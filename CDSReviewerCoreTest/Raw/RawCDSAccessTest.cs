@@ -32,7 +32,7 @@ namespace CDSReviewerCoreTest
         [TestMethod]
         public void TestBasicPublicDocumentMetadata()
         {
-            // https://cds.cern.ch/record/1636207?ln=en - dijet x-section paper
+            // https://cds.cern.ch/record/1637926?ln=en - Weird turbulence paper, that is fast with CDS.
             var ra = new RawCDSAccess();
             var r = ra.GetDocumentMetadata(1637926);
             Assert.IsNotNull(r);
