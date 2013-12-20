@@ -46,7 +46,7 @@ namespace CDSReviewerCoreTest
                 Thread.Sleep(100);
 
             Assert.AreEqual(1, count, "# of times the observable ran");
-            Assert.AreEqual("Measurement of dijet cross sections in pp collisions at 7 TeV centre−of−mass energy using the ATLAS detector", actual.Title, "paper title");
+            Assert.AreEqual("Geometrical statistics of the vorticity vector and the strain rate tensor in rotating turbulence", actual.Title, "paper title");
         }
     }
 }
