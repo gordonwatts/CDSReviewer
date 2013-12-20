@@ -21,30 +21,18 @@ namespace CDSReviewerCore.Raw
 
             var reqUri = new Uri(string.Format("https://cds.cern.ch/record/{0}/export/xm?ln=en", docID));
             var wr = WebRequest.CreateHttp(reqUri);
-
+            
             var s = Observable
                     .FromAsyncPattern<WebResponse>(
                         wr.BeginGetResponse,
                         wr.EndGetResponse)
                     .Invoke()
-                    .Catch(Observable.Return<WebResponse>(null))
-                    .Select(ExtractString)
+                    .Select(resp => resp.GetResponseStream())
+                    .SelectMany(resp => Observable.Using(() => new StreamReader(resp), strm => Observable.StartAsync(tkn => strm.ReadToEndAsync())))
                     .Select(ParseToMD);
-
             return s;
         }
-#if false
-                    .SelectMany(r => Observable.Using(() => r, resp => Observable.Return(resp.)))
 
-        var o = Observable.Return(HttpWebRequest.Create("http://www.google.com"))
-                  .SelectMany(r => Observable.FromAsyncPattern<WebResponse>(
-                      r.BeginGetResponse,
-                      r.EndGetResponse)())
-                  .SelectMany(r =>
-                  {
-                      return Observable.Using( () => r, (resp) => Observable.Return(resp.ContentLength));
-                  });
-#endif
         /// <summary>
         /// Given a string, run the MARC21 parser on it to convert it to an actual
         /// item.
@@ -54,18 +42,6 @@ namespace CDSReviewerCore.Raw
         private IDocumentMetadata ParseToMD(string marc21XML)
         {
             return MARC21Parser.ParseForMetadata(marc21XML);
-        }
-
-        /// <summary>
-        /// Convert a web response into a string.
-        /// </summary>
-        /// <param name="arg"></param>
-        /// <returns></returns>
-        private string ExtractString(WebResponse arg)
-        {
-            var u = arg.GetResponseStream();
-            var rdr = new StreamReader(u);
-            return rdr.ReadToEndAsync().Result;
         }
     }
 }
