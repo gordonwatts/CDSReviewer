@@ -34,13 +34,14 @@ namespace CDSReviewerCoreTest
         {
             // https://cds.cern.ch/record/1636207?ln=en - dijet x-section paper
             var ra = new RawCDSAccess();
-            var r = ra.GetDocumentMetadata(1636207);
+            var r = ra.GetDocumentMetadata(1637926);
             Assert.IsNotNull(r);
 
             int count = 0;
             IDocumentMetadata actual = null;
             bool done = false;
             var sub = r.Subscribe(a => { count++; actual = a; }, () => { done = true; });
+            
             while (!done)
                 Thread.Sleep(100);
 
