@@ -3,6 +3,7 @@ using System;
 using System.IO;
 using System.Net;
 using System.Reactive.Linq;
+using System.Threading.Tasks;
 namespace CDSReviewerCore.Raw
 {
     /// <summary>
@@ -21,12 +22,9 @@ namespace CDSReviewerCore.Raw
 
             var reqUri = new Uri(string.Format("https://cds.cern.ch/record/{0}/export/xm?ln=en", docID));
             var wr = WebRequest.CreateHttp(reqUri);
-            
+
             var s = Observable
-                    .FromAsyncPattern<WebResponse>(
-                        wr.BeginGetResponse,
-                        wr.EndGetResponse)
-                    .Invoke()
+                    .StartAsync(tnk => Task.Factory.FromAsync<WebResponse>(wr.BeginGetResponse, wr.EndGetResponse, null))
                     .Select(resp => resp.GetResponseStream())
                     .SelectMany(resp => Observable.Using(() => new StreamReader(resp), strm => Observable.StartAsync(tkn => strm.ReadToEndAsync())))
                     .Select(ParseToMD);
