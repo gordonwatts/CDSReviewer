@@ -1,7 +1,8 @@
 ﻿using CDSReviewerCore.Raw;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Threading;
+using System.Reactive.Linq;
+using System.Threading.Tasks;
 
 namespace CDSReviewerCoreTest
 {
@@ -30,23 +31,28 @@ namespace CDSReviewerCoreTest
         }
 
         [TestMethod]
-        public void TestBasicPublicDocumentMetadata()
+        public async Task BasicPublicDocumentMetadata()
         {
             // https://cds.cern.ch/record/1637926?ln=en - Weird turbulence paper, that is fast with CDS.
             var ra = new RawCDSAccess();
             var r = ra.GetDocumentMetadata(1637926);
             Assert.IsNotNull(r);
 
-            int count = 0;
-            IDocumentMetadata actual = null;
-            bool done = false;
-            var sub = r.Subscribe(a => { count++; actual = a; }, () => { done = true; });
-            
-            while (!done)
-                Thread.Sleep(100);
+            var actual = await r;
 
-            Assert.AreEqual(1, count, "# of times the observable ran");
             Assert.AreEqual("Geometrical statistics of the vorticity vector and the strain rate tensor in rotating turbulence", actual.Title, "paper title");
         }
+
+        [TestMethod]
+        public async Task CountNumberOfReturnItemsFromMetadataRequest()
+        {
+            // https://cds.cern.ch/record/1637926?ln=en - Weird turbulence paper, that is fast with CDS.
+            var ra = new RawCDSAccess();
+            var r = ra.GetDocumentMetadata(1637926);
+
+            var c = await r.Count();
+            Assert.AreEqual(1, c, "# of items that came back from the web request");
+        }
+
     }
 }
