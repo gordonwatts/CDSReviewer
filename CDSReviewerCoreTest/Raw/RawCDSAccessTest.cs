@@ -57,5 +57,15 @@ namespace CDSReviewerCoreTest
             Assert.AreEqual(1, c, "# of items that came back from the web request");
         }
 
+        [TestMethod]
+        public async Task GetFile()
+        {
+            // Get a file associated with a workshop https://cds.cern.ch/record/1007190
+            // https://cds.cern.ch/record/1007190/files/ard-2005-013.pdf
+
+            Assert.Inconclusive();
+
+        }
+
     }
 }
