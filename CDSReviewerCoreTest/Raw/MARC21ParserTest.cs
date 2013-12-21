@@ -20,6 +20,25 @@ namespace CDSReviewerCoreTest
         }
 
         /// <summary>
+        /// Get the PDF from an external paper
+        /// </summary>
+        [TestMethod]
+        public void PublicPaperExternalPDF()
+        {
+            Assert.Inconclusive();
+        }
+
+        /// <summary>
+        /// Make sure we can parse https://cds.cern.ch/record/1007190 - it has two items
+        /// for download, one of which is a PDF and the other of which is something "else".
+        /// </summary>
+        [TestMethod]
+        public void PublicReportWithTwoEntries()
+        {
+            Assert.Inconclusive();
+        }
+
+        /// <summary>
         /// Helper method to read a file to its end.
         /// </summary>
         /// <param name="file"></param>
