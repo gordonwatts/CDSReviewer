@@ -14,20 +14,23 @@ namespace CDSReviewerCoreTest
         /// </summary>
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
-        public void DeletedDocumentNumber()
+        public async Task DeletedDocumentNumber()
         {
             // 22 - has been deleted
             var ra = new RawCDSAccess();
             var r = ra.GetDocumentMetadata(22);
+            var actual = await r;
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
-        public void NotPresentDocumentNumber()
+        public async Task NotPresentDocumentNumber()
         {
             // 22636207 - not created yet
             var ra = new RawCDSAccess();
             var r = ra.GetDocumentMetadata(22636207);
+
+            var actual = await r;
         }
 
         [TestMethod]
