@@ -12,6 +12,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{948818
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9A39845A-BEE1-4E90-B6EE-AC1B8A199D0A}"
 	ProjectSection(SolutionItems) = preProject
+		LocalRunning.testsettings = LocalRunning.testsettings
 		README.txt = README.txt
 	EndProjectSection
 EndProject
