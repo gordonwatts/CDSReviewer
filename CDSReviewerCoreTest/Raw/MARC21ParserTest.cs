@@ -20,10 +20,10 @@ namespace CDSReviewerCoreTest
         }
 
         /// <summary>
-        /// Get the PDF from an external paper
+        /// Get the PDF from an external paper (like the archive).
         /// </summary>
         [TestMethod]
-        public void PublicPaperExternalPDF()
+        public void PaperExternalPDF()
         {
             Assert.Inconclusive();
         }
@@ -33,7 +33,16 @@ namespace CDSReviewerCoreTest
         /// for download, one of which is a PDF and the other of which is something "else".
         /// </summary>
         [TestMethod]
-        public void PublicReportWithTwoEntries()
+        public void ReportWithTwoEntries()
+        {
+            Assert.Inconclusive();
+        }
+
+        /// <summary>
+        /// The document has multiple versions that can be downloaded. Make sure they are in there right.
+        /// </summary>
+        [TestMethod]
+        public void DocumentWithMultipleVersions()
         {
             Assert.Inconclusive();
         }

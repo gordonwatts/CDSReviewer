@@ -2,6 +2,8 @@
 using System;
 using System.IO;
 using System.Net;
+using System.Reactive;
+using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 namespace CDSReviewerCore.Raw
@@ -40,6 +42,26 @@ namespace CDSReviewerCore.Raw
         private IDocumentMetadata ParseToMD(string marc21XML)
         {
             return MARC21Parser.ParseForMetadata(marc21XML);
+        }
+
+        /// <summary>
+        /// Gets the main document via a direct HTTP download.
+        /// </summary>
+        /// <param name="doc">The document metatdata, the main document will be pulled from there.</param>
+        /// <param name="writeto">A writable stream. It will be closed and disposed of when this returns.</param>
+        /// <returns>A unit sequence with a single item is returned when the request has completed.</returns>
+        internal IObservable<Unit> GetMainDocumentHttp(IDocumentMetadata doc, Stream writeto)
+        {
+            var wr = WebRequest.CreateHttp(doc.MainDocument);
+
+            var s = Observable
+                .StartAsync(tnk => Task.Factory.FromAsync<WebResponse>(wr.BeginGetResponse, wr.EndGetResponse, null))
+                .Select(resp => resp.GetResponseStream())
+                .SelectMany(resp => Observable.Using(
+                    () => new CompositeDisposable(writeto, resp),
+                    strm => Observable.StartAsync(tkn => resp.CopyToAsync(writeto))))
+                .Select(r => Unit.Default);
+            return s;
         }
     }
 }

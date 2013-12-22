@@ -25,6 +25,10 @@ namespace CDSReviewerCore.Raw
             {
                 var col = s.Deserialize(new StringReader(marc21XML)) as MARC21Spec.collectionType;
 
+                // If this contains more records than we are expecting...
+                if (col == null || col.record == null || col.record.Length != 1)
+                    throw new InvalidDataException("The MARC21 XML from CDS has no records in it.");
+
                 // Parse out the fields we need for everything.
                 string title = ExtractDataField(col.record[0], MARC21Spec.MARC21Identifiers.DFTitleStatement, "a");
 

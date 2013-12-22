@@ -1,6 +1,7 @@
 ﻿using CDSReviewerCore.Raw;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.IO;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 
@@ -20,10 +21,11 @@ namespace CDSReviewerCoreTest
             var ra = new RawCDSAccess();
             var r = ra.GetDocumentMetadata(22);
             var actual = await r;
+            Assert.Inconclusive();
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
+        [ExpectedException(typeof(InvalidDataException))]
         public async Task NotPresentDocumentNumber()
         {
             // 22636207 - not created yet
@@ -31,6 +33,7 @@ namespace CDSReviewerCoreTest
             var r = ra.GetDocumentMetadata(22636207);
 
             var actual = await r;
+            Assert.Inconclusive();
         }
 
         [TestMethod]
@@ -58,14 +61,34 @@ namespace CDSReviewerCoreTest
         }
 
         [TestMethod]
-        public async Task GetFile()
+        public async Task GetPublicFile()
         {
             // Get a file associated with a workshop https://cds.cern.ch/record/1007190
             // https://cds.cern.ch/record/1007190/files/ard-2005-013.pdf
 
-            Assert.Inconclusive();
+            var ra = new RawCDSAccess();
+            var doc = new dummyDoc() { Title = "dude", MainDocument = new Uri(@"https://cds.cern.ch/record/1007190/files/ard-2005-013.pdf") };
+            var localFile = new FileInfo(@"GetPublicFile.pdf");
+            using (var rdr = localFile.Create())
+            {
+                var r = await ra.GetMainDocumentHttp(doc, rdr);
+                Assert.IsNotNull(r);
+                rdr.Close();
+            }
 
+            localFile.Refresh();
+            Assert.AreEqual(405757, localFile.Length, "Length of downloaded file");
         }
+
+        /// <summary>
+        /// Helper class for above calling stuff.
+        /// </summary>
+        class dummyDoc : IDocumentMetadata
+        {
+            public string Title { get; set; }
+            public Uri MainDocument { get; set; }
+        }
+
 
     }
 }
