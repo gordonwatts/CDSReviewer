@@ -50,6 +50,19 @@ namespace CDSReviewerCoreTest
         }
 
         [TestMethod]
+        public async Task BasicPrivateDocumentMetadata()
+        {
+            // https://cds.cern.ch/record/1512932?ln=en - Cal Ratio Internal Note
+            var ra = new RawCDSAccess();
+            var r = ra.GetDocumentMetadata(1512932);
+            Assert.IsNotNull(r);
+
+            var actual = await r;
+
+            Assert.AreEqual("Geometrical statistics of the vorticity vector and the strain rate tensor in rotating turbulence", actual.Title, "paper title");
+        }
+
+        [TestMethod]
         public async Task CountNumberOfReturnItemsFromMetadataRequest()
         {
             // https://cds.cern.ch/record/1637926?ln=en - Weird turbulence paper, that is fast with CDS.
@@ -78,6 +91,16 @@ namespace CDSReviewerCoreTest
 
             localFile.Refresh();
             Assert.AreEqual(405757, localFile.Length, "Length of downloaded file");
+        }
+
+        /// <summary>
+        /// If you try to access a document that isn't authorized, then what we
+        /// get back looks different from everything else (a CMS internal document??).
+        /// </summary>
+        [TestMethod]
+        public void MetadataForUnauthorizedRecord()
+        {
+            Assert.Inconclusive();
         }
 
         /// <summary>
