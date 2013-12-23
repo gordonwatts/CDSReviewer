@@ -62,5 +62,16 @@ namespace CDSReviewerCoreTest
                 return reader.ReadToEnd();
             }
         }
+
+        /// <summary>
+        /// https://cds.cern.ch/record/1639578 is a paper for review, and has
+        /// an external link that is for comments, and the full text (that we want to
+        /// review) is in a funny spot.
+        /// </summary>
+        [TestMethod]
+        public void DocumentWithCommentExternalLink()
+        {
+
+        }
     }
 }
