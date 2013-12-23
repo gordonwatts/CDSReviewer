@@ -71,7 +71,17 @@ namespace CDSReviewerCoreTest
         [TestMethod]
         public void DocumentWithCommentExternalLink()
         {
+            Assert.Inconclusive();
+        }
 
+        /// <summary>
+        /// https://cds.cern.ch/record/1638366 has an even other different style
+        /// of links.
+        /// </summary>
+        [TestMethod]
+        public void FullPaperWithOtherLinks()
+        {
+            Assert.Inconclusive();
         }
     }
 }
