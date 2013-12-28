@@ -20,7 +20,7 @@ namespace CDSReviewerCoreTest
         /// Fail if we request a CDS document number that doesn't exist.
         /// </summary>
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
+        [ExpectedException(typeof(CDSReviewerCore.Raw.MARC21Parser.CDSException))]
         public async Task DeletedDocumentNumber()
         {
             // 22 - has been deleted

@@ -1,4 +1,5 @@
 ﻿
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -30,12 +31,26 @@ namespace CDSReviewerCore.Raw
                 if (col == null || col.record == null || col.record.Length != 1)
                     throw new InvalidDataException("The MARC21 XML from CDS has no records in it.");
 
+                // If this is a deleted document...
+                if (ExtractDataFieldFirst(col.record[0], MARC21Spec.MARC21Identifiers.DFCDSStatus, "c") == "DELETED")
+                    throw new CDSException("Document has been deleted from the CDS archive");
+
                 // Parse out the fields we need for everything.
                 string title = ExtractDataFieldFirst(col.record[0], MARC21Spec.MARC21Identifiers.DFTitleStatement, "a");
                 string abs = ExtractDataFieldFirst(col.record[0], MARC21Spec.MARC21Identifiers.DFAbstractStatement, "a");
                 var authors = ExtractDataFieldList(col.record[0], MARC21Spec.MARC21Identifiers.DFAuthorList, "a").ToArray();
                 return new DocMetaData() { Title = title, Abstract = abs, Authors = authors };
             }
+        }
+
+        /// <summary>
+        /// Thrown when we get an exception during parsing.
+        /// </summary>
+        public class CDSException : Exception
+        {
+            public CDSException() { }
+            public CDSException(string message) : base(message) { }
+            public CDSException(string message, System.Exception inner) : base(message, inner) { }
         }
 
         /// <summary>

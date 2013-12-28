@@ -23,6 +23,15 @@ namespace CDSReviewerCoreTest
             Assert.AreEqual(2938, r.Authors.Length, "# of authors");
         }
 
+        [TestMethod]
+        [DeploymentItem(@"Raw\22.xml")]
+        [ExpectedException(typeof(CDSReviewerCore.Raw.MARC21Parser.CDSException))]
+        public void DeletedRecord()
+        {
+            var mdstring = LoadXML(@"22.xml");
+            var r = MARC21Parser.ParseForMetadata(mdstring);
+        }
+
         /// <summary>
         /// Get the PDF from an external paper (like the archive).
         /// </summary>

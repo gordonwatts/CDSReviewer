@@ -10,5 +10,9 @@ namespace CDSReviewerCore.Raw.MARC21Spec
         public const string DFAuthorList = "700";
 
         #endregion
+
+        #region CDS Specific Data Fields
+        public const string DFCDSStatus = "980";
+        #endregion
     }
 }

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<collection xmlns="http://www.loc.gov/MARC21/slim">
+	<record>
+		<controlfield tag="001">22</controlfield>
+		<datafield tag="980" ind1=" " ind2=" ">
+			<subfield code="c">DELETED</subfield>
+		</datafield>
+	</record>
+</collection>
