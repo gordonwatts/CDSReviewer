@@ -115,9 +115,12 @@ namespace CDSReviewerCoreTest
         /// get back looks different from everything else (a CMS internal document??).
         /// </summary>
         [TestMethod]
-        public void MetadataForUnauthorizedRecord()
+        [ExpectedException(typeof(UnauthorizedAccessException))]
+        public async Task MetadataForUnauthorizedRecord()
         {
-            Assert.Inconclusive();
+            // https://cds.cern.ch/record/1512932?ln=en - Cal Ratio Internal Note
+            var ra = new RawCDSAccess();
+            var r = await ra.GetDocumentMetadata(1512932);
         }
 
         /// <summary>

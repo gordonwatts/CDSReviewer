@@ -33,6 +33,25 @@ namespace CDSReviewerCoreTest
         }
 
         /// <summary>
+        /// Helper method to read a file to its end.
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns></returns>
+        private string LoadXML(string file)
+        {
+            var fi = new FileInfo(file);
+            Assert.IsTrue(fi.Exists, string.Format("File {0} does not exist.", fi.FullName));
+
+            using (var reader = fi.OpenText())
+            {
+                return reader.ReadToEnd();
+            }
+        }
+
+#if false
+        // Do these tests when we get files up and running.
+
+        /// <summary>
         /// Get the PDF from an external paper (like the archive).
         /// </summary>
         [TestMethod]
@@ -61,22 +80,6 @@ namespace CDSReviewerCoreTest
         }
 
         /// <summary>
-        /// Helper method to read a file to its end.
-        /// </summary>
-        /// <param name="file"></param>
-        /// <returns></returns>
-        private string LoadXML(string file)
-        {
-            var fi = new FileInfo(file);
-            Assert.IsTrue(fi.Exists, string.Format("File {0} does not exist.", fi.FullName));
-
-            using (var reader = fi.OpenText())
-            {
-                return reader.ReadToEnd();
-            }
-        }
-
-        /// <summary>
         /// https://cds.cern.ch/record/1639578 is a paper for review, and has
         /// an external link that is for comments, and the full text (that we want to
         /// review) is in a funny spot.
@@ -96,5 +99,6 @@ namespace CDSReviewerCoreTest
         {
             Assert.Inconclusive();
         }
+#endif
     }
 }
