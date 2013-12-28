@@ -1,6 +1,7 @@
 ﻿using CDSReviewerCore.Raw;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.IO;
+using System.Linq;
 
 namespace CDSReviewerCoreTest
 {
@@ -17,6 +18,9 @@ namespace CDSReviewerCoreTest
             var mdstring = LoadXML(@"1636207.xml");
             var r = MARC21Parser.ParseForMetadata(mdstring);
             Assert.AreEqual("Measurement of dijet cross sections in pp collisions at 7 TeV centre−of−mass energy using the ATLAS detector", r.Title, "paper title");
+            Assert.IsTrue(r.Abstract.StartsWith("Double-differential dijet cross sections measured"), "Abstract");
+            Assert.IsTrue(r.Authors.Contains("Gumpert, Christian"), "Authors");
+            Assert.AreEqual(2938, r.Authors.Length, "# of authors");
         }
 
         /// <summary>

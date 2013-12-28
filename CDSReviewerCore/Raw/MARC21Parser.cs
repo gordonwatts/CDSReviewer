@@ -1,4 +1,5 @@
 ﻿
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
@@ -30,9 +31,10 @@ namespace CDSReviewerCore.Raw
                     throw new InvalidDataException("The MARC21 XML from CDS has no records in it.");
 
                 // Parse out the fields we need for everything.
-                string title = ExtractDataField(col.record[0], MARC21Spec.MARC21Identifiers.DFTitleStatement, "a");
-
-                return new DocMetaData() { Title = title };
+                string title = ExtractDataFieldFirst(col.record[0], MARC21Spec.MARC21Identifiers.DFTitleStatement, "a");
+                string abs = ExtractDataFieldFirst(col.record[0], MARC21Spec.MARC21Identifiers.DFAbstractStatement, "a");
+                var authors = ExtractDataFieldList(col.record[0], MARC21Spec.MARC21Identifiers.DFAuthorList, "a").ToArray();
+                return new DocMetaData() { Title = title, Abstract = abs, Authors = authors };
             }
         }
 
@@ -42,7 +44,7 @@ namespace CDSReviewerCore.Raw
         /// <param name="col">The collection for a single document</param>
         /// <param name="fieldID">The data field number</param>
         /// <returns>null if it can't be found, other wise the string contents of the title</returns>
-        private static string ExtractDataField(MARC21Spec.recordType document, string fieldID, string subfieldCode)
+        private static string ExtractDataFieldFirst(MARC21Spec.recordType document, string fieldID, string subfieldCode)
         {
             var df = document.datafield.Where(r => r.tag == fieldID).FirstOrDefault();
             if (df == null)
@@ -52,6 +54,24 @@ namespace CDSReviewerCore.Raw
             if (data == null)
                 return null;
             return data.Value;
+        }
+
+        /// <summary>
+        /// Returns all the data fields that satisfy the requirements.
+        /// </summary>
+        /// <param name="document">The collection for the single document</param>
+        /// <param name="fieldID">The field number</param>
+        /// <param name="subfieldCode">The author</param>
+        /// <returns></returns>
+        private static IEnumerable<string> ExtractDataFieldList(MARC21Spec.recordType document, string fieldID, string subfieldCode)
+        {
+            var df = document.datafield
+                .Where(r => r.tag == fieldID)
+                .SelectMany(r => r.subfield.Where(s => s.code == subfieldCode));
+            foreach (var item in df)
+            {
+                yield return item.Value;
+            }
         }
     }
 }

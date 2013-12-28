@@ -16,5 +16,15 @@ namespace CDSReviewerCore.Raw
         /// Get/Set the URI to the main document file.
         /// </summary>
         public Uri MainDocument { get; set; }
+
+        /// <summary>
+        /// Get/Set the abstract for the doc.
+        /// </summary>
+        public string Abstract { get; set; }
+
+        /// <summary>
+        /// Get/Set the author list.
+        /// </summary>
+        public string[] Authors { get; set; }
     }
 }

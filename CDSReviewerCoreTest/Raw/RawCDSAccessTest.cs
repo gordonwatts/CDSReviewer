@@ -127,6 +127,8 @@ namespace CDSReviewerCoreTest
         {
             public string Title { get; set; }
             public Uri MainDocument { get; set; }
+            public string Abstract { get; set; }
+            public string[] Authors { get; set; }
         }
 
 
