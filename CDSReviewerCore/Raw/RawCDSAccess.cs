@@ -1,4 +1,5 @@
 ﻿
+using CERNSSOPCL;
 using System;
 using System.IO;
 using System.Net;
@@ -24,12 +25,10 @@ namespace CDSReviewerCore.Raw
             // Create the web request to get this item.
 
             var reqUri = new Uri(string.Format("https://cds.cern.ch/record/{0}/export/xm?ln=en", docID));
-            var wr = WebRequest.CreateHttp(reqUri);
 
             var s = Observable
-                    .StartAsync(tnk => Task.Factory.FromAsync<WebResponse>(wr.BeginGetResponse, wr.EndGetResponse, null))
-                    .Select(resp => resp.GetResponseStream())
-                    .SelectMany(resp => Observable.Using(() => new StreamReader(resp), strm => Observable.StartAsync(tkn => strm.ReadToEndAsync())))
+                    .StartAsync(tnk => CERNWebAccess.GetWebResponse(reqUri))
+                    .SelectMany(resp => Observable.StartAsync(tkn => resp.Content.ReadAsStringAsync()))
                     .Select(ParseToMD);
             return s;
         }

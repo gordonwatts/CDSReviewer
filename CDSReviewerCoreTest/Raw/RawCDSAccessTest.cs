@@ -10,6 +10,12 @@ namespace CDSReviewerCoreTest
     [TestClass]
     public class RawCDSAccessTest
     {
+        [TestInitialize]
+        public void TestInit()
+        {
+            CERNSSOPCL.CERNWebAccess.ResetCredentials();
+        }
+
         /// <summary>
         /// Fail if we request a CDS document number that doesn't exist.
         /// </summary>
@@ -49,17 +55,28 @@ namespace CDSReviewerCoreTest
             Assert.AreEqual("Geometrical statistics of the vorticity vector and the strain rate tensor in rotating turbulence", actual.Title, "paper title");
         }
 
+        /// <summary>
+        /// Anyone that needs a username password for testing should call this guy.
+        /// This will throw if it can't find the generic credentials for cern.ch.
+        /// </summary>
+        private void LoadUserPassword()
+        {
+            var r = WebGenericCredentialsLib.CredAccess.LookupUserPass("cern.ch");
+            CERNSSOPCL.CERNWebAccess.LoadUsernamePassword(r.Item1, r.Item2);
+        }
+
         [TestMethod]
         public async Task BasicPrivateDocumentMetadata()
         {
             // https://cds.cern.ch/record/1512932?ln=en - Cal Ratio Internal Note
+            LoadUserPassword(); // This is private access, so make sure that goes through.
             var ra = new RawCDSAccess();
             var r = ra.GetDocumentMetadata(1512932);
             Assert.IsNotNull(r);
 
             var actual = await r;
 
-            Assert.AreEqual("Geometrical statistics of the vorticity vector and the strain rate tensor in rotating turbulence", actual.Title, "paper title");
+            Assert.AreEqual("Searches for long-lived neutral particles decaying into Heavy Flavors In the Hadronic Calorimeter of ATLAS at sqrt{s} = 8 TeV", actual.Title, "paper title");
         }
 
         [TestMethod]
