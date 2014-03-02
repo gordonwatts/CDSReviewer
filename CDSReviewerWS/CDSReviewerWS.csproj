@@ -105,9 +105,6 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MainPage.xaml.cs">
-      <DependentUpon>MainPage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Views\AddCDSPaperView.xaml.cs">
       <DependentUpon>AddCDSPaperView.xaml</DependentUpon>
@@ -134,10 +131,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="MainPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Views\AddCDSPaperView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -157,11 +150,13 @@
     <Reference Include="Caliburn.Micro.Platform">
       <HintPath>..\packages\Caliburn.Micro.2.0.0-beta\lib\win81\Caliburn.Micro.Platform.dll</HintPath>
     </Reference>
-    <Reference Include="Caliburn.Micro.Portable">
-      <HintPath>..\packages\Caliburn.Micro.Portable.1.0.0-alpha08\lib\WinRT451\Caliburn.Micro.Portable.dll</HintPath>
+    <Reference Include="Caliburn.Micro.Portable, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Caliburn.Micro.Portable.1.0.0-alpha09\lib\WinRT451\Caliburn.Micro.Portable.dll</HintPath>
     </Reference>
-    <Reference Include="Caliburn.Micro.Portable.WS">
-      <HintPath>..\packages\Caliburn.Micro.Portable.1.0.0-alpha08\lib\WinRT451\Caliburn.Micro.Portable.WS.dll</HintPath>
+    <Reference Include="Caliburn.Micro.Portable.WS, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Caliburn.Micro.Portable.1.0.0-alpha09\lib\WinRT451\Caliburn.Micro.Portable.WS.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Xaml.Interactions">
       <HintPath>..\packages\Caliburn.Micro.2.0.0-beta\lib\win81\Microsoft.Xaml.Interactions.dll</HintPath>
@@ -176,7 +171,9 @@
       <Name>CDSReviewerModels</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Resources\" />
+  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '12.0' ">
     <VisualStudioVersion>12.0</VisualStudioVersion>
   </PropertyGroup>

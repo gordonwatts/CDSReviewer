@@ -40,7 +40,7 @@
     </Reference>
     <Reference Include="Caliburn.Micro.Portable, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Caliburn.Micro.Portable.1.0.0-alpha08\lib\portable-net45+windowsphone8+WinRT45\Caliburn.Micro.Portable.dll</HintPath>
+      <HintPath>..\packages\Caliburn.Micro.Portable.1.0.0-alpha09\lib\portable-net45+windowsphone8+WinRT45\Caliburn.Micro.Portable.dll</HintPath>
     </Reference>
     <Reference Include="Moq">
       <HintPath>..\packages\Moq.4.2.1402.2112\lib\net40\Moq.dll</HintPath>
