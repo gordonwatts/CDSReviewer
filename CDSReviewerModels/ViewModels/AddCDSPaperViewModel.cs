@@ -23,19 +23,21 @@ namespace CDSReviewerModels.ViewModels
             _searchParser = parser;
 
             // When we run, look for the first paper, and route its output to our author, etc.
-            _executeSearch = ReactiveCommand.Create(x => _searchParser.GetPaperFinders(CDSLookupString));
-            var paper = _executeSearch.SelectMany(x => x.FindPaper())
-                .Take(1);
+            _executeSearch = ReactiveCommand.Create();
+            var paper = _executeSearch
+                .Where(x => x is string)
+                .SelectMany(x => _searchParser.GetPaperFinders(x as string))
+                .SelectMany(x => x.FindPaper());
 
             paper
                 .Select(x => x.Item1.Title)
-                .ToPropertyCM(this, x => x.Title, out _TitleOAPH);
+                .ToPropertyCM(this, x => x.Title, out _TitleOAPH, "");
             paper
                 .Select(x => x.Item2.Abstract)
-                .ToPropertyCM(this, x => x.Abstract, out _AbstractOAPH);
+                .ToPropertyCM(this, x => x.Abstract, out _AbstractOAPH, "");
             paper
                 .Select(x => x.Item2.Authors)
-                .ToPropertyCM(this, x => x.Authors, out _AuthorsOAPH);
+                .ToPropertyCM(this, x => x.Authors, out _AuthorsOAPH, new string[0]);
 
             // When the user types in something, we need to trigger a search
             this.ObservableForProperty(p => p.CDSLookupString)
@@ -47,7 +49,7 @@ namespace CDSReviewerModels.ViewModels
         /// <summary>
         /// Run the search
         /// </summary>
-        private readonly ReactiveCommand<IPaperSearch> _executeSearch;
+        private readonly ReactiveCommand<object> _executeSearch;
 
         /// <summary>
         /// The paper searcher, we use it when the user is ready to search.
@@ -84,7 +86,7 @@ namespace CDSReviewerModels.ViewModels
         private ObservableAsPropertyHelper<string> _AbstractOAPH;
 
         /// <summary>
-        /// The authors
+        /// The author list
         /// </summary>
         public string[] Authors
         {
