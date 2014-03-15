@@ -8,7 +8,7 @@ namespace CDSReviewerModels.ServiceInterfaces
     /// <remarks>
     /// Fort this early version it is pretty simplistic what it returns!
     /// </remarks>
-    interface ISearchStringParser
+    public interface ISearchStringParser
     {
         /// <summary>
         /// Returns a list of search guys that can look for a particular paper using a search string.

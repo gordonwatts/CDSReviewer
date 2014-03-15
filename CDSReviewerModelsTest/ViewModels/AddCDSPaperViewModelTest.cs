@@ -1,4 +1,5 @@
 ﻿using Caliburn.Micro.Portable;
+using CDSReviewerModels.ServiceInterfaces;
 using CDSReviewerModels.ViewModels;
 using Microsoft.Reactive.Testing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -15,14 +16,16 @@ namespace CDSReviewerModelsTest.ViewModels
         public void CreateVM()
         {
             INavService obj = Mock.Of<INavService>();
-            var vm = new AddCDSPaperViewModel(obj);
+            ISearchStringParser parser = Mock.Of<ISearchStringParser>();
+            var vm = new AddCDSPaperViewModel(obj, parser);
         }
 
         [TestMethod]
         public void SetCDSSearchPropNotify()
         {
             INavService obj = Mock.Of<INavService>();
-            var vm = new AddCDSPaperViewModel(obj);
+            ISearchStringParser parser = Mock.Of<ISearchStringParser>();
+            var vm = new AddCDSPaperViewModel(obj, parser);
             bool setit = false;
             vm.PropertyChanged += (sender, args) => { setit = args.PropertyName == "CDSLookupString"; };
             vm.CDSLookupString = "hi there";
@@ -36,7 +39,8 @@ namespace CDSReviewerModelsTest.ViewModels
             new TestScheduler().With(shed =>
             {
                 INavService obj = Mock.Of<INavService>();
-                var vm = new AddCDSPaperViewModel(obj);
+                ISearchStringParser parser = Mock.Of<ISearchStringParser>();
+                var vm = new AddCDSPaperViewModel(obj, parser);
                 var propChanged = new HashSet<string>();
                 vm.PropertyChanged += (sender, args) => { propChanged.Add(args.PropertyName); };
 
