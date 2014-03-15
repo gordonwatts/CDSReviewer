@@ -26,5 +26,35 @@ namespace CDSReviewerModels.ViewModels
             set { this.NotifyAndSetIfChanged(ref _CDSLookupString, value); }
         }
         string _CDSLookupString;
+
+        /// <summary>
+        /// The title that is found from a search.
+        /// </summary>
+        public string Title
+        {
+            get { return _Title; }
+            private set { this.NotifyAndSetIfChanged(ref _Title, value); }
+        }
+        private string _Title;
+
+        /// <summary>
+        /// The abstract found from a search
+        /// </summary>
+        public string Abstract
+        {
+            get { return _Abstract; }
+            private set { this.NotifyAndSetIfChanged(ref _Abstract, value); }
+        }
+        private string _Abstract;
+
+        /// <summary>
+        /// The authors
+        /// </summary>
+        public string Authors
+        {
+            get { return _Authors; }
+            private set { this.NotifyAndSetIfChanged(ref _Authors, value); }
+        }
+        private string _Authors;
     }
 }
