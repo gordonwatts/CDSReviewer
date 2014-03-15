@@ -1,11 +1,14 @@
 ﻿using Caliburn.Micro.Portable;
+using CDSReviewerCore.Data;
 using CDSReviewerModels.ServiceInterfaces;
 using CDSReviewerModels.ViewModels;
 using Microsoft.Reactive.Testing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using ReactiveUI.Testing;
+using System;
 using System.Collections.Generic;
+using System.Reactive.Linq;
 
 namespace CDSReviewerModelsTest.ViewModels
 {
@@ -39,7 +42,10 @@ namespace CDSReviewerModelsTest.ViewModels
             new TestScheduler().With(shed =>
             {
                 INavService obj = Mock.Of<INavService>();
-                ISearchStringParser parser = Mock.Of<ISearchStringParser>();
+                var paperInfo = Observable.Return(Tuple.Create(new PaperStub() { Title = "title" }, new PaperFullInfo() { Abstract = "abstract", Authors = new string[] { "Authors" } }));
+                IPaperSearch search = Mock.Of<IPaperSearch>(s => s.FindPaper() == paperInfo);
+                ISearchStringParser parser = Mock.Of<ISearchStringParser>(p => p.GetPaperFinders("1234") == Observable.Return(search));
+
                 var vm = new AddCDSPaperViewModel(obj, parser);
                 var propChanged = new HashSet<string>();
                 vm.PropertyChanged += (sender, args) => { propChanged.Add(args.PropertyName); };
@@ -47,7 +53,7 @@ namespace CDSReviewerModelsTest.ViewModels
                 // Start the search
                 vm.CDSLookupString = "1234";
 
-                shed.AdvanceBy(1000); // All the code should return right away, so, we can just let this go here.
+                //shed.AdvanceBy(1000); // All the code should return right away, so, we can just let this go here.
 
                 Assert.AreEqual("title", vm.Title, "searched for title");
                 Assert.AreEqual("abstract", vm.Abstract, "searched for abstract");
