@@ -62,7 +62,7 @@ namespace CDSReviewerCoreTest
         private void LoadUserPassword()
         {
             var r = WebGenericCredentialsLib.CredAccess.LookupUserPass("cern.ch");
-            CERNSSOPCL.CERNWebAccess.LoadUsernamePassword(r.Item1, r.Item2);
+            //CERNSSOPCL.CERNWebAccess.LoadUsernamePassword(r.Item1, r.Item2);
         }
 
         [TestMethod]

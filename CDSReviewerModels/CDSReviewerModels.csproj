@@ -48,7 +48,7 @@
       <HintPath>..\packages\Caliburn.Micro.Portable.1.0.0-alpha09\lib\portable-net45+windowsphone8+WinRT45\Caliburn.Micro.Portable.dll</HintPath>
     </Reference>
     <Reference Include="Caliburn.Micro.ReactiveUI">
-      <HintPath>..\packages\Caliburn.Micro.ReactiveUI.1.0.0-alpha04\lib\portable-net45+windowsphone8+WinRT45\Caliburn.Micro.ReactiveUI.dll</HintPath>
+      <HintPath>..\packages\Caliburn.Micro.ReactiveUI.Utils.1.0.0-alpha05\lib\portable-net45+windowsphone8+WinRT45\Caliburn.Micro.ReactiveUI.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Threading.Tasks">
       <HintPath>..\packages\Microsoft.Bcl.Async.1.0.165\lib\portable-net45+win8+wp8\Microsoft.Threading.Tasks.dll</HintPath>
@@ -60,7 +60,7 @@
       <HintPath>..\packages\reactiveui-core.5.99.4-beta\lib\Portable-Net45+WinRT45+WP8\ReactiveUI.dll</HintPath>
     </Reference>
     <Reference Include="Splat">
-      <HintPath>..\packages\Splat.1.2.0\lib\Portable-Net45+WinRT45+WP8\Splat.dll</HintPath>
+      <HintPath>..\packages\Splat.1.2.1\lib\Portable-Net45+WinRT45+WP8\Splat.dll</HintPath>
     </Reference>
     <Reference Include="System.Net.Http">
       <HintPath>..\packages\Microsoft.Net.Http.2.2.18\lib\portable-net40+sl4+win8+wp71\System.Net.Http.dll</HintPath>
