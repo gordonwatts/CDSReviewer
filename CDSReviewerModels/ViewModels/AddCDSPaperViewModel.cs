@@ -44,6 +44,12 @@ namespace CDSReviewerModels.ViewModels
                 .Select(x => x.Value)
                 .DistinctUntilChanged()
                 .Subscribe(x => _executeSearch.Execute(x));
+
+            // When the search is running, make sure the search in progress indicator is off.
+            _executeSearch
+                .Select(x => true)
+                .Merge(paper.Select(x => false))
+                .ToPropertyCM(this, x => x.SearchInProgress, out _SearchInProgressOAPH, false);
         }
 
         /// <summary>
@@ -93,5 +99,14 @@ namespace CDSReviewerModels.ViewModels
             get { return _AuthorsOAPH.Value; }
         }
         private ObservableAsPropertyHelper<string[]> _AuthorsOAPH;
+
+        /// <summary>
+        /// Get the state of a search. In progress, or not?
+        /// </summary>
+        public bool SearchInProgress
+        {
+            get { return _SearchInProgressOAPH.Value; }
+        }
+        private ObservableAsPropertyHelper<bool> _SearchInProgressOAPH;
     }
 }

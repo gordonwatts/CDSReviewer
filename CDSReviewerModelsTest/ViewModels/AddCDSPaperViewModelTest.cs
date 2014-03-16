@@ -5,6 +5,7 @@ using CDSReviewerModels.ViewModels;
 using Microsoft.Reactive.Testing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using ReactiveUI;
 using ReactiveUI.Testing;
 using System;
 using System.Collections.Generic;
@@ -36,6 +37,9 @@ namespace CDSReviewerModelsTest.ViewModels
             Assert.IsTrue(setit, "PropChanged Raised");
         }
 
+        /// <summary>
+        /// Test simle and straight forward instant search
+        /// </summary>
         [TestMethod]
         public void FastSimpleCDSSearch()
         {
@@ -61,7 +65,7 @@ namespace CDSReviewerModelsTest.ViewModels
 
                 // Start the search, and let it complete.
                 vm.CDSLookupString = "1234";
-                shed.AdvanceBy(10);
+                shed.AdvanceBy(10000);
 
                 // Did the results of the search get through?
                 Assert.AreEqual("title", vm.Title, "searched for title");
@@ -75,6 +79,43 @@ namespace CDSReviewerModelsTest.ViewModels
                 Assert.IsTrue(propChanged.Contains("Authors"), "Authors");
                 Assert.IsTrue(propChanged.Contains("Abstract"), "Abstract");
                 Assert.IsTrue(propChanged.Contains("CDSLookupString"), "CDSLookupString");
+            });
+        }
+
+        /// <summary>
+        /// Test search busy indicator
+        /// </summary>
+        [TestMethod]
+        public void SearchBusyIndicator()
+        {
+            new TestScheduler().With(shed =>
+            {
+                INavService obj = Mock.Of<INavService>();
+
+                // Return a single paper
+                var paperInfo = Observable.Return(Tuple.Create(new PaperStub() { Title = "title" }, new PaperFullInfo() { Abstract = "abstract", Authors = new string[] { "Authors" } }));
+                IPaperSearch search = Mock.Of<IPaperSearch>(s => s.FindPaper() == paperInfo);
+                ISearchStringParser parser = Mock.Of<ISearchStringParser>(p => p.GetPaperFinders("1234") == Observable.Return(search).Delay(TimeSpan.FromSeconds(3), RxApp.TaskpoolScheduler));
+
+                var vm = new AddCDSPaperViewModel(obj, parser);
+
+                // Initial value access to force subscription.
+                var t = vm.Title;
+                var ab = vm.Abstract;
+                var au = vm.Authors;
+                var sip = vm.SearchInProgress;
+
+                // No search should be in progress
+                Assert.IsFalse(vm.SearchInProgress, "Initial state should be off");
+
+                // Start the search, and let it complete.
+                vm.CDSLookupString = "1234";
+                shed.AdvanceByMs(1); // Give it a chance to get going!
+                Assert.IsTrue(vm.SearchInProgress, "just after search started");
+                shed.AdvanceByMs(2 * 1000 + 500);
+                Assert.IsTrue(vm.SearchInProgress, "just after 2.5 seconds in");
+                shed.AdvanceByMs(1000);
+                Assert.IsFalse(vm.SearchInProgress, "after search is done");
             });
         }
     }
