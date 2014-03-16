@@ -219,5 +219,36 @@ namespace CDSReviewerModelsTest.ViewModels
                 Assert.IsFalse(vm.SearchInProgress, "Just before the timeout should hit");
             });
         }
+
+        [TestMethod]
+        public void AddButtonEnabledAfterSearch()
+        {
+            new TestScheduler().With(shed =>
+            {
+                INavService obj = Mock.Of<INavService>();
+
+                // Return a single paper
+                var paperInfo = Observable.Return(Tuple.Create(new PaperStub() { Title = "title" }, new PaperFullInfo() { Abstract = "abstract", Authors = new string[] { "Authors" } }));
+                IPaperSearch search = Mock.Of<IPaperSearch>(s => s.FindPaper() == paperInfo);
+                ISearchStringParser parser = Mock.Of<ISearchStringParser>(p => p.GetPaperFinders("1234") == Observable.Return(search));
+
+                var vm = new AddCDSPaperViewModel(obj, parser);
+
+                // Initial value access to force subscription.
+                var t = vm.Title;
+                var ab = vm.Abstract;
+                var au = vm.Authors;
+                var sip = vm.SearchInProgress;
+
+                Assert.IsFalse(vm.AddButtonCommand.CanExecute(false), "before search string");
+                // Start the search, and let it complete.
+                vm.CDSLookupString = "1234";
+                Assert.IsFalse(vm.AddButtonCommand.CanExecute(false), "just after search string");
+                shed.AdvanceByMs(459); // Give it a chance to get going!
+                Assert.IsFalse(vm.AddButtonCommand.CanExecute(false), "Just before the timeout should hit");
+                shed.AdvanceByMs(50); // Give it a chance to get going!
+                Assert.IsTrue(vm.AddButtonCommand.CanExecute(false), "Once we've passed the start search");
+            });
+        }
     }
 }

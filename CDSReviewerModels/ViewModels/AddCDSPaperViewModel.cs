@@ -52,7 +52,18 @@ namespace CDSReviewerModels.ViewModels
                 .Select(x => true)
                 .Merge(paper.Select(x => false))
                 .ToPropertyCM(this, x => x.SearchInProgress, out _SearchInProgressOAPH, false);
+
+            // We can only add something when all searches are "good"
+            var cmdGood = _executeSearch
+                .Select(x => false)
+                .Merge(paper.Select(x => true));
+            AddButtonCommand = new ReactiveCommand<bool>(cmdGood, null);
         }
+
+        /// <summary>
+        /// Run when we can add a button.
+        /// </summary>
+        public readonly ReactiveCommand<bool> AddButtonCommand;
 
         /// <summary>
         /// Run the search
