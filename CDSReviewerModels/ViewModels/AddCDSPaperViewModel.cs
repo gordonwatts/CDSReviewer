@@ -41,8 +41,10 @@ namespace CDSReviewerModels.ViewModels
 
             // When the user types in something, we need to trigger a search
             this.ObservableForProperty(p => p.CDSLookupString)
+                .Throttle(TimeSpan.FromMilliseconds(500), RxApp.TaskpoolScheduler)
                 .Select(x => x.Value)
                 .DistinctUntilChanged()
+                .Where(x => !string.IsNullOrWhiteSpace(x))
                 .Subscribe(x => _executeSearch.Execute(x));
 
             // When the search is running, make sure the search in progress indicator is off.

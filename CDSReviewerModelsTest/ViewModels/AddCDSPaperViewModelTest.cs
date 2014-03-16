@@ -62,23 +62,26 @@ namespace CDSReviewerModelsTest.ViewModels
                 Assert.AreEqual("", vm.Title, "inital title");
                 Assert.AreEqual("", vm.Abstract, "initial abstract");
                 Assert.AreEqual(0, vm.Authors.Length, "# of initial authors");
+                Assert.IsFalse(vm.SearchInProgress, "Search spec");
 
                 // Start the search, and let it complete.
                 vm.CDSLookupString = "1234";
-                shed.AdvanceBy(10000);
+                shed.AdvanceByMs(50000);
 
                 // Did the results of the search get through?
+                Assert.IsFalse(vm.SearchInProgress, "Search spec");
                 Assert.AreEqual("title", vm.Title, "searched for title");
                 Assert.AreEqual("abstract", vm.Abstract, "searched for abstract");
                 Assert.AreEqual(1, vm.Authors.Length, "Searched for authors");
                 Assert.AreEqual("Authors", vm.Authors[0], "Searched for authors");
 
                 // Make sure prop changed was called correctly!
-                Assert.AreEqual(4, propChanged.Count, "# of properties");
+                Assert.AreEqual(5, propChanged.Count, "# of properties");
                 Assert.IsTrue(propChanged.Contains("Title"), "title");
                 Assert.IsTrue(propChanged.Contains("Authors"), "Authors");
                 Assert.IsTrue(propChanged.Contains("Abstract"), "Abstract");
                 Assert.IsTrue(propChanged.Contains("CDSLookupString"), "CDSLookupString");
+                Assert.IsTrue(propChanged.Contains("SearchInProgress"), "SearchInProgress");
             });
         }
 
@@ -110,12 +113,110 @@ namespace CDSReviewerModelsTest.ViewModels
 
                 // Start the search, and let it complete.
                 vm.CDSLookupString = "1234";
-                shed.AdvanceByMs(1); // Give it a chance to get going!
+                shed.AdvanceByMs(501); // Give it a chance to get going!
                 Assert.IsTrue(vm.SearchInProgress, "just after search started");
                 shed.AdvanceByMs(2 * 1000 + 500);
                 Assert.IsTrue(vm.SearchInProgress, "just after 2.5 seconds in");
                 shed.AdvanceByMs(1000);
                 Assert.IsFalse(vm.SearchInProgress, "after search is done");
+            });
+        }
+
+        /// <summary>
+        /// Make sure the search starts 500 ms after the stuff is entered a single time
+        /// </summary>
+        [TestMethod]
+        public void DelayedStartSearch()
+        {
+            new TestScheduler().With(shed =>
+            {
+                INavService obj = Mock.Of<INavService>();
+
+                // Return a single paper
+                var paperInfo = Observable.Return(Tuple.Create(new PaperStub() { Title = "title" }, new PaperFullInfo() { Abstract = "abstract", Authors = new string[] { "Authors" } }));
+                IPaperSearch search = Mock.Of<IPaperSearch>(s => s.FindPaper() == paperInfo);
+                ISearchStringParser parser = Mock.Of<ISearchStringParser>(p => p.GetPaperFinders("1234") == Observable.Return(search).Delay(TimeSpan.FromSeconds(3), RxApp.TaskpoolScheduler));
+
+                var vm = new AddCDSPaperViewModel(obj, parser);
+
+                // Initial value access to force subscription.
+                var t = vm.Title;
+                var ab = vm.Abstract;
+                var au = vm.Authors;
+                var sip = vm.SearchInProgress;
+
+                // Start the search, and let it complete.
+                vm.CDSLookupString = "1234";
+                shed.AdvanceByMs(459); // Give it a chance to get going!
+                Assert.IsFalse(vm.SearchInProgress, "Just before the timeout should hit");
+                shed.AdvanceByMs(50); // Give it a chance to get going!
+                Assert.IsTrue(vm.SearchInProgress, "Once we've passed the start search");
+            });
+        }
+
+        /// <summary>
+        /// Make sure the search starts 500 ms after the stuff is entered a single time
+        /// </summary>
+        [TestMethod]
+        public void DelayedStartSearchResetWithNewTyping()
+        {
+            new TestScheduler().With(shed =>
+            {
+                INavService obj = Mock.Of<INavService>();
+
+                // Return a single paper
+                var paperInfo = Observable.Return(Tuple.Create(new PaperStub() { Title = "title" }, new PaperFullInfo() { Abstract = "abstract", Authors = new string[] { "Authors" } }));
+                IPaperSearch search = Mock.Of<IPaperSearch>(s => s.FindPaper() == paperInfo);
+                ISearchStringParser parser = Mock.Of<ISearchStringParser>(p => p.GetPaperFinders("1234") == Observable.Return(search).Delay(TimeSpan.FromSeconds(3), RxApp.TaskpoolScheduler));
+
+                var vm = new AddCDSPaperViewModel(obj, parser);
+
+                // Initial value access to force subscription.
+                var t = vm.Title;
+                var ab = vm.Abstract;
+                var au = vm.Authors;
+                var sip = vm.SearchInProgress;
+
+                // Start the search, and let it complete.
+                vm.CDSLookupString = "1234";
+                shed.AdvanceByMs(200); // Give it a chance to get going!
+                vm.CDSLookupString = "123";
+                shed.AdvanceByMs(459); // Give it a chance to get going!
+                Assert.IsFalse(vm.SearchInProgress, "Just before the timeout should hit");
+                shed.AdvanceByMs(50); // Give it a chance to get going!
+                Assert.IsTrue(vm.SearchInProgress, "Once we've passed the start search");
+            });
+        }
+
+        /// <summary>
+        /// Make sure the search starts 500 ms after the stuff is entered a single time
+        /// </summary>
+        [TestMethod]
+        public void DelayedStartSearchResetWithEmptyTyping()
+        {
+            new TestScheduler().With(shed =>
+            {
+                INavService obj = Mock.Of<INavService>();
+
+                // Return a single paper
+                var paperInfo = Observable.Return(Tuple.Create(new PaperStub() { Title = "title" }, new PaperFullInfo() { Abstract = "abstract", Authors = new string[] { "Authors" } }));
+                IPaperSearch search = Mock.Of<IPaperSearch>(s => s.FindPaper() == paperInfo);
+                ISearchStringParser parser = Mock.Of<ISearchStringParser>(p => p.GetPaperFinders("1234") == Observable.Return(search).Delay(TimeSpan.FromSeconds(3), RxApp.TaskpoolScheduler));
+
+                var vm = new AddCDSPaperViewModel(obj, parser);
+
+                // Initial value access to force subscription.
+                var t = vm.Title;
+                var ab = vm.Abstract;
+                var au = vm.Authors;
+                var sip = vm.SearchInProgress;
+
+                // Start the search, and let it complete.
+                vm.CDSLookupString = "1234";
+                shed.AdvanceByMs(200); // Give it a chance to get going!
+                vm.CDSLookupString = "";
+                shed.AdvanceByMs(600); // Give it a chance to get going!
+                Assert.IsFalse(vm.SearchInProgress, "Just before the timeout should hit");
             });
         }
     }
