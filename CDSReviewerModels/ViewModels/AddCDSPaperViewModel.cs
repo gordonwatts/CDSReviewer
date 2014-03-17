@@ -1,5 +1,6 @@
 ﻿using Caliburn.Micro.Portable;
 using Caliburn.Micro.ReactiveUI;
+using CDSReviewerCore.Data;
 using CDSReviewerModels.ServiceInterfaces;
 using ReactiveUI;
 using System;
@@ -23,19 +24,20 @@ namespace CDSReviewerModels.ViewModels
             _searchParser = parser;
 
             // When we run, look for the first paper, and route its output to our author, etc.
-            _executeSearch = ReactiveCommand.Create();
-            var paper = _executeSearch
-                .Where(x => x is string)
-                .SelectMany(x => _searchParser.GetPaperFinders(x as string))
-                .SelectMany(x => x.FindPaper());
+            _executeSearch = ReactiveCommand.Create(
+                searchString => Observable.Return(searchString)
+                    .Where(x => x is string)
+                    .SelectMany(x => _searchParser.GetPaperFinders(x as string))
+                    .SelectMany(x => x.FindPaper())
+                );
 
-            paper
+            _executeSearch
                 .Select(x => x.Item1.Title)
                 .ToPropertyCM(this, x => x.Title, out _TitleOAPH, "");
-            paper
+            _executeSearch
                 .Select(x => x.Item2.Abstract)
                 .ToPropertyCM(this, x => x.Abstract, out _AbstractOAPH, "");
-            paper
+            _executeSearch
                 .Select(x => x.Item2.Authors)
                 .ToPropertyCM(this, x => x.Authors, out _AuthorsOAPH, new string[0]);
 
@@ -49,14 +51,13 @@ namespace CDSReviewerModels.ViewModels
 
             // When the search is running, make sure the search in progress indicator is off.
             _executeSearch
-                .Select(x => true)
-                .Merge(paper.Select(x => false))
+                .IsExecuting
                 .ToPropertyCM(this, x => x.SearchInProgress, out _SearchInProgressOAPH, false);
 
             // We can only add something when all searches are "good"
-            var cmdGood = _executeSearch
-                .Select(x => false)
-                .Merge(paper.Select(x => true));
+            var cmdGood = _executeSearch.IsExecuting
+                .Select(x => !x)
+                .Merge(Observable.Return(false));
             AddButtonCommand = new ReactiveCommand<bool>(cmdGood, null);
         }
 
@@ -68,7 +69,7 @@ namespace CDSReviewerModels.ViewModels
         /// <summary>
         /// Run the search
         /// </summary>
-        private readonly ReactiveCommand<object> _executeSearch;
+        private readonly ReactiveCommand<Tuple<PaperStub, PaperFullInfo>> _executeSearch;
 
         /// <summary>
         /// The paper searcher, we use it when the user is ready to search.

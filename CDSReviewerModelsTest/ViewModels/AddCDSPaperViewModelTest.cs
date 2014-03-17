@@ -113,7 +113,7 @@ namespace CDSReviewerModelsTest.ViewModels
 
                 // Start the search, and let it complete.
                 vm.CDSLookupString = "1234";
-                shed.AdvanceByMs(501); // Give it a chance to get going!
+                shed.AdvanceByMs(551); // Give it a chance to get going!
                 Assert.IsTrue(vm.SearchInProgress, "just after search started");
                 shed.AdvanceByMs(2 * 1000 + 500);
                 Assert.IsTrue(vm.SearchInProgress, "just after 2.5 seconds in");
