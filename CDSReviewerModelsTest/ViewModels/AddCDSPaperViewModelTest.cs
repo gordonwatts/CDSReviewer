@@ -21,7 +21,8 @@ namespace CDSReviewerModelsTest.ViewModels
         {
             INavService obj = Mock.Of<INavService>();
             ISearchStringParser parser = Mock.Of<ISearchStringParser>();
-            var vm = new AddCDSPaperViewModel(obj, parser);
+            IAddPaper adder = Mock.Of<IAddPaper>();
+            var vm = new AddCDSPaperViewModel(obj, parser, adder);
         }
 
         [TestMethod]
@@ -29,7 +30,8 @@ namespace CDSReviewerModelsTest.ViewModels
         {
             INavService obj = Mock.Of<INavService>();
             ISearchStringParser parser = Mock.Of<ISearchStringParser>();
-            var vm = new AddCDSPaperViewModel(obj, parser);
+            IAddPaper adder = Mock.Of<IAddPaper>();
+            var vm = new AddCDSPaperViewModel(obj, parser, adder);
             bool setit = false;
             vm.PropertyChanged += (sender, args) => { setit = args.PropertyName == "CDSLookupString"; };
             vm.CDSLookupString = "hi there";
@@ -51,8 +53,9 @@ namespace CDSReviewerModelsTest.ViewModels
                 var paperInfo = Observable.Return(Tuple.Create(new PaperStub() { Title = "title" }, new PaperFullInfo() { Abstract = "abstract", Authors = new string[] { "Authors" } }));
                 IPaperSearch search = Mock.Of<IPaperSearch>(s => s.FindPaper() == paperInfo);
                 ISearchStringParser parser = Mock.Of<ISearchStringParser>(p => p.GetPaperFinders("1234") == Observable.Return(search));
+                IAddPaper adder = Mock.Of<IAddPaper>();
 
-                var vm = new AddCDSPaperViewModel(obj, parser);
+                var vm = new AddCDSPaperViewModel(obj, parser, adder);
 
                 // Watch for property changed events
                 var propChanged = new HashSet<string>();
@@ -99,8 +102,9 @@ namespace CDSReviewerModelsTest.ViewModels
                 var paperInfo = Observable.Return(Tuple.Create(new PaperStub() { Title = "title" }, new PaperFullInfo() { Abstract = "abstract", Authors = new string[] { "Authors" } }));
                 IPaperSearch search = Mock.Of<IPaperSearch>(s => s.FindPaper() == paperInfo);
                 ISearchStringParser parser = Mock.Of<ISearchStringParser>(p => p.GetPaperFinders("1234") == Observable.Return(search).Delay(TimeSpan.FromSeconds(3), RxApp.TaskpoolScheduler));
+                IAddPaper adder = Mock.Of<IAddPaper>();
 
-                var vm = new AddCDSPaperViewModel(obj, parser);
+                var vm = new AddCDSPaperViewModel(obj, parser, adder);
 
                 // Initial value access to force subscription.
                 var t = vm.Title;
@@ -136,8 +140,9 @@ namespace CDSReviewerModelsTest.ViewModels
                 var paperInfo = Observable.Return(Tuple.Create(new PaperStub() { Title = "title" }, new PaperFullInfo() { Abstract = "abstract", Authors = new string[] { "Authors" } }));
                 IPaperSearch search = Mock.Of<IPaperSearch>(s => s.FindPaper() == paperInfo);
                 ISearchStringParser parser = Mock.Of<ISearchStringParser>(p => p.GetPaperFinders("1234") == Observable.Return(search).Delay(TimeSpan.FromSeconds(3), RxApp.TaskpoolScheduler));
+                IAddPaper adder = Mock.Of<IAddPaper>();
 
-                var vm = new AddCDSPaperViewModel(obj, parser);
+                var vm = new AddCDSPaperViewModel(obj, parser, adder);
 
                 // Initial value access to force subscription.
                 var t = vm.Title;
@@ -168,8 +173,45 @@ namespace CDSReviewerModelsTest.ViewModels
                 var paperInfo = Observable.Return(Tuple.Create(new PaperStub() { Title = "title" }, new PaperFullInfo() { Abstract = "abstract", Authors = new string[] { "Authors" } }));
                 IPaperSearch search = Mock.Of<IPaperSearch>(s => s.FindPaper() == paperInfo);
                 ISearchStringParser parser = Mock.Of<ISearchStringParser>(p => p.GetPaperFinders("1234") == Observable.Return(search).Delay(TimeSpan.FromSeconds(3), RxApp.TaskpoolScheduler));
+                IAddPaper adder = Mock.Of<IAddPaper>();
 
-                var vm = new AddCDSPaperViewModel(obj, parser);
+                var vm = new AddCDSPaperViewModel(obj, parser, adder);
+
+                // Initial value access to force subscription.
+                var t = vm.Title;
+                var ab = vm.Abstract;
+                var au = vm.Authors;
+                var sip = vm.SearchInProgress;
+
+                // Start the search, and let it complete.
+                vm.CDSLookupString = "1234";
+                shed.AdvanceByMs(200); // Give it a chance to get going!
+                vm.CDSLookupString = "123";
+                shed.AdvanceByMs(459); // Give it a chance to get going!
+                Assert.IsFalse(vm.SearchInProgress, "Just before the timeout should hit");
+                shed.AdvanceByMs(50); // Give it a chance to get going!
+                Assert.IsTrue(vm.SearchInProgress, "Once we've passed the start search");
+            });
+        }
+
+        /// <summary>
+        /// When the add a new page it should make an entry in the DB
+        /// and navagate to the paper display view model.
+        /// </summary>
+        [TestMethod]
+        public void AddNewPaper()
+        {
+            new TestScheduler().With(shed =>
+            {
+                INavService obj = Mock.Of<INavService>();
+
+                // Return a single paper
+                var paperInfo = Observable.Return(Tuple.Create(new PaperStub() { Title = "title" }, new PaperFullInfo() { Abstract = "abstract", Authors = new string[] { "Authors" } }));
+                IPaperSearch search = Mock.Of<IPaperSearch>(s => s.FindPaper() == paperInfo);
+                ISearchStringParser parser = Mock.Of<ISearchStringParser>(p => p.GetPaperFinders("1234") == Observable.Return(search).Delay(TimeSpan.FromSeconds(3), RxApp.TaskpoolScheduler));
+                IAddPaper adder = Mock.Of<IAddPaper>();
+
+                var vm = new AddCDSPaperViewModel(obj, parser, adder);
 
                 // Initial value access to force subscription.
                 var t = vm.Title;
@@ -202,8 +244,9 @@ namespace CDSReviewerModelsTest.ViewModels
                 var paperInfo = Observable.Return(Tuple.Create(new PaperStub() { Title = "title" }, new PaperFullInfo() { Abstract = "abstract", Authors = new string[] { "Authors" } }));
                 IPaperSearch search = Mock.Of<IPaperSearch>(s => s.FindPaper() == paperInfo);
                 ISearchStringParser parser = Mock.Of<ISearchStringParser>(p => p.GetPaperFinders("1234") == Observable.Return(search).Delay(TimeSpan.FromSeconds(3), RxApp.TaskpoolScheduler));
+                IAddPaper adder = Mock.Of<IAddPaper>();
 
-                var vm = new AddCDSPaperViewModel(obj, parser);
+                var vm = new AddCDSPaperViewModel(obj, parser, adder);
 
                 // Initial value access to force subscription.
                 var t = vm.Title;
@@ -231,8 +274,9 @@ namespace CDSReviewerModelsTest.ViewModels
                 var paperInfo = Observable.Return(Tuple.Create(new PaperStub() { Title = "title" }, new PaperFullInfo() { Abstract = "abstract", Authors = new string[] { "Authors" } }));
                 IPaperSearch search = Mock.Of<IPaperSearch>(s => s.FindPaper() == paperInfo);
                 ISearchStringParser parser = Mock.Of<ISearchStringParser>(p => p.GetPaperFinders("1234") == Observable.Return(search));
+                IAddPaper adder = Mock.Of<IAddPaper>();
 
-                var vm = new AddCDSPaperViewModel(obj, parser);
+                var vm = new AddCDSPaperViewModel(obj, parser, adder);
 
                 // Initial value access to force subscription.
                 var t = vm.Title;
@@ -262,8 +306,9 @@ namespace CDSReviewerModelsTest.ViewModels
                 var paperInfo = Observable.Return(Tuple.Create(new PaperStub() { Title = "title" }, new PaperFullInfo() { Abstract = "abstract", Authors = new string[] { "Authors" } }));
                 IPaperSearch search = Mock.Of<IPaperSearch>(s => s.FindPaper() == paperInfo);
                 ISearchStringParser parser = Mock.Of<ISearchStringParser>(p => p.GetPaperFinders("1234") == Observable.Return(search));
+                IAddPaper adder = Mock.Of<IAddPaper>();
 
-                var vm = new AddCDSPaperViewModel(obj, parser);
+                var vm = new AddCDSPaperViewModel(obj, parser, adder);
 
                 // Initial value access to force subscription.
                 var t = vm.Title;

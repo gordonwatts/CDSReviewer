@@ -34,10 +34,12 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ServiceInterfaces\IAddPaper.cs" />
     <Compile Include="ServiceInterfaces\IPaperSearch.cs" />
     <Compile Include="ServiceInterfaces\ISearchStringParser.cs" />
     <Compile Include="ViewModels\AddCDSPaperViewModel.cs" />
     <Compile Include="ViewModels\HomePageViewModel.cs" />
+    <Compile Include="ViewModels\PaperViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -4,6 +4,7 @@ using CDSReviewerCore.Data;
 using CDSReviewerModels.ServiceInterfaces;
 using ReactiveUI;
 using System;
+using System.Reactive;
 using System.Reactive.Linq;
 
 namespace CDSReviewerModels.ViewModels
@@ -18,10 +19,11 @@ namespace CDSReviewerModels.ViewModels
         /// Pass down the navagation service
         /// </summary>
         /// <param name="nav"></param>
-        public AddCDSPaperViewModel(INavService nav, ISearchStringParser parser)
+        public AddCDSPaperViewModel(INavService nav, ISearchStringParser parser, IAddPaper adder)
             : base(nav)
         {
             _searchParser = parser;
+            _paperAdder = adder;
 
             // When we run, look for the first paper, and route its output to our author, etc.
             _executeSearch = ReactiveCommand.Create(
@@ -58,13 +60,36 @@ namespace CDSReviewerModels.ViewModels
             var cmdGood = _executeSearch.IsExecuting
                 .Select(x => !x)
                 .Merge(Observable.Return(false));
-            AddButtonCommand = new ReactiveCommand<bool>(cmdGood, null);
+            AddFoundPaperCommand = ReactiveCommand.Create(cmdGood, _ => Observable.FromAsync(t => _paperAdder.AddPaperLocally(_paperStub, _paperFullInfo)));
+            AddFoundPaperCommand
+                .Subscribe(_ =>
+                {
+                    nav.NavigateToViewModel<PaperViewModel>();
+                });
+
         }
+
+        /// <summary>
+        /// Cache the currently found paper's info
+        /// </summary>
+        private PaperStub _paperStub;
+
+        /// <summary>
+        /// Cache the currently found paper's full info
+        /// </summary>
+        private PaperFullInfo _paperFullInfo;
 
         /// <summary>
         /// Run when we can add a button.
         /// </summary>
-        public readonly ReactiveCommand<bool> AddButtonCommand;
+        public readonly ReactiveCommand<Unit> AddButtonCommand;
+
+        /// <summary>
+        /// Click when a good paper ahs been found to add it to the
+        /// paper database. It will also cause a transition to the
+        /// paper view, so the person can see the thing in detail.
+        /// </summary>
+        public readonly ReactiveCommand<Unit> AddFoundPaperCommand;
 
         /// <summary>
         /// Run the search
@@ -122,5 +147,10 @@ namespace CDSReviewerModels.ViewModels
             get { return _SearchInProgressOAPH.Value; }
         }
         private ObservableAsPropertyHelper<bool> _SearchInProgressOAPH;
+
+        /// <summary>
+        /// The interface to add the paper to the central database
+        /// </summary>
+        private IAddPaper _paperAdder;
     }
 }
