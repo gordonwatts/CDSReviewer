@@ -307,11 +307,12 @@ namespace CDSReviewerModelsTest.ViewModels
         }
 
         [TestMethod]
-        public void DatabaseUpdateWithAddButton()
+        public void DatabaseUpdateAndPageWithAddButton()
         {
             new TestScheduler().With(shed =>
             {
-                INavService obj = Mock.Of<INavService>();
+                var navService = new Mock<INavService>();
+                navService.Setup(n => n.NavigateToViewModel<PaperViewModel>());
 
                 // Return a single paper
                 var pstub = new PaperStub() { Title = "title" };
@@ -323,7 +324,7 @@ namespace CDSReviewerModelsTest.ViewModels
                     a.AddPaperLocally(pstub, pstubfull) == Task.Factory.StartNew(() => 10)
                     );
 
-                var vm = new AddCDSPaperViewModel(obj, parser, adder);
+                var vm = new AddCDSPaperViewModel(navService.Object, parser, adder);
 
                 // Initial value access to force subscription.
                 var t = vm.Title;
@@ -339,9 +340,11 @@ namespace CDSReviewerModelsTest.ViewModels
 
                 // Run the add button
                 vm.AddButtonCommand.Execute("dude");
+                shed.AdvanceByMs(1);
 
                 // Make sure that the adder object was actually called
                 Mock.Get(adder).VerifyAll();
+                navService.VerifyAll();
             });
         }
 

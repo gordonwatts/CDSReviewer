@@ -42,6 +42,12 @@ namespace CDSReviewerModels.ViewModels
             _executeSearch
                 .Select(x => x.Item2.Authors)
                 .ToPropertyCM(this, x => x.Authors, out _AuthorsOAPH, new string[0]);
+            _executeSearch
+                .Subscribe(x =>
+                {
+                    _paperStub = x.Item1;
+                    _paperFullInfo = x.Item2;
+                });
 
             // When the user types in something, we need to trigger a search
             this.ObservableForProperty(p => p.CDSLookupString)
