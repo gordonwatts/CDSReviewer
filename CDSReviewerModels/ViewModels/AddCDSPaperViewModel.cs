@@ -60,8 +60,8 @@ namespace CDSReviewerModels.ViewModels
             var cmdGood = _executeSearch.IsExecuting
                 .Select(x => !x)
                 .Merge(Observable.Return(false));
-            AddFoundPaperCommand = ReactiveCommand.Create(cmdGood, _ => Observable.FromAsync(t => _paperAdder.AddPaperLocally(_paperStub, _paperFullInfo)));
-            AddFoundPaperCommand
+            AddButtonCommand = ReactiveCommand.Create(cmdGood, _ => Observable.FromAsync(t => _paperAdder.AddPaperLocally(_paperStub, _paperFullInfo)));
+            AddButtonCommand
                 .Subscribe(_ =>
                 {
                     nav.NavigateToViewModel<PaperViewModel>();
@@ -83,13 +83,6 @@ namespace CDSReviewerModels.ViewModels
         /// Run when we can add a button.
         /// </summary>
         public readonly ReactiveCommand<Unit> AddButtonCommand;
-
-        /// <summary>
-        /// Click when a good paper ahs been found to add it to the
-        /// paper database. It will also cause a transition to the
-        /// paper view, so the person can see the thing in detail.
-        /// </summary>
-        public readonly ReactiveCommand<Unit> AddFoundPaperCommand;
 
         /// <summary>
         /// Run the search
