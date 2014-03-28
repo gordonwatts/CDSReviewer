@@ -10,6 +10,7 @@ using ReactiveUI.Testing;
 using System;
 using System.Collections.Generic;
 using System.Reactive.Linq;
+using System.Threading.Tasks;
 
 namespace CDSReviewerModelsTest.ViewModels
 {
@@ -302,6 +303,45 @@ namespace CDSReviewerModelsTest.ViewModels
                 Assert.IsFalse(vm.AddButtonCommand.CanExecute(false), "Just before the timeout should hit");
                 shed.AdvanceByMs(50); // Give it a chance to get going!
                 Assert.IsTrue(vm.AddButtonCommand.CanExecute(false), "Once we've passed the start search");
+            });
+        }
+
+        [TestMethod]
+        public void DatabaseUpdateWithAddButton()
+        {
+            new TestScheduler().With(shed =>
+            {
+                INavService obj = Mock.Of<INavService>();
+
+                // Return a single paper
+                var pstub = new PaperStub() { Title = "title" };
+                var pstubfull = new PaperFullInfo() { Abstract = "abstract", Authors = new string[] { "Authors" } };
+                var paperInfo = Observable.Return(Tuple.Create(pstub, pstubfull));
+                IPaperSearch search = Mock.Of<IPaperSearch>(s => s.FindPaper() == paperInfo);
+                ISearchStringParser parser = Mock.Of<ISearchStringParser>(p => p.GetPaperFinders("1234") == Observable.Return(search));
+                IAddPaper adder = Mock.Of<IAddPaper>(a =>
+                    a.AddPaperLocally(pstub, pstubfull) == Task.Factory.StartNew(() => 10)
+                    );
+
+                var vm = new AddCDSPaperViewModel(obj, parser, adder);
+
+                // Initial value access to force subscription.
+                var t = vm.Title;
+                var ab = vm.Abstract;
+                var au = vm.Authors;
+                var sip = vm.SearchInProgress;
+                vm.AddButtonCommand.CanExecute(true);
+
+                // Start the search, and let it complete.
+                vm.CDSLookupString = "1234";
+                shed.AdvanceByMs(510); // Give it a chance to get going!
+                Assert.IsTrue(vm.AddButtonCommand.CanExecute(false), "Once we've passed the start search");
+
+                // Run the add button
+                vm.AddButtonCommand.Execute("dude");
+
+                // Make sure that the adder object was actually called
+                Mock.Get(adder).VerifyAll();
             });
         }
 
