@@ -311,11 +311,17 @@ namespace CDSReviewerModelsTest.ViewModels
         {
             new TestScheduler().With(shed =>
             {
+                var navUriBuilder2 = new Mock<INavUriBuilder<PaperViewModel>>();
+                navUriBuilder2.Setup(n => n.Navigate());
+
+                var navUriBuilder1 = new Mock<INavUriBuilder<PaperViewModel>>();
+                navUriBuilder1.Setup(n => n.WithParam(x => x.PaperID, "1234")).Returns(navUriBuilder2.Object);
+
                 var navService = new Mock<INavService>();
-                navService.Setup(n => n.NavigateToViewModel<PaperViewModel>());
+                navService.Setup(n => n.UriForViewModel<PaperViewModel>()).Returns(navUriBuilder1.Object);
 
                 // Return a single paper
-                var pstub = new PaperStub() { Title = "title" };
+                var pstub = new PaperStub() { Title = "title", ID = "1234" };
                 var pstubfull = new PaperFullInfo() { Abstract = "abstract", Authors = new string[] { "Authors" } };
                 var paperInfo = Observable.Return(Tuple.Create(pstub, pstubfull));
                 IPaperSearch search = Mock.Of<IPaperSearch>(s => s.FindPaper() == paperInfo);
@@ -345,6 +351,8 @@ namespace CDSReviewerModelsTest.ViewModels
                 // Make sure that the adder object was actually called
                 Mock.Get(adder).VerifyAll();
                 navService.VerifyAll();
+                navUriBuilder1.VerifyAll();
+                navUriBuilder2.VerifyAll();
             });
         }
 

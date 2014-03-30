@@ -11,5 +11,11 @@ namespace CDSReviewerModels.ViewModels
         public PaperViewModel(INavService nav)
             : base(nav)
         { }
+
+        /// <summary>
+        /// The ID of the paper we are to display. We use this as a direct
+        /// key into the local database.
+        /// </summary>
+        public string PaperID { get; set; }
     }
 }

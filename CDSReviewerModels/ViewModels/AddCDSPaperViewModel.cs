@@ -70,7 +70,10 @@ namespace CDSReviewerModels.ViewModels
             AddButtonCommand
                 .Subscribe(_ =>
                 {
-                    nav.NavigateToViewModel<PaperViewModel>();
+                    nav
+                        .UriForViewModel<PaperViewModel>()
+                        .WithParam(x => x.PaperID, _paperStub.ID)
+                        .Navigate();
                 });
 
         }
