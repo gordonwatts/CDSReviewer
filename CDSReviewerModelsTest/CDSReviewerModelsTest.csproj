@@ -40,7 +40,7 @@
     </Reference>
     <Reference Include="Caliburn.Micro.Portable, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Caliburn.Micro.Portable.1.0.0-alpha09\lib\portable-net45+windowsphone8+WinRT45\Caliburn.Micro.Portable.dll</HintPath>
+      <HintPath>..\packages\Caliburn.Micro.Portable.1.0.0-alpha10\lib\portable-net45+windowsphone8+WinRT45\Caliburn.Micro.Portable.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Reactive.Testing">
       <HintPath>..\packages\Rx-Testing.2.2.2\lib\net45\Microsoft.Reactive.Testing.dll</HintPath>

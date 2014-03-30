@@ -47,7 +47,7 @@
       <HintPath>..\packages\Caliburn.Micro.Core.2.0.0-beta\lib\portable-net45+sl5+win8+wp8\Caliburn.Micro.dll</HintPath>
     </Reference>
     <Reference Include="Caliburn.Micro.Portable">
-      <HintPath>..\packages\Caliburn.Micro.Portable.1.0.0-alpha09\lib\portable-net45+windowsphone8+WinRT45\Caliburn.Micro.Portable.dll</HintPath>
+      <HintPath>..\packages\Caliburn.Micro.Portable.1.0.0-alpha10\lib\portable-net45+windowsphone8+WinRT45\Caliburn.Micro.Portable.dll</HintPath>
     </Reference>
     <Reference Include="Caliburn.Micro.ReactiveUI">
       <HintPath>..\packages\Caliburn.Micro.ReactiveUI.Utils.1.0.0-alpha05\lib\portable-net45+windowsphone8+WinRT45\Caliburn.Micro.ReactiveUI.dll</HintPath>
