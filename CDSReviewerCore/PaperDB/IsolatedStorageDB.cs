@@ -198,6 +198,16 @@ namespace CDSReviewerCore.PaperDB
         }
 
         /// <summary>
+        /// Return the info for a particular paper ID
+        /// </summary>
+        /// <param name="paperID"></param>
+        /// <returns></returns>
+        public async Task<Tuple<PaperStub, PaperFullInfo>> GetPaperInfoForID(string paperID)
+        {
+            return Tuple.Create((await GetStubInformation()).Where(ps => ps.ID == paperID).First(), await GetFullInfoForID(paperID));
+        }
+
+        /// <summary>
         /// Return the full info for a paper.
         /// </summary>
         /// <param name="paperID"></param>

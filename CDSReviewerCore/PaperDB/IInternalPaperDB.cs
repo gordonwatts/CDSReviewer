@@ -47,5 +47,12 @@ namespace CDSReviewerCore.PaperDB
         /// <param name="paperID"></param>
         /// <returns>The full info, or a null if it isn't found.</returns>
         Task<PaperFullInfo> GetFullInfoForID(string paperID);
+
+        /// <summary>
+        /// Return the paper info for a particular paper.
+        /// </summary>
+        /// <param name="paperID"></param>
+        /// <returns></returns>
+        Task<Tuple<PaperStub, PaperFullInfo>> GetPaperInfoForID(string paperID);
     }
 }

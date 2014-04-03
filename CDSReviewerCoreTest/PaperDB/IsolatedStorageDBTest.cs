@@ -63,6 +63,18 @@ namespace CDSReviewerCoreTest.PaperDB
         }
 
         [TestMethod]
+        public async Task GetBothBack()
+        {
+            IInternalPaperDB paperdb = new IsolatedStorageDB();
+            var p = CreatePaperInfo("CDS1234");
+            await paperdb.Add(p.Item1, p.Item2);
+            var info = await paperdb.GetPaperInfoForID(p.Item1.ID);
+            Assert.IsNotNull(info, "getting back the item");
+            Assert.AreEqual(p.Item2.Abstract, info.Item2.Abstract, "Abstract");
+            Assert.AreEqual(p.Item1.ID, info.Item1.ID, "Abstract");
+        }
+
+        [TestMethod]
         public async Task RetreiveSingleStubList()
         {
             IInternalPaperDB paperdb = new IsolatedStorageDB();
