@@ -19,7 +19,7 @@ namespace CDSReviewerModels.ViewModels
         /// Pass down the navagation service
         /// </summary>
         /// <param name="nav"></param>
-        public AddCDSPaperViewModel(INavService nav, ISearchStringParser parser, IAddPaper adder)
+        public AddCDSPaperViewModel(INavService nav, ISearchStringParser parser, ILocalDBAccess adder)
             : base(nav)
         {
             _searchParser = parser;
@@ -153,6 +153,6 @@ namespace CDSReviewerModels.ViewModels
         /// <summary>
         /// The interface to add the paper to the central database
         /// </summary>
-        private IAddPaper _paperAdder;
+        private ILocalDBAccess _paperAdder;
     }
 }

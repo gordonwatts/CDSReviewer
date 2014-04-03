@@ -18,7 +18,7 @@ namespace CDSReviewerModels.ViewModels
         /// Initialize the paper view model
         /// </summary>
         /// <param name="nav"></param>
-        public PaperViewModel(INavService nav, IAddPaper localI)
+        public PaperViewModel(INavService nav, ILocalDBAccess localI)
             : base(nav)
         {
 

@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace CDSReviewerModels.ServiceInterfaces
 {
-    public interface IAddPaper
+    public interface ILocalDBAccess
     {
         /// <summary>
         /// Add a paper to the central database. Do nothing if the paper

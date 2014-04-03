@@ -24,7 +24,7 @@ namespace CDSReviewerModelsTest.ViewModels
                 var psf = new PaperFullInfo() { Abstract = "this abstract", Authors = new string[] { "this author" } };
 
                 var nav = Mock.Of<INavService>();
-                var addr = Mock.Of<IAddPaper>(a => a.LookupPaperLocally("1234") == Task.Factory.StartNew(() => Tuple.Create(ps, psf)));
+                var addr = Mock.Of<ILocalDBAccess>(a => a.LookupPaperLocally("1234") == Task.Factory.StartNew(() => Tuple.Create(ps, psf)));
 
                 var pvobj = new PaperViewModel(nav, addr);
                 var at = pvobj.Title;

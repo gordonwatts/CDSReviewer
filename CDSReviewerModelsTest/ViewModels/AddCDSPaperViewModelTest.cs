@@ -22,7 +22,7 @@ namespace CDSReviewerModelsTest.ViewModels
         {
             INavService obj = Mock.Of<INavService>();
             ISearchStringParser parser = Mock.Of<ISearchStringParser>();
-            IAddPaper adder = Mock.Of<IAddPaper>();
+            ILocalDBAccess adder = Mock.Of<ILocalDBAccess>();
             var vm = new AddCDSPaperViewModel(obj, parser, adder);
         }
 
@@ -31,7 +31,7 @@ namespace CDSReviewerModelsTest.ViewModels
         {
             INavService obj = Mock.Of<INavService>();
             ISearchStringParser parser = Mock.Of<ISearchStringParser>();
-            IAddPaper adder = Mock.Of<IAddPaper>();
+            ILocalDBAccess adder = Mock.Of<ILocalDBAccess>();
             var vm = new AddCDSPaperViewModel(obj, parser, adder);
             bool setit = false;
             vm.PropertyChanged += (sender, args) => { setit = args.PropertyName == "CDSLookupString"; };
@@ -54,7 +54,7 @@ namespace CDSReviewerModelsTest.ViewModels
                 var paperInfo = Observable.Return(Tuple.Create(new PaperStub() { Title = "title" }, new PaperFullInfo() { Abstract = "abstract", Authors = new string[] { "Authors" } }));
                 IPaperSearch search = Mock.Of<IPaperSearch>(s => s.FindPaper() == paperInfo);
                 ISearchStringParser parser = Mock.Of<ISearchStringParser>(p => p.GetPaperFinders("1234") == Observable.Return(search));
-                IAddPaper adder = Mock.Of<IAddPaper>();
+                ILocalDBAccess adder = Mock.Of<ILocalDBAccess>();
 
                 var vm = new AddCDSPaperViewModel(obj, parser, adder);
 
@@ -103,7 +103,7 @@ namespace CDSReviewerModelsTest.ViewModels
                 var paperInfo = Observable.Return(Tuple.Create(new PaperStub() { Title = "title" }, new PaperFullInfo() { Abstract = "abstract", Authors = new string[] { "Authors" } }));
                 IPaperSearch search = Mock.Of<IPaperSearch>(s => s.FindPaper() == paperInfo);
                 ISearchStringParser parser = Mock.Of<ISearchStringParser>(p => p.GetPaperFinders("1234") == Observable.Return(search).Delay(TimeSpan.FromSeconds(3), RxApp.TaskpoolScheduler));
-                IAddPaper adder = Mock.Of<IAddPaper>();
+                ILocalDBAccess adder = Mock.Of<ILocalDBAccess>();
 
                 var vm = new AddCDSPaperViewModel(obj, parser, adder);
 
@@ -141,7 +141,7 @@ namespace CDSReviewerModelsTest.ViewModels
                 var paperInfo = Observable.Return(Tuple.Create(new PaperStub() { Title = "title" }, new PaperFullInfo() { Abstract = "abstract", Authors = new string[] { "Authors" } }));
                 IPaperSearch search = Mock.Of<IPaperSearch>(s => s.FindPaper() == paperInfo);
                 ISearchStringParser parser = Mock.Of<ISearchStringParser>(p => p.GetPaperFinders("1234") == Observable.Return(search).Delay(TimeSpan.FromSeconds(3), RxApp.TaskpoolScheduler));
-                IAddPaper adder = Mock.Of<IAddPaper>();
+                ILocalDBAccess adder = Mock.Of<ILocalDBAccess>();
 
                 var vm = new AddCDSPaperViewModel(obj, parser, adder);
 
@@ -179,7 +179,7 @@ namespace CDSReviewerModelsTest.ViewModels
                     p => p.GetPaperFinders("1234") == Observable.Return(search1).Delay(TimeSpan.FromSeconds(3), RxApp.TaskpoolScheduler)
                         && p.GetPaperFinders("123") == Observable.Return(search2).Delay(TimeSpan.FromSeconds(3), RxApp.TaskpoolScheduler)
                     );
-                IAddPaper adder = Mock.Of<IAddPaper>();
+                ILocalDBAccess adder = Mock.Of<ILocalDBAccess>();
 
                 var vm = new AddCDSPaperViewModel(obj, parser, adder);
 
@@ -220,7 +220,7 @@ namespace CDSReviewerModelsTest.ViewModels
                     p => p.GetPaperFinders("1234") == Observable.Return(search1).Delay(TimeSpan.FromSeconds(3), RxApp.TaskpoolScheduler)
                         && p.GetPaperFinders("123") == Observable.Return(search2).Delay(TimeSpan.FromSeconds(3), RxApp.TaskpoolScheduler)
                     );
-                IAddPaper adder = Mock.Of<IAddPaper>();
+                ILocalDBAccess adder = Mock.Of<ILocalDBAccess>();
 
                 var vm = new AddCDSPaperViewModel(obj, parser, adder);
 
@@ -255,7 +255,7 @@ namespace CDSReviewerModelsTest.ViewModels
                 var paperInfo = Observable.Return(Tuple.Create(new PaperStub() { Title = "title" }, new PaperFullInfo() { Abstract = "abstract", Authors = new string[] { "Authors" } }));
                 IPaperSearch search = Mock.Of<IPaperSearch>(s => s.FindPaper() == paperInfo);
                 ISearchStringParser parser = Mock.Of<ISearchStringParser>(p => p.GetPaperFinders("1234") == Observable.Return(search).Delay(TimeSpan.FromSeconds(3), RxApp.TaskpoolScheduler));
-                IAddPaper adder = Mock.Of<IAddPaper>();
+                ILocalDBAccess adder = Mock.Of<ILocalDBAccess>();
 
                 var vm = new AddCDSPaperViewModel(obj, parser, adder);
 
@@ -285,7 +285,7 @@ namespace CDSReviewerModelsTest.ViewModels
                 var paperInfo = Observable.Return(Tuple.Create(new PaperStub() { Title = "title" }, new PaperFullInfo() { Abstract = "abstract", Authors = new string[] { "Authors" } }));
                 IPaperSearch search = Mock.Of<IPaperSearch>(s => s.FindPaper() == paperInfo);
                 ISearchStringParser parser = Mock.Of<ISearchStringParser>(p => p.GetPaperFinders("1234") == Observable.Return(search));
-                IAddPaper adder = Mock.Of<IAddPaper>();
+                ILocalDBAccess adder = Mock.Of<ILocalDBAccess>();
 
                 var vm = new AddCDSPaperViewModel(obj, parser, adder);
 
@@ -326,7 +326,7 @@ namespace CDSReviewerModelsTest.ViewModels
                 var paperInfo = Observable.Return(Tuple.Create(pstub, pstubfull));
                 IPaperSearch search = Mock.Of<IPaperSearch>(s => s.FindPaper() == paperInfo);
                 ISearchStringParser parser = Mock.Of<ISearchStringParser>(p => p.GetPaperFinders("1234") == Observable.Return(search));
-                IAddPaper adder = Mock.Of<IAddPaper>(a =>
+                ILocalDBAccess adder = Mock.Of<ILocalDBAccess>(a =>
                     a.AddPaperLocally(pstub, pstubfull) == Task.Factory.StartNew(() => 10)
                     );
 
@@ -367,7 +367,7 @@ namespace CDSReviewerModelsTest.ViewModels
                 var paperInfo = Observable.Return(Tuple.Create(new PaperStub() { Title = "title" }, new PaperFullInfo() { Abstract = "abstract", Authors = new string[] { "Authors" } }));
                 IPaperSearch search = Mock.Of<IPaperSearch>(s => s.FindPaper() == paperInfo);
                 ISearchStringParser parser = Mock.Of<ISearchStringParser>(p => p.GetPaperFinders("1234") == Observable.Return(search));
-                IAddPaper adder = Mock.Of<IAddPaper>();
+                ILocalDBAccess adder = Mock.Of<ILocalDBAccess>();
 
                 var vm = new AddCDSPaperViewModel(obj, parser, adder);
 
