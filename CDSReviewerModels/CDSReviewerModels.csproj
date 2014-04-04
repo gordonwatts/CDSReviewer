@@ -39,6 +39,8 @@
     <Compile Include="ServiceInterfaces\ISearchStringParser.cs" />
     <Compile Include="ViewModels\AddCDSPaperViewModel.cs" />
     <Compile Include="ViewModels\HomePageViewModel.cs" />
+    <Compile Include="ViewModels\PaperListViewModel.cs" />
+    <Compile Include="ViewModels\PaperTileViewModel.cs" />
     <Compile Include="ViewModels\PaperViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
   </ItemGroup>

@@ -1,5 +1,6 @@
 ﻿using CDSReviewerCore.Data;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace CDSReviewerModels.ServiceInterfaces
@@ -22,5 +23,11 @@ namespace CDSReviewerModels.ServiceInterfaces
         /// <param name="paperID"></param>
         /// <returns></returns>
         Task<Tuple<PaperStub, PaperFullInfo>> LookupPaperLocally(string paperID);
+
+        /// <summary>
+        /// Returns all papers from the local database
+        /// </summary>
+        /// <returns>Enumerable list of all papers</returns>
+        Task<IEnumerable<Tuple<PaperStub, PaperFullInfo>>> GetAllPapers();
     }
 }
