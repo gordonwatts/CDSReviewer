@@ -25,16 +25,23 @@ namespace CDSReviewerModels.ViewModels
         {
             Observable.FromAsync(paperDB.GetAllPapers)
                 .Select(x => new ObservableCollection<Tuple<PaperStub, PaperFullInfo>>(x))
+                .Select(x =>
+                {
+                    _paperListRaw = x;
+                    return _paperListRaw.CreateDerivedCollection(t => new PaperTileViewModel(nav, t.Item1, t.Item2));
+                })
                 .ToPropertyCM(this, x => x.PaperList, out _PaperListOAPH, null);
         }
+
+        private ObservableCollection<Tuple<PaperStub, PaperFullInfo>> _paperListRaw;
 
         /// <summary>
         /// The list of papers this view model is showing
         /// </summary>
-        public ObservableCollection<Tuple<PaperStub, PaperFullInfo>> PaperList
+        public IReactiveDerivedList<PaperTileViewModel> PaperList
         {
             get { return _PaperListOAPH.Value; }
         }
-        private ObservableAsPropertyHelper<ObservableCollection<Tuple<PaperStub, PaperFullInfo>>> _PaperListOAPH;
+        private ObservableAsPropertyHelper<IReactiveDerivedList<PaperTileViewModel>> _PaperListOAPH;
     }
 }
