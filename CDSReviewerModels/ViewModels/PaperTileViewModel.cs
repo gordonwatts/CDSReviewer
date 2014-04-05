@@ -1,4 +1,5 @@
-﻿using Caliburn.Micro.Portable;
+﻿using Caliburn.Micro;
+using Caliburn.Micro.Portable;
 using Caliburn.Micro.ReactiveUI;
 using CDSReviewerCore.Data;
 using ReactiveUI;
@@ -10,10 +11,9 @@ namespace CDSReviewerModels.ViewModels
     /// Simple view model that provates read-only data to a user control that displays
     /// some very basic infomration about a paper.
     /// </summary>
-    public class PaperTileViewModel : ViewModelBase
+    public class PaperTileViewModel : PropertyChangedBase
     {
         public PaperTileViewModel(INavService nav, PaperStub basicInfo, PaperFullInfo fullInfo)
-            : base(nav)
         {
             this._basicInfo = basicInfo;
             this._fullInfo = fullInfo;
