@@ -7,7 +7,7 @@ using ReactiveUI;
 using System;
 using System.Collections.ObjectModel;
 using System.Reactive.Linq;
-namespace CDSReviewerCore.ViewModels
+namespace CDSReviewewrModels.ViewModels
 {
     /// <summary>
     /// Show a list of papers that we've been given to look at. Just their titles, etc (easy info) so that

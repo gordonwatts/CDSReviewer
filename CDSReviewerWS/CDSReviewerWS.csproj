@@ -187,6 +187,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CDSReviewerCore\CDSReviewerCore.csproj">
+      <Project>{a8c7dacd-1842-46e8-9f1a-82b1ff5e5790}</Project>
+      <Name>CDSReviewerCore</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CDSReviewerModels\CDSReviewerModels.csproj">
       <Project>{ea04228a-4dea-49a1-a5b3-3aeff37a22f1}</Project>
       <Name>CDSReviewerModels</Name>

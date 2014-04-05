@@ -5,7 +5,7 @@ using CDSReviewerCore.Data;
 using ReactiveUI;
 using System.Reactive.Linq;
 
-namespace CDSReviewerCore.ViewModels
+namespace CDSReviewewrModels.ViewModels
 {
     /// <summary>
     /// Simple view model that provates read-only data to a user control that displays

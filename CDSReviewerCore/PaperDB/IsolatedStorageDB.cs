@@ -11,7 +11,7 @@ namespace CDSReviewerCore.PaperDB
     /// <summary>
     /// The device local database, implemented in isolated storage.
     /// </summary>
-    class IsolatedStorageDB : IInternalPaperDB
+    public class IsolatedStorageDB : IInternalPaperDB
     {
         /// <summary>
         /// Add or update a data item in our local storage.

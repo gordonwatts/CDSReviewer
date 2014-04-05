@@ -1,7 +1,7 @@
 ﻿using Caliburn.Micro;
 using Caliburn.Micro.Portable;
 
-namespace CDSReviewerCore.ViewModels
+namespace CDSReviewewrModels.ViewModels
 {
     /// <summary>
     /// The home page view model

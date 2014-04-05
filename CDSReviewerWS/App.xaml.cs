@@ -1,6 +1,9 @@
 ﻿using Caliburn.Micro;
-using CDSReviewerCore.ViewModels;
+using CDSReviewerCore.PaperDB;
+using CDSReviewerCore.ServiceInterfaces;
+using CDSReviewerCore.Services.CDS;
 using CDSReviewerWS.Views;
+using CDSReviewewrModels.ViewModels;
 using System;
 using System.Reflection;
 using Windows.ApplicationModel.Activation;
@@ -53,11 +56,14 @@ namespace CDSReviewerWS
             // Singletons that help us out
             _container = new WinRTContainer();
             _container.RegisterWinRTServices();
+            _container.Singleton<ISearchStringParser, CDSSearchStringParser>();
+            _container.Singleton<IInternalPaperDB, IsolatedStorageDB>();
 
             // The various views, explicitly declared
             _container
                 .PerRequest<HomePageViewModel>()
                 .PerRequest<AddCDSPaperViewModel>()
+                .PerRequest<PaperViewModel>()
                 ;
 
             // View models and views are in different locations, so we can be more "cross-platform".

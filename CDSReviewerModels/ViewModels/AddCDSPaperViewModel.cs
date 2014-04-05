@@ -8,7 +8,7 @@ using System;
 using System.Reactive;
 using System.Reactive.Linq;
 
-namespace CDSReviewerCore.ViewModels
+namespace CDSReviewewrModels.ViewModels
 {
     /// <summary>
     /// View model for adding a paper to the archive. Takes care of look up and
