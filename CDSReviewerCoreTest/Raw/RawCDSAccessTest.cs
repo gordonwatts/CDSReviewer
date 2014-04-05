@@ -24,8 +24,7 @@ namespace CDSReviewerCoreTest
         public async Task DeletedDocumentNumber()
         {
             // 22 - has been deleted
-            var ra = new RawCDSAccess();
-            var r = ra.GetDocumentMetadata(22);
+            var r = RawCDSAccess.GetDocumentMetadata(22);
             var actual = await r;
             Assert.Inconclusive();
         }
@@ -35,8 +34,7 @@ namespace CDSReviewerCoreTest
         public async Task NotPresentDocumentNumber()
         {
             // 22636207 - not created yet
-            var ra = new RawCDSAccess();
-            var r = ra.GetDocumentMetadata(22636207);
+            var r = RawCDSAccess.GetDocumentMetadata(22636207);
 
             var actual = await r;
             Assert.Inconclusive();
@@ -46,8 +44,7 @@ namespace CDSReviewerCoreTest
         public async Task BasicPublicDocumentMetadata()
         {
             // https://cds.cern.ch/record/1637926?ln=en - Weird turbulence paper, that is fast with CDS.
-            var ra = new RawCDSAccess();
-            var r = ra.GetDocumentMetadata(1637926);
+            var r = RawCDSAccess.GetDocumentMetadata(1637926);
             Assert.IsNotNull(r);
 
             var actual = await r;
@@ -73,8 +70,7 @@ namespace CDSReviewerCoreTest
         {
             // https://cds.cern.ch/record/1512932?ln=en - Cal Ratio Internal Note
             LoadUserPassword(); // This is private access, so make sure that goes through.
-            var ra = new RawCDSAccess();
-            var r = ra.GetDocumentMetadata(1512932);
+            var r = RawCDSAccess.GetDocumentMetadata(1512932);
             Assert.IsNotNull(r);
 
             var actual = await r;
@@ -87,8 +83,7 @@ namespace CDSReviewerCoreTest
         public async Task CountNumberOfReturnItemsFromMetadataRequest()
         {
             // https://cds.cern.ch/record/1637926?ln=en - Weird turbulence paper, that is fast with CDS.
-            var ra = new RawCDSAccess();
-            var r = ra.GetDocumentMetadata(1637926);
+            var r = RawCDSAccess.GetDocumentMetadata(1637926);
 
             var c = await r.Count();
             Assert.AreEqual(1, c, "# of items that came back from the web request");
@@ -100,12 +95,11 @@ namespace CDSReviewerCoreTest
             // Get a file associated with a workshop https://cds.cern.ch/record/1007190
             // https://cds.cern.ch/record/1007190/files/ard-2005-013.pdf
 
-            var ra = new RawCDSAccess();
             var doc = new dummyDoc() { Title = "dude", MainDocument = new Uri(@"https://cds.cern.ch/record/1007190/files/ard-2005-013.pdf") };
             var localFile = new FileInfo(@"GetPublicFile.pdf");
             using (var rdr = localFile.Create())
             {
-                var r = await ra.GetMainDocumentHttp(doc, rdr);
+                var r = await RawCDSAccess.GetMainDocumentHttp(doc, rdr);
                 Assert.IsNotNull(r);
                 rdr.Close();
             }
@@ -123,8 +117,7 @@ namespace CDSReviewerCoreTest
         public async Task MetadataForUnauthorizedRecord()
         {
             // https://cds.cern.ch/record/1512932?ln=en - Cal Ratio Internal Note
-            var ra = new RawCDSAccess();
-            var r = await ra.GetDocumentMetadata(1512932);
+            var r = await RawCDSAccess.GetDocumentMetadata(1512932);
         }
 
         /// <summary>

@@ -20,7 +20,7 @@ namespace CDSReviewerCore.Raw
         /// </summary>
         /// <param name="docID">Document number in CDS</param>
         /// <returns></returns>
-        public IObservable<IDocumentMetadata> GetDocumentMetadata(int docID)
+        public static IObservable<IDocumentMetadata> GetDocumentMetadata(int docID)
         {
             // Create the web request to get this item.
 
@@ -39,7 +39,7 @@ namespace CDSReviewerCore.Raw
         /// </summary>
         /// <param name="marc21XML"></param>
         /// <returns></returns>
-        private IDocumentMetadata ParseToMD(string marc21XML)
+        private static IDocumentMetadata ParseToMD(string marc21XML)
         {
             return MARC21Parser.ParseForMetadata(marc21XML);
         }
@@ -50,7 +50,7 @@ namespace CDSReviewerCore.Raw
         /// <param name="doc">The document metatdata, the main document will be pulled from there.</param>
         /// <param name="writeto">A writable stream. It will be closed and disposed of when this returns.</param>
         /// <returns>A unit sequence with a single item is returned when the request has completed.</returns>
-        internal IObservable<Unit> GetMainDocumentHttp(IDocumentMetadata doc, Stream writeto)
+        internal static IObservable<Unit> GetMainDocumentHttp(IDocumentMetadata doc, Stream writeto)
         {
             var wr = WebRequest.CreateHttp(doc.MainDocument);
 
