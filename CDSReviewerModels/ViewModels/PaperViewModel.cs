@@ -6,7 +6,7 @@ using ReactiveUI;
 using System;
 using System.Reactive.Linq;
 
-namespace CDSReviewewrModels.ViewModels
+namespace CDSReviewerModels.ViewModels
 {
     /// <summary>
     /// Display detailed infomration for a single paper, including access

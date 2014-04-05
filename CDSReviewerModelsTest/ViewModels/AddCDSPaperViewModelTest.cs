@@ -2,7 +2,7 @@
 using CDSReviewerCore.Data;
 using CDSReviewerCore.PaperDB;
 using CDSReviewerCore.ServiceInterfaces;
-using CDSReviewewrModels.ViewModels;
+using CDSReviewerModels.ViewModels;
 using Microsoft.Reactive.Testing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;

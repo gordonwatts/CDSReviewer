@@ -2,8 +2,8 @@
 using CDSReviewerCore.PaperDB;
 using CDSReviewerCore.ServiceInterfaces;
 using CDSReviewerCore.Services.CDS;
+using CDSReviewerModels.ViewModels;
 using CDSReviewerWS.Views;
-using CDSReviewewrModels.ViewModels;
 using System;
 using System.Reflection;
 using Windows.ApplicationModel.Activation;

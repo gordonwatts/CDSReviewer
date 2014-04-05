@@ -1,7 +1,7 @@
 namespace CDSReviewerWP
 {
     using Caliburn.Micro;
-    using CDSReviewewrModels.ViewModels;
+    using CDSReviewerModels.ViewModels;
     using Microsoft.Phone.Controls;
     using System;
     using System.Collections.Generic;

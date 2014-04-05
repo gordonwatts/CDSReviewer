@@ -1,7 +1,7 @@
 ﻿using Caliburn.Micro;
 using Caliburn.Micro.Portable;
 
-namespace CDSReviewewrModels.ViewModels
+namespace CDSReviewerModels.ViewModels
 {
     /// <summary>
     /// Base class for common items for our view models.

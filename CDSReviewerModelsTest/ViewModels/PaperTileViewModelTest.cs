@@ -1,6 +1,6 @@
 ﻿using Caliburn.Micro.Portable;
 using CDSReviewerCore.Data;
-using CDSReviewewrModels.ViewModels;
+using CDSReviewerModels.ViewModels;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
