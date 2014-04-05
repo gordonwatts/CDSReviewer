@@ -2,7 +2,7 @@
 using Caliburn.Micro.Portable;
 using Caliburn.Micro.ReactiveUI;
 using CDSReviewerCore.Data;
-using CDSReviewerModels.ServiceInterfaces;
+using CDSReviewerCore.PaperDB;
 using ReactiveUI;
 using System;
 using System.Collections.ObjectModel;
@@ -20,10 +20,10 @@ namespace CDSReviewerModels.ViewModels
         /// </summary>
         /// <param name="nav"></param>
         /// <param name="paperDB"></param>
-        public PaperListViewModel(INavService nav, ILocalDBAccess paperDB)
+        public PaperListViewModel(INavService nav, IInternalPaperDB paperDB)
             : base(nav)
         {
-            Observable.FromAsync(paperDB.GetAllPapers)
+            Observable.FromAsync(paperDB.GetFullInformation)
                 .Select(x => new ObservableCollection<Tuple<PaperStub, PaperFullInfo>>(x))
                 .Select(x =>
                 {

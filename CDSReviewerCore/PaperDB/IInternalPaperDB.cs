@@ -8,7 +8,7 @@ namespace CDSReviewerCore.PaperDB
     /// <summary>
     /// The internal paper database engine
     /// </summary>
-    interface IInternalPaperDB
+    public interface IInternalPaperDB
     {
         /// <summary>
         /// Add a new paper into the database, or update an existing paper in the database

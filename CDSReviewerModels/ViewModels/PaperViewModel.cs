@@ -1,7 +1,7 @@
 ﻿using Caliburn.Micro.Portable;
 using Caliburn.Micro.ReactiveUI;
 using CDSReviewerCore.Data;
-using CDSReviewerModels.ServiceInterfaces;
+using CDSReviewerCore.PaperDB;
 using ReactiveUI;
 using System;
 using System.Reactive.Linq;
@@ -18,7 +18,7 @@ namespace CDSReviewerModels.ViewModels
         /// Initialize the paper view model
         /// </summary>
         /// <param name="nav"></param>
-        public PaperViewModel(INavService nav, ILocalDBAccess localI)
+        public PaperViewModel(INavService nav, IInternalPaperDB localI)
             : base(nav)
         {
 
@@ -26,7 +26,7 @@ namespace CDSReviewerModels.ViewModels
 
             _findPaper = ReactiveCommand.Create(
                 idString => Observable.Return(idString as string)
-                    .SelectMany(id => Observable.FromAsync(_ => localI.LookupPaperLocally(id)))
+                    .SelectMany(id => Observable.FromAsync(_ => localI.GetPaperInfoForID(id)))
                 );
 
             // When the lookup is done, fill all the various properties

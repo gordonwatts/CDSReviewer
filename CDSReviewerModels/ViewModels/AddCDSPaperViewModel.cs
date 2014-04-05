@@ -1,6 +1,7 @@
 ﻿using Caliburn.Micro.Portable;
 using Caliburn.Micro.ReactiveUI;
 using CDSReviewerCore.Data;
+using CDSReviewerCore.PaperDB;
 using CDSReviewerModels.ServiceInterfaces;
 using ReactiveUI;
 using System;
@@ -19,7 +20,7 @@ namespace CDSReviewerModels.ViewModels
         /// Pass down the navagation service
         /// </summary>
         /// <param name="nav"></param>
-        public AddCDSPaperViewModel(INavService nav, ISearchStringParser parser, ILocalDBAccess adder)
+        public AddCDSPaperViewModel(INavService nav, ISearchStringParser parser, IInternalPaperDB adder)
             : base(nav)
         {
             _searchParser = parser;
@@ -66,7 +67,7 @@ namespace CDSReviewerModels.ViewModels
             var cmdGood = _executeSearch.IsExecuting
                 .Select(x => !x)
                 .Merge(Observable.Return(false));
-            AddButtonCommand = ReactiveCommand.Create(cmdGood, _ => Observable.FromAsync(t => _paperAdder.AddPaperLocally(_paperStub, _paperFullInfo)));
+            AddButtonCommand = ReactiveCommand.Create(cmdGood, _ => Observable.FromAsync(t => _paperAdder.Add(_paperStub, _paperFullInfo)));
             AddButtonCommand
                 .Subscribe(_ =>
                 {
@@ -153,6 +154,6 @@ namespace CDSReviewerModels.ViewModels
         /// <summary>
         /// The interface to add the paper to the central database
         /// </summary>
-        private ILocalDBAccess _paperAdder;
+        private IInternalPaperDB _paperAdder;
     }
 }

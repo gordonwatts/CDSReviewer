@@ -1,6 +1,6 @@
 ﻿using Caliburn.Micro.Portable;
 using CDSReviewerCore.Data;
-using CDSReviewerModels.ServiceInterfaces;
+using CDSReviewerCore.PaperDB;
 using CDSReviewerModels.ViewModels;
 using Microsoft.Reactive.Testing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -25,7 +25,7 @@ namespace CDSReviewerModelsTest.ViewModels
             {
                 var nav = Mock.Of<INavService>();
                 var allPapersTask = Task<IEnumerable<Tuple<PaperStub, PaperFullInfo>>>.Factory.StartNew(() => new Tuple<PaperStub, PaperFullInfo>[] { });
-                var db = Mock.Of<ILocalDBAccess>(dba => dba.GetAllPapers() == allPapersTask);
+                var db = Mock.Of<IInternalPaperDB>(dba => dba.GetFullInformation() == allPapersTask);
 
                 var list = new PaperListViewModel(nav, db);
                 sched.AdvanceByMs(1);
@@ -43,7 +43,7 @@ namespace CDSReviewerModelsTest.ViewModels
             {
                 var nav = Mock.Of<INavService>();
                 var allPapersTask = Task<IEnumerable<Tuple<PaperStub, PaperFullInfo>>>.Factory.StartNew(() => new Tuple<PaperStub, PaperFullInfo>[] { Tuple.Create(new PaperStub() { ID = "1234", Title = "hi" }, new PaperFullInfo() { Abstract = "abs", Authors = new string[] { "hi" } }) });
-                var db = Mock.Of<ILocalDBAccess>(dba => dba.GetAllPapers() == allPapersTask);
+                var db = Mock.Of<IInternalPaperDB>(dba => dba.GetFullInformation() == allPapersTask);
 
                 var list = new PaperListViewModel(nav, db);
                 sched.AdvanceByMs(1);
