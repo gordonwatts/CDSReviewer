@@ -1,5 +1,5 @@
 ﻿using Caliburn.Micro;
-using CDSReviewerModels.ViewModels;
+using CDSReviewerCore.ViewModels;
 using CDSReviewerWS.Views;
 using System;
 using System.Reflection;

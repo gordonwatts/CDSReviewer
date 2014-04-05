@@ -55,6 +55,8 @@
     </Compile>
     <Compile Include="Raw\RawCDSAccess.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\IPaperSearch.cs" />
+    <Compile Include="Services\ISearchStringParser.cs" />
     <Compile Include="Utils.cs" />
   </ItemGroup>
   <ItemGroup>

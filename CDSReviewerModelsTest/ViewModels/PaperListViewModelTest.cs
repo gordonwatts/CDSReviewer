@@ -1,7 +1,7 @@
 ﻿using Caliburn.Micro.Portable;
 using CDSReviewerCore.Data;
 using CDSReviewerCore.PaperDB;
-using CDSReviewerModels.ViewModels;
+using CDSReviewerCore.ViewModels;
 using Microsoft.Reactive.Testing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;

@@ -2,13 +2,13 @@
 using Caliburn.Micro.ReactiveUI;
 using CDSReviewerCore.Data;
 using CDSReviewerCore.PaperDB;
-using CDSReviewerModels.ServiceInterfaces;
+using CDSReviewerCore.ServiceInterfaces;
 using ReactiveUI;
 using System;
 using System.Reactive;
 using System.Reactive.Linq;
 
-namespace CDSReviewerModels.ViewModels
+namespace CDSReviewerCore.ViewModels
 {
     /// <summary>
     /// View model for adding a paper to the archive. Takes care of look up and

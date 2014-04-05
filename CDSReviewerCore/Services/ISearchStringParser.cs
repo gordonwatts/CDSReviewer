@@ -1,5 +1,5 @@
 ﻿using System;
-namespace CDSReviewerModels.ServiceInterfaces
+namespace CDSReviewerCore.ServiceInterfaces
 {
     /// <summary>
     /// How to parse a search string that the user enters, and how to resolve it

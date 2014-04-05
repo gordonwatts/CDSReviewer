@@ -1,6 +1,6 @@
 ﻿using CDSReviewerCore.Data;
 using System;
-namespace CDSReviewerModels.ServiceInterfaces
+namespace CDSReviewerCore.ServiceInterfaces
 {
     /// <summary>
     /// Return a list of papers for a particular search string
