@@ -1,6 +1,9 @@
 namespace CDSReviewerWP
 {
     using Caliburn.Micro;
+    using CDSReviewerCore.PaperDB;
+    using CDSReviewerCore.ServiceInterfaces;
+    using CDSReviewerCore.Services.CDS;
     using CDSReviewerModels.ViewModels;
     using Microsoft.Phone.Controls;
     using System;
@@ -34,11 +37,14 @@ namespace CDSReviewerWP
             // Register our custom navigation service.
             var nav = container.GetInstance<INavigationService>();
             Caliburn.Micro.Portable.WP8.NavService.RegisterINavService(container);
+            container.Singleton<ISearchStringParser, CDSSearchStringParser>();
+            container.Singleton<IInternalPaperDB, IsolatedStorageDB>();
 
             // Declare the pages we are going to be visiting
             container
                 .PerRequest<HomePageViewModel>()
                 .PerRequest<AddCDSPaperViewModel>()
+                .PerRequest<PaperViewModel>()
                 ;
 
             // We are crossing projects for views and view models. Set that up for the
