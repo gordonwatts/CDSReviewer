@@ -22,5 +22,21 @@
             <Button x:Name="GoBack" Style="{StaticResource NavigationBackButtonNormalStyle}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
             <TextBlock Text="Add CDS Paper" Style="{StaticResource HeaderTextBlockStyle}" Grid.Column="1" VerticalAlignment="Center" />
         </Grid>
+        <Grid Margin="0" Grid.Row="1">
+        	<TextBlock HorizontalAlignment="Left" Margin="22,19,0,0" TextWrapping="Wrap" Text="Enter a CDS URL or ID number" VerticalAlignment="Top"/>
+        	<Grid VerticalAlignment="Top" Margin="50,50,100,0" >
+        		<Grid.ColumnDefinitions>
+        			<ColumnDefinition/>
+        			<ColumnDefinition Width="50"/>
+        		</Grid.ColumnDefinitions>
+        		<TextBox x:Name="CDSLookupString" TextWrapping="Wrap" VerticalAlignment="Top" FontFamily="Global User Interface" Margin="0"/>
+        		<ProgressRing x:Name="SearchInProgress" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="1" Width="32" Height="32"/>
+        	</Grid>
+        	<StackPanel Margin="22,127,22,0" VerticalAlignment="Top">
+        		<TextBlock x:Name="Title" TextWrapping="Wrap" FontSize="21.333"/>
+        		<TextBlock x:Name="Abstract" TextWrapping="Wrap" FontSize="14.667" Margin="0,20,0,0"/>
+        	</StackPanel>
+        	<Button x:Name="AddButton" Content="Add Paper" HorizontalAlignment="Right" Margin="0,0,50,50" VerticalAlignment="Bottom" FontFamily="Global User Interface" Height="38"/>
+        </Grid>
     </Grid>
 </Page>
