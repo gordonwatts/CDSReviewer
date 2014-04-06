@@ -26,7 +26,7 @@ namespace CDSReviewerCore.Services.CDS
             }
 
             // Is it a valid URL?
-            var rFinder = new Regex("^https://cds.cern.ch/record/(?<id>[0-9]+)(\\?|/.*)$");
+            var rFinder = new Regex("^http(s*)://cds.cern.ch/record/(?<id>[0-9]+)(\\?|/).*$");
             var g = rFinder.Match(searchstring);
             if (g.Success)
             {

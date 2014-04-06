@@ -36,6 +36,18 @@ namespace CDSReviewerCoreTest.Services.CDS
         }
 
         [TestMethod]
+        public async Task cdsURL3()
+        {
+            string uid = "http://cds.cern.ch/record/1693481?ln=en";
+            var schr = new CDSSearchStringParser();
+            var all = await schr.GetPaperFinders(uid).ToList().FirstAsync();
+            Assert.AreEqual(1, all.Count);
+            var s = all[0] as CDSPaperSearch;
+            Assert.IsNotNull(s);
+            Assert.AreEqual(1693481, s.ID);
+        }
+
+        [TestMethod]
         public async Task cdsID()
         {
             string uid = "1512932";
