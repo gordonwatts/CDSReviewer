@@ -243,6 +243,43 @@ namespace CDSReviewerModelsTest.ViewModels
         }
 
         /// <summary>
+        /// A paper that has been deleted will cause an exception. So we want to
+        /// hide all those that happen...
+        /// </summary>
+        [TestMethod]
+        public void SearchForDeletedPaper()
+        {
+            new TestScheduler().With(shed =>
+            {
+                INavService obj = Mock.Of<INavService>();
+
+                var searchMoq = new Mock<IPaperSearch>();
+                searchMoq.Setup(ps => ps.FindPaper()).Returns(() => Observable.Throw<Tuple<PaperStub, PaperFullInfo>>(new InvalidOperationException()));
+
+                // Return a single paper
+                ISearchStringParser parser = Mock.Of<ISearchStringParser>(
+                    p => p.GetPaperFinders("1234") == Observable.Return(searchMoq.Object)
+                    );
+                var adder = Mock.Of<IInternalPaperDB>();
+
+                var vm = new AddCDSPaperViewModel(obj, parser, adder);
+
+                // Initial value access to force subscription.
+                var t = vm.Title;
+                var ab = vm.Abstract;
+                var au = vm.Authors;
+                var sip = vm.SearchInProgress;
+
+                // Start the search, and let it complete.
+                vm.CDSLookupString = "1234";
+                shed.AdvanceByMs(459); // Give it a chance to get going!
+                shed.AdvanceByMs(50); // Give it a chance to get going!
+                Assert.IsFalse(vm.SearchInProgress, "Once we've passed the start search");
+                Assert.AreEqual("", vm.Title);
+            });
+        }
+
+        /// <summary>
         /// Make sure the search starts 500 ms after the stuff is entered a single time
         /// </summary>
         [TestMethod]

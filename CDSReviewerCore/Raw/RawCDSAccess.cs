@@ -29,7 +29,7 @@ namespace CDSReviewerCore.Raw
             var s = Observable
                     .StartAsync(tnk => CERNWebAccess.GetWebResponse(reqUri))
                     .SelectMany(resp => Observable.StartAsync(tkn => resp.Content.ReadAsStringAsync()))
-                    .Select(ParseToMD);
+                    .SelectMany(xml => Observable.Start(() => ParseToMD(xml)));
             return s;
         }
 

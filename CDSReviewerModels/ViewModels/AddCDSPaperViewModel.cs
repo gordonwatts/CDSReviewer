@@ -31,7 +31,7 @@ namespace CDSReviewerModels.ViewModels
                 searchString => Observable.Return(searchString)
                     .Where(x => x is string)
                     .SelectMany(x => _searchParser.GetPaperFinders(x as string))
-                    .SelectMany(x => x.FindPaper())
+                    .SelectMany(x => x.FindPaper().Catch(Observable.Empty<Tuple<PaperStub, PaperFullInfo>>()))
                 );
 
             _executeSearch
