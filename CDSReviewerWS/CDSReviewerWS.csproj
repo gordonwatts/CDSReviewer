@@ -161,6 +161,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Caliburn.Micro.Portable.1.0.0-alpha10\lib\WinRT451\Caliburn.Micro.Portable.WS.dll</HintPath>
     </Reference>
+    <Reference Include="CERNSSOPCL, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\CERNSSO.1.1.3\lib\windows8\CERNSSOPCL.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Threading.Tasks, Version=1.0.12.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Microsoft.Bcl.Async.1.0.166\lib\win8\Microsoft.Threading.Tasks.dll</HintPath>
