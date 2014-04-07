@@ -91,6 +91,63 @@ namespace CDSReviewerModelsTest.ViewModels
         }
 
         /// <summary>
+        /// When a good search completes all the items are updated (like Title). When a second search starts, they should
+        /// all be cleared.
+        /// </summary>
+        [TestMethod]
+        public void GoodSearchFollowedByBad()
+        {
+            new TestScheduler().With(shed =>
+            {
+                INavService obj = Mock.Of<INavService>();
+
+                // Return a single paper
+                var paperInfo = Observable.Return(Tuple.Create(new PaperStub() { Title = "title" }, new PaperFullInfo() { Abstract = "abstract", Authors = new string[] { "Authors" } }));
+                var nullPaperInfo = Observable.Empty<Tuple<PaperStub, PaperFullInfo>>();
+                IPaperSearch search = Mock.Of<IPaperSearch>(s => s.FindPaper() == paperInfo);
+                IPaperSearch nullSearch = Mock.Of<IPaperSearch>(s => s.FindPaper() == nullPaperInfo);
+                ISearchStringParser parser = Mock.Of<ISearchStringParser>(p =>
+                    p.GetPaperFinders("1234") == Observable.Return(search)
+                    && p.GetPaperFinders("123") == Observable.Return(nullSearch).Delay(TimeSpan.FromMilliseconds(100), RxApp.TaskpoolScheduler)
+                    );
+                var adder = Mock.Of<IInternalPaperDB>();
+
+                var vm = new AddCDSPaperViewModel(obj, parser, adder);
+
+                // Initial values shoudl be set. ALso causes the subscription.
+                Assert.AreEqual("", vm.Title, "inital title");
+                Assert.AreEqual("", vm.Abstract, "initial abstract");
+                Assert.AreEqual(0, vm.Authors.Length, "# of initial authors");
+                Assert.IsFalse(vm.SearchInProgress, "Search spec");
+
+                // Start the search, and let it complete. We'll get good stuff populated.
+                vm.CDSLookupString = "1234";
+                shed.AdvanceByMs(6000);
+
+                // Restart the search for something "bad".
+                vm.CDSLookupString = "123";
+
+                // Before the search actually starts, nothing should happen.
+                shed.AdvanceByMs(450);
+                Assert.AreEqual("title", vm.Title);
+
+                // But, once it has started, then everything bad should happen.
+                shed.AdvanceByMs(55);
+                Assert.IsTrue(vm.SearchInProgress);
+                Assert.AreEqual("", vm.Title);
+                Assert.AreEqual("", vm.Abstract);
+                Assert.AreEqual(0, vm.Authors.Length);
+
+                // Make sure, once the search is done, and since it is bad, that things remain empty.
+                shed.AdvanceByMs(1000);
+                Assert.IsFalse(vm.SearchInProgress);
+                Assert.AreEqual("", vm.Title);
+                Assert.AreEqual("", vm.Abstract);
+                Assert.AreEqual(0, vm.Authors.Length);
+            });
+        }
+
+        /// <summary>
         /// Test search busy indicator
         /// </summary>
         [TestMethod]
