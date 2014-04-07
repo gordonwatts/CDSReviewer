@@ -67,8 +67,8 @@ namespace CDSReviewerModels.ViewModels
             var cmdGood = _executeSearch.IsExecuting
                 .Select(x => !x)
                 .Merge(Observable.Return(false));
-            AddButtonCommand = ReactiveCommand.Create(cmdGood, _ => Observable.FromAsync(t => _paperAdder.Add(_paperStub, _paperFullInfo)));
-            AddButtonCommand
+            _addButtonCommand = ReactiveCommand.Create(cmdGood, _ => Observable.FromAsync(t => _paperAdder.Add(_paperStub, _paperFullInfo)));
+            _addButtonCommand
                 .Subscribe(_ =>
                 {
                     nav
@@ -92,7 +92,8 @@ namespace CDSReviewerModels.ViewModels
         /// <summary>
         /// Run when we can add a button.
         /// </summary>
-        public readonly ReactiveCommand<Unit> AddButtonCommand;
+        public ReactiveCommand<Unit> AddButtonCommand { get { return _addButtonCommand; } }
+        public readonly ReactiveCommand<Unit> _addButtonCommand;
 
         /// <summary>
         /// Run the search

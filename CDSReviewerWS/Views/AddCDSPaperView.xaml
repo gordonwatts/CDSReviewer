@@ -36,7 +36,7 @@
         		<TextBlock x:Name="Title" TextWrapping="Wrap" FontSize="21.333"/>
         		<TextBlock x:Name="Abstract" TextWrapping="Wrap" FontSize="14.667" Margin="0,20,0,0"/>
         	</StackPanel>
-        	<Button x:Name="AddButton" Content="Add Paper" HorizontalAlignment="Right" Margin="0,0,50,50" VerticalAlignment="Bottom" FontFamily="Global User Interface" Height="38"/>
+        	<Button x:Name="AddButton" Command="{Binding AddButtonCommand}" Content="Add Paper" HorizontalAlignment="Right" Margin="0,0,50,50" VerticalAlignment="Bottom" FontFamily="Global User Interface" Height="38"/>
         </Grid>
     </Grid>
 </Page>
