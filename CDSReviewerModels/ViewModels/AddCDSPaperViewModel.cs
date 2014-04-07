@@ -57,7 +57,7 @@ namespace CDSReviewerModels.ViewModels
                 .Select(x => x.Item1.Title)
                 .Merge(emptyTitle);
             titleSet
-                .ToPropertyCM(this, x => x.Title, out _TitleOAPH, "");
+                .ToPropertyCM(this, x => x.PaperTitle, out _TitleOAPH, "");
 
             _executeSearch
                 .Select(x => x.Item2.Abstract)
@@ -137,7 +137,7 @@ namespace CDSReviewerModels.ViewModels
         /// <summary>
         /// The title that is found from a search.
         /// </summary>
-        public string Title
+        public string PaperTitle
         {
             get { return _TitleOAPH.Value; }
         }

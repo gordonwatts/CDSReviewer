@@ -33,7 +33,7 @@
         		<ProgressRing x:Name="SearchInProgress" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="1" Width="32" Height="32"/>
         	</Grid>
         	<StackPanel Margin="22,127,22,0" VerticalAlignment="Top">
-        		<TextBlock x:Name="Title" TextWrapping="Wrap" FontSize="21.333"/>
+        		<TextBlock x:Name="PaperTitle" TextWrapping="Wrap" FontSize="21.333"/>
         		<TextBlock x:Name="Abstract" TextWrapping="Wrap" FontSize="14.667" Margin="0,20,0,0"/>
         	</StackPanel>
         	<Button x:Name="AddButton" Command="{Binding AddButtonCommand}" Content="Add Paper" HorizontalAlignment="Right" Margin="0,0,50,50" VerticalAlignment="Bottom" FontFamily="Global User Interface" Height="38"/>

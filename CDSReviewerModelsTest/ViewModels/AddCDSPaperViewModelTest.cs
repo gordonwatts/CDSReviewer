@@ -64,7 +64,7 @@ namespace CDSReviewerModelsTest.ViewModels
                 vm.PropertyChanged += (sender, args) => { propChanged.Add(args.PropertyName); };
 
                 // Initial values shoudl be set. ALso causes the subscription.
-                Assert.AreEqual("", vm.Title, "inital title");
+                Assert.AreEqual("", vm.PaperTitle, "inital title");
                 Assert.AreEqual("", vm.Abstract, "initial abstract");
                 Assert.AreEqual(0, vm.Authors.Length, "# of initial authors");
                 Assert.IsFalse(vm.SearchInProgress, "Search spec");
@@ -75,7 +75,7 @@ namespace CDSReviewerModelsTest.ViewModels
 
                 // Did the results of the search get through?
                 Assert.IsFalse(vm.SearchInProgress, "Search spec");
-                Assert.AreEqual("title", vm.Title, "searched for title");
+                Assert.AreEqual("title", vm.PaperTitle, "searched for title");
                 Assert.AreEqual("abstract", vm.Abstract, "searched for abstract");
                 Assert.AreEqual(1, vm.Authors.Length, "Searched for authors");
                 Assert.AreEqual("Authors", vm.Authors[0], "Searched for authors");
@@ -115,7 +115,7 @@ namespace CDSReviewerModelsTest.ViewModels
                 var vm = new AddCDSPaperViewModel(obj, parser, adder);
 
                 // Initial values shoudl be set. ALso causes the subscription.
-                Assert.AreEqual("", vm.Title, "inital title");
+                Assert.AreEqual("", vm.PaperTitle, "inital title");
                 Assert.AreEqual("", vm.Abstract, "initial abstract");
                 Assert.AreEqual(0, vm.Authors.Length, "# of initial authors");
                 Assert.IsFalse(vm.SearchInProgress, "Search spec");
@@ -129,19 +129,19 @@ namespace CDSReviewerModelsTest.ViewModels
 
                 // Before the search actually starts, nothing should happen.
                 shed.AdvanceByMs(450);
-                Assert.AreEqual("title", vm.Title);
+                Assert.AreEqual("title", vm.PaperTitle);
 
                 // But, once it has started, then everything bad should happen.
                 shed.AdvanceByMs(55);
                 Assert.IsTrue(vm.SearchInProgress);
-                Assert.AreEqual("", vm.Title);
+                Assert.AreEqual("", vm.PaperTitle);
                 Assert.AreEqual("", vm.Abstract);
                 Assert.AreEqual(0, vm.Authors.Length);
 
                 // Make sure, once the search is done, and since it is bad, that things remain empty.
                 shed.AdvanceByMs(1000);
                 Assert.IsFalse(vm.SearchInProgress);
-                Assert.AreEqual("", vm.Title);
+                Assert.AreEqual("", vm.PaperTitle);
                 Assert.AreEqual("", vm.Abstract);
                 Assert.AreEqual(0, vm.Authors.Length);
             });
@@ -166,7 +166,7 @@ namespace CDSReviewerModelsTest.ViewModels
                 var vm = new AddCDSPaperViewModel(obj, parser, adder);
 
                 // Initial value access to force subscription.
-                var t = vm.Title;
+                var t = vm.PaperTitle;
                 var ab = vm.Abstract;
                 var au = vm.Authors;
                 var sip = vm.SearchInProgress;
@@ -204,7 +204,7 @@ namespace CDSReviewerModelsTest.ViewModels
                 var vm = new AddCDSPaperViewModel(obj, parser, adder);
 
                 // Initial value access to force subscription.
-                var t = vm.Title;
+                var t = vm.PaperTitle;
                 var ab = vm.Abstract;
                 var au = vm.Authors;
                 var sip = vm.SearchInProgress;
@@ -242,7 +242,7 @@ namespace CDSReviewerModelsTest.ViewModels
                 var vm = new AddCDSPaperViewModel(obj, parser, adder);
 
                 // Initial value access to force subscription.
-                var t = vm.Title;
+                var t = vm.PaperTitle;
                 var ab = vm.Abstract;
                 var au = vm.Authors;
                 var sip = vm.SearchInProgress;
@@ -283,7 +283,7 @@ namespace CDSReviewerModelsTest.ViewModels
                 var vm = new AddCDSPaperViewModel(obj, parser, adder);
 
                 // Initial value access to force subscription.
-                var t = vm.Title;
+                var t = vm.PaperTitle;
                 var ab = vm.Abstract;
                 var au = vm.Authors;
                 var sip = vm.SearchInProgress;
@@ -322,7 +322,7 @@ namespace CDSReviewerModelsTest.ViewModels
                 var vm = new AddCDSPaperViewModel(obj, parser, adder);
 
                 // Initial value access to force subscription.
-                var t = vm.Title;
+                var t = vm.PaperTitle;
                 var ab = vm.Abstract;
                 var au = vm.Authors;
                 var sip = vm.SearchInProgress;
@@ -332,7 +332,7 @@ namespace CDSReviewerModelsTest.ViewModels
                 shed.AdvanceByMs(459); // Give it a chance to get going!
                 shed.AdvanceByMs(50); // Give it a chance to get going!
                 Assert.IsFalse(vm.SearchInProgress, "Once we've passed the start search");
-                Assert.AreEqual("", vm.Title);
+                Assert.AreEqual("", vm.PaperTitle);
             });
         }
 
@@ -358,7 +358,7 @@ namespace CDSReviewerModelsTest.ViewModels
                 var vm = new AddCDSPaperViewModel(obj, parser, adder);
 
                 // Initial value access to force subscription.
-                var t = vm.Title;
+                var t = vm.PaperTitle;
                 var ab = vm.Abstract;
                 var au = vm.Authors;
                 var sip = vm.SearchInProgress;
@@ -392,7 +392,7 @@ namespace CDSReviewerModelsTest.ViewModels
                 var vm = new AddCDSPaperViewModel(obj, parser, adder);
 
                 // Initial value access to force subscription.
-                var t = vm.Title;
+                var t = vm.PaperTitle;
                 var ab = vm.Abstract;
                 var au = vm.Authors;
                 var sip = vm.SearchInProgress;
@@ -426,7 +426,7 @@ namespace CDSReviewerModelsTest.ViewModels
                 var vm = new AddCDSPaperViewModel(obj, parser, adder);
 
                 // Initial value access to force subscription.
-                var t = vm.Title;
+                var t = vm.PaperTitle;
                 var ab = vm.Abstract;
                 var au = vm.Authors;
                 var sip = vm.SearchInProgress;
@@ -457,7 +457,7 @@ namespace CDSReviewerModelsTest.ViewModels
                 var vm = new AddCDSPaperViewModel(obj, parser, adder);
 
                 // Initial value access to force subscription.
-                var t = vm.Title;
+                var t = vm.PaperTitle;
                 var ab = vm.Abstract;
                 var au = vm.Authors;
                 var sip = vm.SearchInProgress;
@@ -487,7 +487,7 @@ namespace CDSReviewerModelsTest.ViewModels
                 var vm = new AddCDSPaperViewModel(obj, parser, adder);
 
                 // Initial value access to force subscription.
-                var t = vm.Title;
+                var t = vm.PaperTitle;
                 var ab = vm.Abstract;
                 var au = vm.Authors;
                 var sip = vm.SearchInProgress;
@@ -530,7 +530,7 @@ namespace CDSReviewerModelsTest.ViewModels
                 var vm = new AddCDSPaperViewModel(navService.Object, parser, adder);
 
                 // Initial value access to force subscription.
-                var t = vm.Title;
+                var t = vm.PaperTitle;
                 var ab = vm.Abstract;
                 var au = vm.Authors;
                 var sip = vm.SearchInProgress;
@@ -569,7 +569,7 @@ namespace CDSReviewerModelsTest.ViewModels
                 var vm = new AddCDSPaperViewModel(obj, parser, adder);
 
                 // Initial value access to force subscription.
-                var t = vm.Title;
+                var t = vm.PaperTitle;
                 var ab = vm.Abstract;
                 var au = vm.Authors;
                 var sip = vm.SearchInProgress;
