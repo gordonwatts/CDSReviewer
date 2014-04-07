@@ -26,7 +26,38 @@ namespace CDSReviewerCoreTest
             // 22 - has been deleted
             var r = RawCDSAccess.GetDocumentMetadata(22);
             var actual = await r;
-            Assert.Inconclusive();
+        }
+
+        [TestMethod]
+        public async Task CatchDeletedDocumentException()
+        {
+            // 22 - has been deleted
+            var r = RawCDSAccess.GetDocumentMetadata(22).Catch(Observable.Empty<IDocumentMetadata>());
+            var actual = await r.Count();
+            Assert.AreEqual(0, actual);
+        }
+
+        /// <summary>
+        /// Dummy function to return a string after a search.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        private IObservable<string> FindPaper(int id)
+        {
+            return RawCDSAccess.GetDocumentMetadata(id)
+                .Select(x => "hi there");
+        }
+
+        [TestMethod]
+        public async Task CatchDeletedDocumentExceptionAfterSelect()
+        {
+            // 22 - has been deleted
+            var id = Observable.Return(22);
+            var strs = id
+                .SelectMany(i => FindPaper(i).Catch(Observable.Empty<string>()));
+
+            var actual = await strs.Count();
+            Assert.AreEqual(0, actual);
         }
 
         [TestMethod]
