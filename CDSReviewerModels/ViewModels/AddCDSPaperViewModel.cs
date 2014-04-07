@@ -53,18 +53,22 @@ namespace CDSReviewerModels.ViewModels
 
             // Several places where we will be wanting to update the
             // various properties we are going after...
-            _executeSearch
+            var titleSet = _executeSearch
                 .Select(x => x.Item1.Title)
-                .Merge(emptyTitle)
+                .Merge(emptyTitle);
+            titleSet
                 .ToPropertyCM(this, x => x.Title, out _TitleOAPH, "");
+
             _executeSearch
                 .Select(x => x.Item2.Abstract)
                 .Merge(emptyAbstract)
                 .ToPropertyCM(this, x => x.Abstract, out _AbstractOAPH, "");
+
             _executeSearch
                 .Select(x => x.Item2.Authors)
                 .Merge(emptyAuthors)
                 .ToPropertyCM(this, x => x.Authors, out _AuthorsOAPH, new string[0]);
+
             _executeSearch
                 .Subscribe(x =>
                 {
@@ -79,9 +83,8 @@ namespace CDSReviewerModels.ViewModels
                 .ToPropertyCM(this, x => x.SearchInProgress, out _SearchInProgressOAPH, false);
 
             // We can only add something when all searches are "good"
-            var cmdGood = _executeSearch.IsExecuting
-                .Select(x => !x)
-                .Merge(Observable.Return(false));
+            var cmdGood = titleSet
+                .Select(x => x != "");
             _addButtonCommand = ReactiveCommand.Create(cmdGood, _ => Observable.FromAsync(t => _paperAdder.Add(_paperStub, _paperFullInfo)));
             _addButtonCommand
                 .Subscribe(_ =>
