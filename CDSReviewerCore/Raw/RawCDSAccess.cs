@@ -27,8 +27,8 @@ namespace CDSReviewerCore.Raw
             var reqUri = new Uri(string.Format("https://cds.cern.ch/record/{0}/export/xm?ln=en", docID));
 
             var s = Observable
-                    .StartAsync(tnk => CERNWebAccess.GetWebResponse(reqUri))
-                    .SelectMany(resp => Observable.StartAsync(tkn => resp.Content.ReadAsStringAsync()))
+                    .FromAsync(tnk => CERNWebAccess.GetWebResponse(reqUri))
+                    .SelectMany(resp => Observable.FromAsync(tkn => resp.Content.ReadAsStringAsync()))
                     .Select(ParseToMD);
             return s;
         }
@@ -55,11 +55,11 @@ namespace CDSReviewerCore.Raw
             var wr = WebRequest.CreateHttp(doc.MainDocument);
 
             var s = Observable
-                .StartAsync(tnk => Task.Factory.FromAsync<WebResponse>(wr.BeginGetResponse, wr.EndGetResponse, null))
+                .FromAsync(tnk => Task.Factory.FromAsync<WebResponse>(wr.BeginGetResponse, wr.EndGetResponse, null))
                 .Select(resp => resp.GetResponseStream())
                 .SelectMany(resp => Observable.Using(
                     () => new CompositeDisposable(writeto, resp),
-                    strm => Observable.StartAsync(tkn => resp.CopyToAsync(writeto))))
+                    strm => Observable.FromAsync(tkn => resp.CopyToAsync(writeto))))
                 .Select(r => Unit.Default);
             return s;
         }
