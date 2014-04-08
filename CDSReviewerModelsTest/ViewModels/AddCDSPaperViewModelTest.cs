@@ -82,7 +82,7 @@ namespace CDSReviewerModelsTest.ViewModels
 
                 // Make sure prop changed was called correctly!
                 Assert.AreEqual(5, propChanged.Count, "# of properties");
-                Assert.IsTrue(propChanged.Contains("Title"), "title");
+                Assert.IsTrue(propChanged.Contains("PaperTitle"), "title");
                 Assert.IsTrue(propChanged.Contains("Authors"), "Authors");
                 Assert.IsTrue(propChanged.Contains("Abstract"), "Abstract");
                 Assert.IsTrue(propChanged.Contains("CDSLookupString"), "CDSLookupString");
