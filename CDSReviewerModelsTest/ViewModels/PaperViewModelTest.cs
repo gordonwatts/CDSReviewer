@@ -27,7 +27,7 @@ namespace CDSReviewerModelsTest.ViewModels
                 var addr = Mock.Of<IInternalPaperDB>(a => a.GetPaperInfoForID("1234") == Task.Factory.StartNew(() => Tuple.Create(ps, psf)));
 
                 var pvobj = new PaperViewModel(nav, addr);
-                var at = pvobj.Title;
+                var at = pvobj.PaperTitle;
                 var ab = pvobj.Abstract;
                 var ath = pvobj.Authors;
 
@@ -35,7 +35,7 @@ namespace CDSReviewerModelsTest.ViewModels
 
                 shed.AdvanceByMs(1);
 
-                Assert.AreEqual("this title", pvobj.Title);
+                Assert.AreEqual("this title", pvobj.PaperTitle);
                 Assert.AreEqual("this abstract", pvobj.Abstract);
                 Assert.AreEqual(1, pvobj.Authors.Length);
                 Assert.AreEqual("this author", pvobj.Authors[0]);

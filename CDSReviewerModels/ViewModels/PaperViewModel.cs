@@ -32,7 +32,7 @@ namespace CDSReviewerModels.ViewModels
             // When the lookup is done, fill all the various properties
             _findPaper
                 .Select(x => x.Item1.Title)
-                .ToPropertyCM(this, x => x.Title, out _TitleOAPH, "");
+                .ToPropertyCM(this, x => x.PaperTitle, out _TitleOAPH, "");
             _findPaper
                 .Select(x => x.Item2.Abstract)
                 .ToPropertyCM(this, x => x.Abstract, out _AbstractOAPH, "");
@@ -64,7 +64,7 @@ namespace CDSReviewerModels.ViewModels
         /// <summary>
         /// The title that is found from a search.
         /// </summary>
-        public string Title
+        public string PaperTitle
         {
             get { return _TitleOAPH.Value; }
         }
