@@ -8,7 +8,10 @@ namespace CDSReviewerModels.ViewModels
     /// </summary>
     public class ViewModelBase : Screen
     {
-        private INavService _nav;
+        /// <summary>
+        /// The navigation service, if anyone below needs to use it!
+        /// </summary>
+        protected INavService _nav;
         public ViewModelBase(INavService nav)
         {
             _nav = nav;
