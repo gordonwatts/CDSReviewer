@@ -64,6 +64,8 @@ namespace CDSReviewerWS
                 .PerRequest<HomePageViewModel>()
                 .PerRequest<AddCDSPaperViewModel>()
                 .PerRequest<PaperViewModel>()
+                .PerRequest<PaperTileViewModel>()
+                .PerRequest<PaperTileView>()
                 ;
 
             // View models and views are in different locations, so we can be more "cross-platform".

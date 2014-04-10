@@ -15,6 +15,7 @@
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{BC8A1FFA-BEE3-4634-8014-F334798102B3};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <PackageCertificateKeyFile>CDSReviewerWS_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <ExpressionBlendVersion>12.0.41212.0</ExpressionBlendVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -112,6 +113,9 @@
     <Compile Include="Views\HomePageView.xaml.cs">
       <DependentUpon>HomePageView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\PaperTileView.xaml.cs">
+      <DependentUpon>PaperTileView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\PaperView.xaml.cs">
       <DependentUpon>PaperView.xaml</DependentUpon>
     </Compile>
@@ -141,6 +145,10 @@
     <Page Include="Views\HomePageView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\PaperTileView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\PaperView.xaml">
       <SubType>Designer</SubType>

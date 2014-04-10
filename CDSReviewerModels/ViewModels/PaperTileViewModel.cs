@@ -19,7 +19,9 @@ namespace CDSReviewerModels.ViewModels
             this._fullInfo = fullInfo;
 
             Observable.Return(_basicInfo.Title)
-                .ToPropertyCM(this, x => x.Title, out _TitleOAPH, "");
+                .ToPropertyCM(this, x => x.PaperTitle, out _TitleOAPH, "");
+            Observable.Return(_fullInfo.Abstract)
+                .ToPropertyCM(this, x => x.Abstract, out _AbstractOAPH, "");
         }
 
         readonly PaperStub _basicInfo;
@@ -29,10 +31,29 @@ namespace CDSReviewerModels.ViewModels
         /// <summary>
         /// The title for the paper
         /// </summary>
-        public string Title
+        public string PaperTitle
         {
             get { return _TitleOAPH.Value; }
         }
         private ObservableAsPropertyHelper<string> _TitleOAPH;
+
+        /// <summary>
+        /// The abstract for a paper
+        /// </summary>
+        public string Abstract
+        {
+            get { return _AbstractOAPH.Value; }
+        }
+        private ObservableAsPropertyHelper<string> _AbstractOAPH;
+
+        /// <summary>
+        /// Return title as a string representation. Mostly for hacking and
+        /// getting things working quickly.
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return PaperTitle;
+        }
     }
 }

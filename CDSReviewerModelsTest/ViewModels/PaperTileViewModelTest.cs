@@ -18,7 +18,7 @@ namespace CDSReviewerModelsTest.ViewModels
 
             var tile = new PaperTileViewModel(nav, basicInfo, fullInfo);
 
-            Assert.AreEqual("paper title", tile.Title);
+            Assert.AreEqual("paper title", tile.PaperTitle);
 
         }
     }
