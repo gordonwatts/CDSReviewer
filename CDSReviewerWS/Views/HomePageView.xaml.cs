@@ -13,5 +13,10 @@ namespace CDSReviewerWS.Views
         {
             this.InitializeComponent();
         }
+
+        public void ForkItUp(object sender, ItemClickEventArgs args)
+        {
+            // How do I get this information back to the view model?
+        }
     }
 }

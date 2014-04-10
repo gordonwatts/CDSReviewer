@@ -29,6 +29,14 @@ namespace CDSReviewerModels.ViewModels
         readonly PaperFullInfo _fullInfo;
 
         /// <summary>
+        /// Get the paperID - not meant for using in UI since it can't update!
+        /// </summary>
+        public string PaperID
+        {
+            get { return _basicInfo.ID; }
+        }
+
+        /// <summary>
         /// The title for the paper
         /// </summary>
         public string PaperTitle

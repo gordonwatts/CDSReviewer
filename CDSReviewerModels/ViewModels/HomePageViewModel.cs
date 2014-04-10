@@ -29,6 +29,18 @@ namespace CDSReviewerModels.ViewModels
                     return _paperListRaw.CreateDerivedCollection(t => new PaperTileViewModel(nav, t.Item1, t.Item2));
                 })
                 .ToPropertyCM(this, x => x.PaperList, out _PaperListOAPH, null);
+
+#if false
+            // If they select a particular item, off we go to the page!
+            var NavigateAway = this.ObservableForProperty(p => p.SelectedItem)
+                .Where(x => x != null)
+                .Select(x => x.Value)
+                .Where(x => x != null)
+                .Select(x => x as PaperTileViewModel)
+                .Where(x => x != null);
+
+            NavigateAway.Subscribe(x => _nav.UriForViewModel<PaperViewModel>().WithParam(pv => pv.PaperID, x.PaperID).Navigate());
+#endif
         }
 
         private ObservableCollection<Tuple<PaperStub, PaperFullInfo>> _paperListRaw;
@@ -41,6 +53,8 @@ namespace CDSReviewerModels.ViewModels
             get { return _PaperListOAPH.Value; }
         }
         private ObservableAsPropertyHelper<IReactiveDerivedList<PaperTileViewModel>> _PaperListOAPH;
+
+
 
         /// <summary>
         /// Move away to the add new document view.

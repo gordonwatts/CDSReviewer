@@ -26,7 +26,7 @@
         		<ColumnDefinition Width="26*"/>
         		<ColumnDefinition Width="657*"/>
         	</Grid.ColumnDefinitions>
-            <GridView x:Name="PaperList" Margin="0" Grid.Column="1"/>
+            <GridView x:Name="PaperList" Margin="0" Grid.Column="1" IsItemClickEnabled="True" ItemClick="ForkItUp"/>
         </Grid>
 
     </Grid>
