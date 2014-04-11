@@ -2,6 +2,7 @@
 using Caliburn.Micro.ReactiveUI;
 using CDSReviewerCore.Data;
 using CDSReviewerCore.PaperDB;
+using CDSReviewerCore.ViewModels;
 using ReactiveUI;
 using System;
 using System.Collections.ObjectModel;
@@ -21,6 +22,8 @@ namespace CDSReviewerModels.ViewModels
         public HomePageViewModel(INavService nav, IInternalPaperDB paperDB)
             : base(nav)
         {
+            // Load up the list of papers to display
+
             Observable.FromAsync(paperDB.GetFullInformation)
                 .Select(x => new ObservableCollection<Tuple<PaperStub, PaperFullInfo>>(x))
                 .Select(x =>
@@ -30,17 +33,13 @@ namespace CDSReviewerModels.ViewModels
                 })
                 .ToPropertyCM(this, x => x.PaperList, out _PaperListOAPH, null);
 
-#if false
-            // If they select a particular item, off we go to the page!
-            var NavigateAway = this.ObservableForProperty(p => p.SelectedItem)
-                .Where(x => x != null)
-                .Select(x => x.Value)
-                .Where(x => x != null)
-                .Select(x => x as PaperTileViewModel)
-                .Where(x => x != null);
-
-            NavigateAway.Subscribe(x => _nav.UriForViewModel<PaperViewModel>().WithParam(pv => pv.PaperID, x.PaperID).Navigate());
-#endif
+            // Setup the navagate command to move away from this display
+            NavigateToPaperTile = new ReactiveCommand<PaperTileViewModel>(Observable.Return(true), o => Observable.Return(o as PaperTileViewModel), RxApp.MainThreadScheduler);
+            NavigateToPaperTile.Subscribe(pt =>
+                _nav.UriForViewModel<PaperViewModel>()
+                .WithParam(x => x.PaperID, pt.PaperID)
+                .Navigate()
+                );
         }
 
         private ObservableCollection<Tuple<PaperStub, PaperFullInfo>> _paperListRaw;
@@ -54,7 +53,10 @@ namespace CDSReviewerModels.ViewModels
         }
         private ObservableAsPropertyHelper<IReactiveDerivedList<PaperTileViewModel>> _PaperListOAPH;
 
-
+        /// <summary>
+        /// Command to move to a new paper tile display.
+        /// </summary>
+        public ReactiveCommand<PaperTileViewModel> NavigateToPaperTile { get; private set; }
 
         /// <summary>
         /// Move away to the add new document view.
@@ -62,6 +64,20 @@ namespace CDSReviewerModels.ViewModels
         public void CmdAdd()
         {
             _nav.NavigateToViewModel<AddCDSPaperViewModel>();
+        }
+
+        /// <summary>
+        /// When the view is attached, see if it implements our call back for final setup
+        /// </summary>
+        /// <param name="view"></param>
+        /// <param name="context"></param>
+        protected override void OnViewAttached(object view, object context)
+        {
+            base.OnViewAttached(view, context);
+            if (view is IHomePageViewCallback)
+            {
+                (view as IHomePageViewCallback).FinalizeVMWiring(this);
+            }
         }
     }
 }
