@@ -45,6 +45,7 @@ namespace CDSReviewerWP
                 .PerRequest<HomePageViewModel>()
                 .PerRequest<AddCDSPaperViewModel>()
                 .PerRequest<PaperViewModel>()
+                .PerRequest<PaperTileViewModel>()
                 ;
 
             // We are crossing projects for views and view models. Set that up for the
@@ -53,9 +54,24 @@ namespace CDSReviewerWP
             ViewLocator.AddNamespaceMapping("CDSReviewerModels.ViewModels", "CDSReviewerWP.Views");
             ViewModelLocator.AddNamespaceMapping("CDSReviewerWP.Views", "CDSReviewerModels.ViewModels");
 
+            // Custom conventions for the long list selector. This will get the caliburn.micro template binding done right.
+            ConventionManager.AddElementConvention<LongListSelector>(LongListSelector.ItemsSourceProperty, "DataContext", "Loaded")
+                .ApplyBinding = (viewModelType, path, property, element, convention) =>
+                {
+                    if (!ConventionManager.SetBindingWithoutBindingOrValueOverwrite(viewModelType, path, property, element, convention, LongListSelector.ItemsSourceProperty))
+                    {
+                        return false;
+                    }
+
+                    ((LongListSelector)element).ItemTemplate = ConventionManager.DefaultItemTemplate;
+
+                    return true;
+                };
+
             // Conventions based behaviors.
             AddCustomConventions();
         }
+
 
         /// <summary>
         /// Look up a service from our container

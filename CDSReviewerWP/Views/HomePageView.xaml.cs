@@ -1,8 +1,10 @@
-﻿using Microsoft.Phone.Controls;
+﻿using CDSReviewerCore.ViewModels;
+using CDSReviewerModels.ViewModels;
+using Microsoft.Phone.Controls;
 
 namespace CDSReviewerWP.Views
 {
-    public partial class HomePageView : PhoneApplicationPage
+    public partial class HomePageView : PhoneApplicationPage, IHomePageViewCallback
     {
         // Constructor
         public HomePageView()
@@ -28,5 +30,19 @@ namespace CDSReviewerWP.Views
         //    ApplicationBarMenuItem appBarMenuItem = new ApplicationBarMenuItem(AppResources.AppBarMenuItemText);
         //    ApplicationBar.MenuItems.Add(appBarMenuItem);
         //}
+
+        /// <summary>
+        /// We are called when the view model is all hooked up.
+        /// </summary>
+        /// <param name="homePageViewModel"></param>
+        public void FinalizeVMWiring(HomePageViewModel myVM)
+        {
+            PaperList.SelectionChanged += (s, args) =>
+            {
+                var myItem = PaperList.SelectedItem as PaperTileViewModel;
+                if (myItem != null)
+                    myVM.NavigateToPaperTile.Execute(myItem);
+            };
+        }
     }
 }

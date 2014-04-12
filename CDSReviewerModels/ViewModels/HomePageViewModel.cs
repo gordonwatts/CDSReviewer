@@ -24,14 +24,16 @@ namespace CDSReviewerModels.ViewModels
         {
             // Load up the list of papers to display
 
+            _paperListRaw = new ObservableCollection<Tuple<PaperStub, PaperFullInfo>>();
             Observable.FromAsync(paperDB.GetFullInformation)
                 .Select(x => new ObservableCollection<Tuple<PaperStub, PaperFullInfo>>(x))
                 .Select(x =>
                 {
                     _paperListRaw = x;
-                    return _paperListRaw.CreateDerivedCollection(t => new PaperTileViewModel(nav, t.Item1, t.Item2));
+                    var r = _paperListRaw.CreateDerivedCollection(t => new PaperTileViewModel(nav, t.Item1, t.Item2));
+                    return r;
                 })
-                .ToPropertyCM(this, x => x.PaperList, out _PaperListOAPH, null);
+                .ToPropertyCM(this, x => x.PaperList, out _PaperListOAPH, _paperListRaw.CreateDerivedCollection(t => new PaperTileViewModel(nav, t.Item1, t.Item2)));
 
             // Setup the navagate command to move away from this display
             NavigateToPaperTile = new ReactiveCommand<PaperTileViewModel>(Observable.Return(true), o => Observable.Return(o as PaperTileViewModel), RxApp.MainThreadScheduler);
