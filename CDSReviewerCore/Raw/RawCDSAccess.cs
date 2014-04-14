@@ -44,6 +44,13 @@ namespace CDSReviewerCore.Raw
         {
             throw new NotImplementedException();
             // Call the paper file parser here
+            var reqUri = new Uri(string.Format("https://cds.cern.ch/record/{0}/export/xm?ln=en", docID));
+
+            var s = Observable
+                    .FromAsync(tnk => CERNWebAccess.GetWebResponse(reqUri))
+                    .SelectMany(resp => Observable.FromAsync(tkn => resp.Content.ReadAsStringAsync()))
+                    .Select(HTMLFileVersionListParser.ParseToFileList);
+            return s;
         }
 
         /// <summary>

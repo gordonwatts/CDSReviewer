@@ -49,6 +49,7 @@
     <Compile Include="PaperDB\IInternalPaperDB.cs" />
     <Compile Include="PaperDB\IsolatedStorageDB.cs" />
     <Compile Include="Raw\DocMetaData.cs" />
+    <Compile Include="Raw\HTMLFileVersionListParser.cs" />
     <Compile Include="Raw\IDocumentMetadata.cs" />
     <Compile Include="Raw\MARC21Parser.cs" />
     <Compile Include="Raw\MARC21Spec\MARC21Identifiers.cs" />
