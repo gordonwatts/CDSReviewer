@@ -75,6 +75,21 @@ namespace CDSReviewerCoreTest.PaperDB
         }
 
         [TestMethod]
+        public async Task GetBothBackWithFileInfo()
+        {
+            IInternalPaperDB paperdb = new IsolatedStorageDB();
+            var p = CreatePaperInfoWithFiles("CDS12345");
+            await paperdb.Add(p.Item1, p.Item2);
+            var info = await paperdb.GetPaperInfoForID(p.Item1.ID);
+            Assert.IsNotNull(info, "getting back the item");
+            Assert.AreEqual(p.Item2.Abstract, info.Item2.Abstract, "Abstract");
+            Assert.AreEqual(p.Item1.ID, info.Item1.ID, "Abstract");
+            Assert.AreEqual(1, p.Item2.Files.Count(), "# of files");
+            Assert.AreEqual(2, p.Item2.Files.First().Versions.Count(), "# of versions");
+        }
+
+
+        [TestMethod]
         public async Task RetreiveSingleStubList()
         {
             IInternalPaperDB paperdb = new IsolatedStorageDB();
@@ -198,6 +213,32 @@ namespace CDSReviewerCoreTest.PaperDB
             {
                 Abstract = string.Format("Abstract of paper for {0}.", paperID),
                 Authors = new string[] { "A. Berson", "C. Duderson", "E. Fillerson" }
+            };
+
+            return Tuple.Create(ps, pf);
+        }
+
+        /// <summary>
+        /// Create a paper with attached files for testing
+        /// </summary>
+        /// <param name="paperID"></param>
+        /// <returns></returns>
+        private Tuple<PaperStub, PaperFullInfo> CreatePaperInfoWithFiles(string paperID)
+        {
+            var ps = new PaperStub() { ID = paperID, Title = string.Format("Paper title for {0}.", paperID) };
+            var pf = new PaperFullInfo()
+            {
+                Abstract = string.Format("Abstract of paper for {0}.", paperID),
+                Authors = new string[] { "A. Berson", "C. Duderson", "E. Fillerson" },
+                Files = new PaperFile[] { 
+                    new PaperFile() { 
+                        FileName="ATL-COM-STAT-2014-223.pdf", 
+                        Versions = new PaperFileVersion[] { 
+                            new PaperFileVersion() { VersionDate = DateTime.Now, VersionNumber = 1},
+                            new PaperFileVersion() { VersionDate = DateTime.Now, VersionNumber = 2}
+                        }
+                    }
+                }
             };
 
             return Tuple.Create(ps, pf);
