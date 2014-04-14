@@ -42,6 +42,8 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\PaperFile.cs" />
+    <Compile Include="Data\PaperFileVersion.cs" />
     <Compile Include="Data\PaperFullInfo.cs" />
     <Compile Include="Data\PaperStub.cs" />
     <Compile Include="PaperDB\IInternalPaperDB.cs" />

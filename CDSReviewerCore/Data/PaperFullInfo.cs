@@ -1,4 +1,5 @@
 ﻿
+using System.Collections.Generic;
 namespace CDSReviewerCore.Data
 {
     /// <summary>
@@ -15,5 +16,10 @@ namespace CDSReviewerCore.Data
         /// List of authors
         /// </summary>
         public string[] Authors { get; set; }
+
+        /// <summary>
+        /// Get/Set the list of files that CDS (and us) know about.
+        /// </summary>
+        public IEnumerable<PaperFile> Files { get; set; }
     }
 }
