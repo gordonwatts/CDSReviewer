@@ -83,6 +83,17 @@ namespace CDSReviewerCoreTest
             Assert.AreEqual("Geometrical statistics of the vorticity vector and the strain rate tensor in rotating turbulence", actual.Title, "paper title");
         }
 
+        [TestMethod]
+        public async Task FileListFetch()
+        {
+            // https://
+            var r = RawCDSAccess.GetDocumentFiles(1637926);
+            Assert.IsNotNull(r);
+            var actual = await r;
+
+            Assert.Inconclusive();
+        }
+
         /// <summary>
         /// Anyone that needs a username password for testing should call this guy.
         /// This will throw if it can't find the generic credentials for cern.ch.

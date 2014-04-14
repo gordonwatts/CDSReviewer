@@ -1,6 +1,8 @@
 ﻿
+using CDSReviewerCore.Data;
 using CERNSSOPCL;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Reactive;
@@ -31,6 +33,17 @@ namespace CDSReviewerCore.Raw
                     .SelectMany(resp => Observable.FromAsync(tkn => resp.Content.ReadAsStringAsync()))
                     .Select(ParseToMD);
             return s;
+        }
+
+        /// <summary>
+        /// Return a list of all files that CDS thinks are assoicated with a particular record.
+        /// </summary>
+        /// <param name="docID"></param>
+        /// <returns></returns>
+        public static IObservable<IEnumerable<PaperFile>> GetDocumentFiles(int docID)
+        {
+            throw new NotImplementedException();
+            // Call the paper file parser here
         }
 
         /// <summary>
