@@ -99,6 +99,7 @@
     <Compile Include="Raw\RawCDSAccessTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Raw\MARC21ParserTest.cs" />
+    <Compile Include="Raw\HTMLFileVersionListParserTest.cs" />
     <Compile Include="Services\CDS\CDSSearchStringParserTest.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -112,6 +113,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Raw\22.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Raw\hvfiles.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Raw\ss3lfiles.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
