@@ -1,6 +1,7 @@
 ﻿using CDSReviewerCore.Raw;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Linq;
 using System.IO;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
@@ -86,12 +87,17 @@ namespace CDSReviewerCoreTest
         [TestMethod]
         public async Task FileListFetch()
         {
-            // https://
-            var r = RawCDSAccess.GetDocumentFiles(1637926);
+            // SUSY 3L paper - this is a public ATLAS published paper.
+            var r = RawCDSAccess.GetDocumentFiles(1694329);
             Assert.IsNotNull(r);
-            var actual = await r;
+            var actual = (await r).ToArray();
 
-            Assert.Inconclusive();
+            Assert.AreEqual(2, actual.Count());
+            var p1 = actual[0];
+            Assert.AreEqual("SUSY-2013-09_ss3L.pdf", p1.FileName);
+            Assert.AreEqual(1, p1.Versions.Length);
+            Assert.AreEqual(DateTime.Parse("09 Apr 2014, 13:28"), p1.Versions[0].VersionDate);
+            Assert.AreEqual(1, p1.Versions[0].VersionNumber);
         }
 
         /// <summary>
