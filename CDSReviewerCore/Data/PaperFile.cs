@@ -19,6 +19,6 @@ namespace CDSReviewerCore.Data
         /// <summary>
         /// Get/Set the list of versions associated with this particular file.
         /// </summary>
-        public IEnumerable<PaperFileVersion> Versions { get; set; }
+        public PaperFileVersion[] Versions { get; set; }
     }
 }
