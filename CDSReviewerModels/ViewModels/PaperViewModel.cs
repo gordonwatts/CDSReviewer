@@ -4,6 +4,8 @@ using CDSReviewerCore.Data;
 using CDSReviewerCore.PaperDB;
 using ReactiveUI;
 using System;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Reactive.Linq;
 
 namespace CDSReviewerModels.ViewModels
@@ -39,10 +41,29 @@ namespace CDSReviewerModels.ViewModels
             _findPaper
                 .Select(x => x.Item2.Authors)
                 .ToPropertyCM(this, x => x.Authors, out _AuthorsOAPH, new string[0]);
+            _findPaper
+                .Select(x => x.Item2.Files)
+                .Where(x => x != null)
+                .Select(x => new ObservableCollection<PaperFileViewModel>(x.Select(MostRecentFileVersionVM)))
+                .ToPropertyCM(this, x => x.PaperVersions, out _PaperVersionsOAPH, new ObservableCollection<PaperFileViewModel>());
 
             // When we have an update to the string property guy, off we go!
             this.ObservableForProperty(p => p.PaperID)
                 .Subscribe(x => _findPaper.Execute(x.Value));
+        }
+
+        /// <summary>
+        /// Return a vm for the papers' most recent VM.
+        /// </summary>
+        /// <param name="arg"></param>
+        /// <returns></returns>
+        private PaperFileViewModel MostRecentFileVersionVM(PaperFile aFile)
+        {
+            var mostRecentVersion = aFile.Versions.OrderByDescending(x => x.VersionNumber).First();
+            return new PaperFileViewModel(
+                aFile.FileName,
+                mostRecentVersion.VersionNumber, mostRecentVersion.VersionDate
+            );
         }
 
         /// <summary>
@@ -87,5 +108,14 @@ namespace CDSReviewerModels.ViewModels
             get { return _AuthorsOAPH.Value; }
         }
         private ObservableAsPropertyHelper<string[]> _AuthorsOAPH;
+
+        /// <summary>
+        /// The list of paper verisons
+        /// </summary>
+        public ObservableCollection<PaperFileViewModel> PaperVersions
+        {
+            get { return _PaperVersionsOAPH.Value; }
+        }
+        private ObservableAsPropertyHelper<ObservableCollection<PaperFileViewModel>> _PaperVersionsOAPH;
     }
 }
