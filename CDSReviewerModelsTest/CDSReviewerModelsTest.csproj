@@ -131,6 +131,7 @@
     <Compile Include="ViewModels\PaperViewModelTest.cs" />
     <Compile Include="ViewModels\PaperTileViewModelTest.cs" />
     <Compile Include="ViewModels\PaperListViewModelTest.cs" />
+    <Compile Include="ViewModels\PaperFileViewModelTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CDSReviewerCore\CDSReviewerCore.csproj">

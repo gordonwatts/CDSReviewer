@@ -37,6 +37,7 @@
     <Compile Include="ViewModels\AddCDSPaperViewModel.cs" />
     <Compile Include="ViewModels\HomePageViewModel.cs" />
     <Compile Include="ViewModels\IHomePageViewCallback.cs" />
+    <Compile Include="ViewModels\PaperFileViewModel.cs" />
     <Compile Include="ViewModels\PaperListViewModel.cs" />
     <Compile Include="ViewModels\PaperTileViewModel.cs" />
     <Compile Include="ViewModels\PaperViewModel.cs" />
