@@ -12,8 +12,10 @@ namespace CDSReviewerCore.ServiceInterfaces
     {
         /// <summary>
         /// Returns a list of search guys that can look for a particular paper using a search string.
+        /// It is legal to pass a paper ID as a search string, in which case the unique paper info must
+        /// be returned.
         /// </summary>
-        /// <param name="searchstring"></param>
+        /// <param name="searchstring">A search string or ID</param>
         /// <returns></returns>
         IObservable<IPaperSearch> GetPaperFinders(string searchstring);
     }
