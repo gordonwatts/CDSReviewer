@@ -202,6 +202,94 @@ namespace CDSReviewerCoreTest.PaperDB
         }
 
         /// <summary>
+        /// Merging to a paper that doesn't exsit should cause an exception.
+        /// </summary>
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public async Task MergeToBadPaperID()
+        {
+            IInternalPaperDB paperdb = new IsolatedStorageDB();
+            await paperdb.Merge("CDS1234", CreatePaperFileInfo(1, 1));
+        }
+
+        /// <summary>
+        /// When there is no file information, we should be able
+        /// to add a new file list.
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public async Task MergeToNoNewInformation()
+        {
+            IInternalPaperDB paperdb = new IsolatedStorageDB();
+            var p1 = CreatePaperInfo("CDS1234");
+            await paperdb.Add(p1.Item1, p1.Item2);
+
+            await paperdb.Merge("CDS1234", CreatePaperFileInfo(1, 1));
+
+            var fullInfo = await paperdb.GetFullInfoForID("CDS1234");
+            Assert.IsNotNull(fullInfo.Files);
+            Assert.AreEqual(1, fullInfo.Files.Length);
+        }
+
+        /// <summary>
+        /// Add normal file info, then merge in new file info.
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public async Task MergeUpdatedFileInfo()
+        {
+            IInternalPaperDB paperdb = new IsolatedStorageDB();
+            var p1 = CreatePaperInfo("CDS1234");
+            await paperdb.Add(p1.Item1, p1.Item2);
+
+            await paperdb.Merge("CDS1234", CreatePaperFileInfo(1, 1));
+            await paperdb.Merge("CDS1234", CreatePaperFileInfo(2, 1));
+
+            var fullInfo = await paperdb.GetFullInfoForID("CDS1234");
+            Assert.IsNotNull(fullInfo.Files);
+            Assert.AreEqual(2, fullInfo.Files.Length);
+        }
+
+        /// <summary>
+        /// Create simple file info
+        /// </summary>
+        /// <returns></returns>
+        private PaperFile[] CreatePaperFileInfo(int nFiles, int nVersions)
+        {
+            return Enumerable.Range(1, nFiles).Select(findex => CreatePaperFile(findex, nVersions)).ToArray();
+        }
+
+        /// <summary>
+        /// Create a single paper file.
+        /// </summary>
+        /// <param name="findex"></param>
+        /// <param name="nVersions"></param>
+        /// <returns></returns>
+        private PaperFile CreatePaperFile(int findex,int nVersions)
+        {
+            return new PaperFile()
+            {
+                FileName = string.Format("{0}.pdf", findex),
+                Versions = Enumerable.Range(0, nVersions).Select(CreatePaperVersion).ToArray()
+            };
+        }
+
+        /// <summary>
+        /// Create a single paper version.
+        /// </summary>
+        /// <param name="nVers"></param>
+        /// <returns></returns>
+        private PaperFileVersion CreatePaperVersion(int nVers)
+        {
+            return new PaperFileVersion()
+            {
+                VersionDate = DateTime.Now,
+                VersionNumber = nVers
+            };
+        }
+
+
+        /// <summary>
         /// Create a paper for testing use.
         /// </summary>
         /// <param name="paperID"></param>

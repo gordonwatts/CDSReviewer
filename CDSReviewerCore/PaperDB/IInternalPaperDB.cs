@@ -19,6 +19,15 @@ namespace CDSReviewerCore.PaperDB
         Task Add(PaperStub stub, PaperFullInfo full);
 
         /// <summary>
+        /// Merge the files into the current version of the DB entry.
+        /// </summary>
+        /// <param name="paperID">PaperID that should have the merging done to</param>
+        /// <param name="files">The list of files associated with this file</param>
+        /// <returns>Completes when everything has been merged. The merged information provided below
+        /// is expected to be complete. It will replace anything that current exists.</returns>
+        Task Merge(string paperID, PaperFile[] files);
+
+        /// <summary>
         /// Remove a paper from the database.
         /// </summary>
         /// <param name="paperID">The unique ID string for this paper</param>

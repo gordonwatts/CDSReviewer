@@ -20,6 +20,6 @@ namespace CDSReviewerCore.Data
         /// <summary>
         /// Get/Set the list of files that CDS (and us) know about.
         /// </summary>
-        public IEnumerable<PaperFile> Files { get; set; }
+        public PaperFile[] Files { get; set; }
     }
 }

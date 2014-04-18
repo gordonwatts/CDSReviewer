@@ -53,6 +53,21 @@ namespace CDSReviewerCore.PaperDB
         }
 
         /// <summary>
+        /// Replace the file info.
+        /// </summary>
+        /// <param name="paperID"></param>
+        /// <param name="files"></param>
+        /// <returns></returns>
+        public async Task Merge(string paperID, PaperFile[] files)
+        {
+            var obj = await LoadObject(paperID) as PaperFullInfo;
+            if (obj == null)
+                throw new ArgumentException("paperID");
+            obj.Files = files;
+            await SaveObject(paperID, obj);
+        }
+
+        /// <summary>
         /// Cache the serialize so we don't have to keep creating it and destroying it.
         /// </summary>
         private Lazy<SharpSerializer> _binarySerlizer = new Lazy<SharpSerializer>(() => new SharpSerializer(true));
