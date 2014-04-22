@@ -2,6 +2,7 @@
 using Caliburn.Micro.ReactiveUI;
 using CDSReviewerCore.Data;
 using CDSReviewerCore.PaperDB;
+using CDSReviewerCore.Services;
 using ReactiveUI;
 using System;
 using System.Collections.ObjectModel;
@@ -20,7 +21,7 @@ namespace CDSReviewerModels.ViewModels
         /// Initialize the paper view model
         /// </summary>
         /// <param name="nav"></param>
-        public PaperViewModel(INavService nav, IInternalPaperDB localI)
+        public PaperViewModel(INavService nav, IInternalPaperDB localI, IPaperIDFetchParser paperFinder)
             : base(nav)
         {
 
@@ -50,6 +51,25 @@ namespace CDSReviewerModels.ViewModels
             // When we have an update to the string property guy, off we go!
             this.ObservableForProperty(p => p.PaperID)
                 .Subscribe(x => _findPaper.Execute(x.Value));
+
+            // When the initial paper lookup is done, re-fetch files from
+            // CDS.
+            _findPaper
+                .SelectMany(x => paperFinder.GetFetcher(PaperID))
+                .SelectMany(x => x.GetPapers())
+                .ToArray()
+                .Subscribe(x => MergeWithObservable(x));
+        }
+
+        /// <summary>
+        /// Merge a new set of files with the observable collection that already exists. Also,
+        /// update our central database if anything has changed.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <returns></returns>
+        private object MergeWithObservable(PaperFile[] x)
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>
