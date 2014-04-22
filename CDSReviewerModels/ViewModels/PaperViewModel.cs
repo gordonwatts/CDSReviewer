@@ -65,9 +65,8 @@ namespace CDSReviewerModels.ViewModels
         /// </summary>
         /// <param name="x"></param>
         /// <returns></returns>
-        private object MergeWithObservable(PaperFile[] x)
+        private void MergeWithObservable(PaperFile[] x)
         {
-            throw new NotImplementedException();
         }
 
         /// <summary>
