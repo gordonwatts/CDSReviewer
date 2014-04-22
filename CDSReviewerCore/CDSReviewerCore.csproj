@@ -61,11 +61,9 @@
     <Compile Include="Services\CDS\CDSPaperDataFetcher.cs" />
     <Compile Include="Services\CDS\CDSPaperSearch.cs" />
     <Compile Include="Services\CDS\CDSSearchStringParser.cs" />
-    <Compile Include="Services\IPaperDataFetcher.cs" />
-    <Compile Include="Services\IPaperIDFetchParser.cs" />
+    <Compile Include="Services\IPaperFetcher.cs" />
     <Compile Include="Services\IPaperSearch.cs" />
     <Compile Include="Services\ISearchStringParser.cs" />
-    <Compile Include="Services\PaperIDFetchParser.cs" />
     <Compile Include="Utils.cs" />
   </ItemGroup>
   <ItemGroup>

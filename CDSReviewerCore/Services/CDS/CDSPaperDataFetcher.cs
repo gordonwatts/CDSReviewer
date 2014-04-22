@@ -1,40 +1,34 @@
 ﻿using CDSReviewerCore.Data;
 using CDSReviewerCore.Raw;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CDSReviewerCore.Services.CDS
 {
     /// <summary>
     /// Returns the paper data required for a cds paper
     /// </summary>
-    class CDSPaperDataFetcher  : IPaperDataFetcher
+    class CDSPaperDataFetcher : IPaperFetcher
     {
         /// <summary>
-        /// Initalize with the paper we will be responsible for
+        /// Return a list of the paper files associated with a single paper.
         /// </summary>
         /// <param name="paperID"></param>
-        public CDSPaperDataFetcher(string paperID)
-        {
-            _paperID = int.Parse(paperID);
-        }
-
-        /// <summary>
-        /// Return the paper file data
-        /// </summary>
         /// <returns></returns>
-        public IObservable<PaperFile> GetPapers()
+        public IObservable<PaperFile[]> GetPaperFiles(string paperID)
         {
-            return RawCDSAccess.GetDocumentFiles(_paperID).SelectMany(x => x);
+            return RawCDSAccess.GetDocumentFiles(ParseIDString(paperID)).Select(x => x.ToArray());
         }
 
         /// <summary>
-        /// Cache the paper data info
+        /// Convert an ID string into an ID string that can be used to fetch an item
         /// </summary>
-        private readonly int _paperID;
+        /// <param name="id"></param>
+        /// <returns></returns>
+        private static int ParseIDString(string id)
+        {
+            return int.Parse(id);
+        }
     }
 }

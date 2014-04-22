@@ -21,7 +21,7 @@ namespace CDSReviewerModels.ViewModels
         /// Initialize the paper view model
         /// </summary>
         /// <param name="nav"></param>
-        public PaperViewModel(INavService nav, IInternalPaperDB localI, IPaperIDFetchParser paperFinder)
+        public PaperViewModel(INavService nav, IInternalPaperDB localI, IPaperFetcher paperFinder)
             : base(nav)
         {
 
@@ -55,9 +55,7 @@ namespace CDSReviewerModels.ViewModels
             // When the initial paper lookup is done, re-fetch files from
             // CDS.
             _findPaper
-                .SelectMany(x => paperFinder.GetFetcher(PaperID))
-                .SelectMany(x => x.GetPapers())
-                .ToArray()
+                .SelectMany(x => paperFinder.GetPaperFiles(PaperID))
                 .Subscribe(x => MergeWithObservable(x));
         }
 

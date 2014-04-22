@@ -1,6 +1,7 @@
 ﻿using Caliburn.Micro.Portable;
 using CDSReviewerCore.Data;
 using CDSReviewerCore.PaperDB;
+using CDSReviewerCore.Services;
 using CDSReviewerModels.ViewModels;
 using Microsoft.Reactive.Testing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -45,8 +46,9 @@ namespace CDSReviewerModelsTest.ViewModels
 
                 var nav = Mock.Of<INavService>();
                 var addr = Mock.Of<IInternalPaperDB>(a => a.GetPaperInfoForID("1234") == Task.Factory.StartNew(() => Tuple.Create(ps, psf)));
+                var fetcher = Mock.Of<IPaperFetcher>();
 
-                var pvobj = new PaperViewModel(nav, addr);
+                var pvobj = new PaperViewModel(nav, addr, fetcher);
                 var at = pvobj.PaperTitle;
                 var ab = pvobj.Abstract;
                 var ath = pvobj.Authors;
@@ -112,8 +114,9 @@ namespace CDSReviewerModelsTest.ViewModels
                 Assert.Inconclusive();
                 var nav = Mock.Of<INavService>();
                 var addr = Mock.Of<IInternalPaperDB>(a => a.GetPaperInfoForID("1234") == Task.Factory.StartNew(() => Tuple.Create(ps, psf)));
+                var fetcher = Mock.Of<IPaperFetcher>();
 
-                var pvobj = new PaperViewModel(nav, addr);
+                var pvobj = new PaperViewModel(nav, addr, fetcher);
                 var paps = pvobj.PaperVersions;
 
                 pvobj.PaperID = "1234";
