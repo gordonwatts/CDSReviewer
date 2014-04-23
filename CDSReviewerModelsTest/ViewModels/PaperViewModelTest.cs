@@ -170,24 +170,27 @@ namespace CDSReviewerModelsTest.ViewModels
                     }
                 };
 
-                Assert.Inconclusive();
                 var nav = Mock.Of<INavService>();
-                var addr = Mock.Of<IInternalPaperDB>(a => a.GetPaperInfoForID("1234") == Task.Factory.StartNew(() => Tuple.Create(ps, psf)));
-                var fetcher = Mock.Of<IPaperFetcher>();
 
-                var pvobj = new PaperViewModel(nav, addr, fetcher);
+                var addrMock = new Mock<IInternalPaperDB>();
+                addrMock.Setup(a => a.GetPaperInfoForID("1234")).Returns(Task.Factory.StartNew(() => Tuple.Create(ps, psf)));
+                addrMock.Setup(a => a.Merge("1234", updatedFiles)).Returns(Task.Factory.StartNew(() => true));
+
+                var fetcher = Mock.Of<IPaperFetcher>(a => a.GetPaperFiles("1234") == Observable.Return(updatedFiles));
+
+                var pvobj = new PaperViewModel(nav, addrMock.Object, fetcher);
                 var paps = pvobj.PaperVersions;
 
                 pvobj.PaperID = "1234";
 
                 // Allow the update to complete
-                shed.AdvanceByMs(50);
+                shed.AdvanceByMs(1);
 
                 Assert.AreEqual(1, pvobj.PaperVersions.Count);
                 Assert.AreEqual(3, pvobj.PaperVersions.First().Version);
 
                 // Check that the database got updated correctly as well.
-                Assert.Inconclusive();
+                addrMock.VerifyAll();
             });
         }
 
@@ -195,7 +198,7 @@ namespace CDSReviewerModelsTest.ViewModels
         /// See what happens when a file file is added.
         /// </summary>
         [TestMethod]
-        public void FileAddsNewFileVersion()
+        public void FileAddsNewFileName()
         {
             new TestScheduler().With(shed =>
             {
