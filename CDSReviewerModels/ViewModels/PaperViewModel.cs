@@ -62,10 +62,14 @@ namespace CDSReviewerModels.ViewModels
             this.ObservableForProperty(p => p.PaperID)
                 .Subscribe(x => _findPaper.Execute(x.Value));
 
-            // When the initial paper lookup is done, re-fetch files from
-            // CDS.
-
+            // And when the user clicks on a particular paper, we need to do some work!
+            OpenPaperVersion = new ReactiveCommand<PaperFileViewModel>(Observable.Return(true), o => Observable.Return(o as PaperFileViewModel), RxApp.MainThreadScheduler);
         }
+
+        /// <summary>
+        /// Fired from the UI when a particular paper file view is clicked... We need to open the file!
+        /// </summary>
+        public ReactiveCommand<PaperFileViewModel> OpenPaperVersion { get; private set; }
 
         /// <summary>
         /// Merge a new set of files with the observable collection that already exists. Also,

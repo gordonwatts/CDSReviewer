@@ -1,0 +1,25 @@
+﻿<UserControl
+    x:Class="CDSReviewerWS.Views.PaperFileView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:CDSReviewerWS.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400" VerticalAlignment="Top">
+    
+    <Grid VerticalAlignment="Top">
+    	<StackPanel Margin="0" Orientation="Vertical" VerticalAlignment="Top">
+    		<TextBlock x:Name="FileName" TextWrapping="Wrap" VerticalAlignment="Top"/>
+    		<TextBlock x:Name="FileDate" TextWrapping="Wrap" Margin="0"/>
+    		<StackPanel Orientation="Horizontal">
+    			<TextBlock TextWrapping="Wrap" Text="Ver " HorizontalAlignment="Left"/>
+    			<TextBlock x:Name="Version" TextWrapping="Wrap" Margin="5,0,0,0"/>
+
+    		</StackPanel>
+
+    	</StackPanel>
+
+    </Grid>
+</UserControl>

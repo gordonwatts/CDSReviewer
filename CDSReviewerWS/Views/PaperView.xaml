@@ -22,10 +22,15 @@
             <Button x:Name="GoBack" Style="{StaticResource NavigationBackButtonNormalStyle}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
         </Grid>
         <Grid Margin="0" Grid.Row="1">
-        	<Rectangle Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="184" Margin="36,10,0,0" Stroke="Black" VerticalAlignment="Top" Width="142"/>
-        	<StackPanel Margin="202,10,38,0" VerticalAlignment="Top">
-        		<TextBlock x:Name="PaperTitle" TextWrapping="Wrap" FontSize="48" VerticalAlignment="Top"/>
-        		<TextBlock x:Name="Abstract" Margin="0,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="26.667"/>
+        	<StackPanel Margin="36,10,38,434" Orientation="Horizontal">
+        		<StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top">
+        			<Rectangle Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="184" Stroke="Black" VerticalAlignment="Top" Width="142" Margin="0,20,0,0"/>
+        			<ListView x:Name="PaperVersions" IsItemClickEnabled="True"/>
+        		</StackPanel>
+        		<StackPanel VerticalAlignment="Top" Width="1126" Margin="25,0,0,0">
+        			<TextBlock x:Name="PaperTitle" TextWrapping="Wrap" FontSize="48" VerticalAlignment="Top"/>
+        			<TextBlock x:Name="Abstract" Margin="0,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="26.667"/>
+        		</StackPanel>
         	</StackPanel>
         </Grid>
     </Grid>

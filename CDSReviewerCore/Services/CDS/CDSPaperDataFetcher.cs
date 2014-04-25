@@ -9,7 +9,7 @@ namespace CDSReviewerCore.Services.CDS
     /// <summary>
     /// Returns the paper data required for a cds paper
     /// </summary>
-    class CDSPaperDataFetcher : IPaperFetcher
+    public class CDSPaperDataFetcher : IPaperFetcher
     {
         /// <summary>
         /// Return a list of the paper files associated with a single paper.
