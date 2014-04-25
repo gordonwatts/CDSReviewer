@@ -8,6 +8,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive.Linq;
+using System.Threading.Tasks;
 
 namespace CDSReviewerModels.ViewModels
 {
@@ -42,9 +43,18 @@ namespace CDSReviewerModels.ViewModels
             _findPaper
                 .Select(x => x.Item2.Authors)
                 .ToPropertyCM(this, x => x.Authors, out _AuthorsOAPH, new string[0]);
-            _findPaper
+
+            // Papers will be updated from two sources, the origianl soruce when we start
+            // up, and then an update that can come in from other sources.
+            var papers1 = _findPaper
                 .Select(x => x.Item2.Files)
-                .Where(x => x != null)
+                .Where(x => x != null);
+
+            var papers2 = _findPaper
+                .SelectMany(x => paperFinder.GetPaperFiles(PaperID))
+                .SelectMany(x => Observable.FromAsync(_ => MergeWithObservable(x, localI)));
+
+            papers1.Merge(papers2)
                 .Select(x => new ObservableCollection<PaperFileViewModel>(x.Select(MostRecentFileVersionVM)))
                 .ToPropertyCM(this, x => x.PaperVersions, out _PaperVersionsOAPH, new ObservableCollection<PaperFileViewModel>());
 
@@ -54,9 +64,7 @@ namespace CDSReviewerModels.ViewModels
 
             // When the initial paper lookup is done, re-fetch files from
             // CDS.
-            _findPaper
-                .SelectMany(x => paperFinder.GetPaperFiles(PaperID))
-                .Subscribe(x => MergeWithObservable(x));
+
         }
 
         /// <summary>
@@ -65,8 +73,10 @@ namespace CDSReviewerModels.ViewModels
         /// </summary>
         /// <param name="x"></param>
         /// <returns></returns>
-        private void MergeWithObservable(PaperFile[] x)
+        private async Task<PaperFile[]> MergeWithObservable(PaperFile[] x, IInternalPaperDB db)
         {
+            await db.Merge(PaperID, x);
+            return x;
         }
 
         /// <summary>

@@ -254,20 +254,26 @@ namespace CDSReviewerModelsTest.ViewModels
                     }
                 };
 
-                Assert.Inconclusive();
                 var nav = Mock.Of<INavService>();
-                var addr = Mock.Of<IInternalPaperDB>(a => a.GetPaperInfoForID("1234") == Task.Factory.StartNew(() => Tuple.Create(ps, psf)));
-                var fetcher = Mock.Of<IPaperFetcher>();
 
-                var pvobj = new PaperViewModel(nav, addr, fetcher);
+                var addrMock = new Mock<IInternalPaperDB>();
+                addrMock.Setup(a => a.GetPaperInfoForID("1234")).Returns(Task.Factory.StartNew(() => Tuple.Create(ps, psf)));
+                addrMock.Setup(a => a.Merge("1234", updatedFiles)).Returns(Task.Factory.StartNew(() => true));
+
+                var fetcher = Mock.Of<IPaperFetcher>(a => a.GetPaperFiles("1234") == Observable.Return(updatedFiles));
+
+                var pvobj = new PaperViewModel(nav, addrMock.Object, fetcher);
                 var paps = pvobj.PaperVersions;
 
                 pvobj.PaperID = "1234";
 
-                // Allow the update to complete
-                shed.AdvanceByMs(50);
+                shed.AdvanceByMs(1);
 
                 Assert.AreEqual(2, pvobj.PaperVersions.Count);
+
+                // Check that the database got updated correctly as well.
+                addrMock.VerifyAll();
+
             });
         }
     }
