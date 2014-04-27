@@ -10,9 +10,9 @@
     d:DesignHeight="480" d:DesignWidth="480">
     
     <Grid x:Name="LayoutRoot" Background="{StaticResource PhoneChromeBrush}">
-    	<StackPanel>
+    	<StackPanel Margin="0,3,0,0" Background="#FF363636">
     		<TextBlock x:Name="FileName" TextWrapping="Wrap"/>
-    		<TextBlock x:Name="FIleDate" TextWrapping="Wrap"/>
+    		<TextBlock x:Name="FileDate" TextWrapping="Wrap" FontFamily="Portable User Interface"/>
     		<StackPanel Orientation="Horizontal">
     			<TextBlock TextWrapping="Wrap" Text="Version" VerticalAlignment="Top"/>
     			<TextBlock x:Name="Version" TextWrapping="Wrap" Margin="5,0,0,0"/>

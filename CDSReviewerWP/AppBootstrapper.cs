@@ -3,6 +3,7 @@ namespace CDSReviewerWP
     using Caliburn.Micro;
     using CDSReviewerCore.PaperDB;
     using CDSReviewerCore.ServiceInterfaces;
+    using CDSReviewerCore.Services;
     using CDSReviewerCore.Services.CDS;
     using CDSReviewerModels.ViewModels;
     using Microsoft.Phone.Controls;
@@ -39,6 +40,7 @@ namespace CDSReviewerWP
             Caliburn.Micro.Portable.WP8.NavService.RegisterINavService(container);
             container.Singleton<ISearchStringParser, CDSSearchStringParser>();
             container.Singleton<IInternalPaperDB, IsolatedStorageDB>();
+            container.Singleton<IPaperFetcher, CDSPaperDataFetcher>();
 
             // Declare the pages we are going to be visiting
             container
