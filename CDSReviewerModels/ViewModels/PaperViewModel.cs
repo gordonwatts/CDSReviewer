@@ -91,10 +91,7 @@ namespace CDSReviewerModels.ViewModels
         private PaperFileViewModel MostRecentFileVersionVM(PaperFile aFile)
         {
             var mostRecentVersion = aFile.Versions.OrderByDescending(x => x.VersionNumber).First();
-            return new PaperFileViewModel(
-                aFile.FileName,
-                mostRecentVersion.VersionNumber, mostRecentVersion.VersionDate
-            );
+            return new PaperFileViewModel(PaperID, aFile, mostRecentVersion);
         }
 
         /// <summary>

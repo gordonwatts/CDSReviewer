@@ -1,4 +1,5 @@
 ﻿using Caliburn.Micro;
+using CDSReviewerCore.Data;
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
@@ -20,11 +21,11 @@ namespace CDSReviewerModels.ViewModels
         /// <param name="fname"></param>
         /// <param name="version"></param>
         /// <param name="date"></param>
-        public PaperFileViewModel(string fname, int version, DateTime date)
+        public PaperFileViewModel(string paperID, PaperFile file, PaperFileVersion version)
         {
-            FileName = fname;
-            Version = version;
-            FileDate = date;
+            FileName = file.FileName;
+            Version = version.VersionNumber;
+            FileDate = version.VersionDate;
         }
 
         /// <summary>

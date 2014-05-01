@@ -30,5 +30,11 @@ namespace CDSReviewerCore.Services.CDS
         {
             return int.Parse(id);
         }
+
+
+        public IObservable<IDownloadProgressInfo> DownloadPaper(string paperID, PaperFile file, PaperFileVersion version)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
