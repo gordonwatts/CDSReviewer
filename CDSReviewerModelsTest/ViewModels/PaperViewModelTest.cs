@@ -47,7 +47,7 @@ namespace CDSReviewerModelsTest.ViewModels
 
                 var nav = Mock.Of<INavService>();
                 var addr = Mock.Of<IInternalPaperDB>(a => a.GetPaperInfoForID("1234") == Task.Factory.StartNew(() => Tuple.Create(ps, psf)));
-                var fetcher = Mock.Of<IPaperFetcher>(f => f.GetPaperFiles("1234") == Observable.Return<PaperFile[]>(new PaperFile[0]));
+                var fetcher = Mock.Of<IPaperFetcher>(f => f.GetPaperFiles("1234") == Observable.Return<PaperFile[]>(psf.Files));
 
                 var pvobj = new PaperViewModel(nav, addr, fetcher);
                 var at = pvobj.PaperTitle;
@@ -57,7 +57,7 @@ namespace CDSReviewerModelsTest.ViewModels
 
                 pvobj.PaperID = "1234";
 
-                shed.AdvanceByMs(1);
+                shed.AdvanceByMs(10);
 
                 Assert.AreEqual("this title", pvobj.PaperTitle);
                 Assert.AreEqual("this abstract", pvobj.Abstract);
