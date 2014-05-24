@@ -64,7 +64,7 @@ namespace CDSReviewerCore.Raw
         }
 
         /// <summary>
-        /// Gets the main document via a direct HTTP download.
+        /// Downloads the main document associated with a particular guy, in a particular location..
         /// </summary>
         /// <param name="doc">The document metatdata, the main document will be pulled from there.</param>
         /// <param name="writeto">A writable stream. It will be closed and disposed of when this returns.</param>

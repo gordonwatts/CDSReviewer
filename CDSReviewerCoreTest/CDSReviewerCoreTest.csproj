@@ -101,6 +101,7 @@
     <Compile Include="Raw\MARC21ParserTest.cs" />
     <Compile Include="Raw\HTMLFileVersionListParserTest.cs" />
     <Compile Include="Services\CDS\CDSSearchStringParserTest.cs" />
+    <Compile Include="Services\CDS\CDSPaperDataFetcherTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CDSReviewerCore\CDSReviewerCore.csproj">

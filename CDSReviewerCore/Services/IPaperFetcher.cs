@@ -16,5 +16,14 @@ namespace CDSReviewerCore.Services
         /// <param name="paperID"></param>
         /// <returns></returns>
         IObservable<PaperFile[]> GetPaperFiles(string paperID);
+
+        /// <summary>
+        /// Download the data for a particular file into local storage.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="file"></param>
+        /// <param name="version"></param>
+        /// <returns></returns>
+        IObservable<int> DownloadPaper(PaperStub id, PaperFile file, PaperFileVersion version);
     }
 }

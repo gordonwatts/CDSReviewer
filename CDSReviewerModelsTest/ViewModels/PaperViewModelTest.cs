@@ -276,5 +276,72 @@ namespace CDSReviewerModelsTest.ViewModels
 
             });
         }
+
+        /// <summary>
+        /// The file isn't downloaded, when they click open it should download
+        /// the file.
+        /// </summary>
+        [TestMethod]
+        public void TriggerFileDownload()
+        {
+            new TestScheduler().With(shed =>
+            {
+
+                var ps = new PaperStub() { ID = "1234", Title = "this title" };
+                var psf = new PaperFullInfo()
+                {
+                    Abstract = "this abstract",
+                    Authors = new string[] { "this author" },
+                    Files = new PaperFile[] { 
+                        new PaperFile() {
+                             FileName="1.pdf",
+                             Versions = new PaperFileVersion[] {
+                                 new PaperFileVersion() {
+                                      VersionNumber = 1,
+                                      VersionDate = DateTime.Now,
+                                 },
+                                 new PaperFileVersion() {
+                                     VersionNumber = 2,
+                                     VersionDate = DateTime.Now,
+                                 }
+                            }
+                        }
+                    }
+                };
+
+                var nav = Mock.Of<INavService>();
+                var addr = Mock.Of<IInternalPaperDB>(a => a.GetPaperInfoForID("1234") == Task.Factory.StartNew(() => Tuple.Create(ps, psf)));
+                var fetcher = Mock.Of<IPaperFetcher>(f => f.GetPaperFiles("1234") == Observable.Return<PaperFile[]>(psf.Files)
+                    && f.DownloadPaper(ps, psf.Files[0], psf.Files[0].Versions[1]) == Observable.Return<int>(1));
+
+                var pvobj = new PaperViewModel(nav, addr, fetcher);
+                var paps = pvobj.PaperVersions;
+
+                pvobj.PaperID = "1234";
+
+                shed.AdvanceByMs(1);
+
+                // Check the file isn't marked as already downloaded
+                Assert.IsFalse(pvobj.PaperVersions[0].IsDownloaded);
+
+                // Now, trigger the download
+                pvobj.OpenPaperVersion.Execute(pvobj.PaperVersions.First());
+
+                // Next, wait for it to complete and then make sure it is marked as downloaded.
+                shed.AdvanceBy(1);
+                Assert.IsTrue(pvobj.PaperVersions[0].IsDownloaded);
+
+                Mock.Get(fetcher).VerifyAll();
+            });
+        }
+
+        /// <summary>
+        /// The file is already downloaded. Open it.
+        /// </summary>
+        [TestMethod]
+        public void OpenFileAlreadyDownloaded()
+        {
+            Assert.Inconclusive();
+        }
     }
 }

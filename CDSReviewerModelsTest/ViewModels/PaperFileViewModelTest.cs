@@ -1,6 +1,6 @@
-﻿using System;
+﻿using CDSReviewerModels.ViewModels;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using CDSReviewerModels.ViewModels;
+using System;
 
 namespace CDSReviewerModelsTest.ViewModels
 {

@@ -30,5 +30,24 @@ namespace CDSReviewerCore.Services.CDS
         {
             return int.Parse(id);
         }
+
+        /// <summary>
+        /// Download a file into local storage. If we already have it locally, then do nothing.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="file"></param>
+        /// <param name="version"></param>
+        /// <returns></returns>
+        public IObservable<int> DownloadPaper(PaperStub id, PaperFile file, PaperFileVersion version)
+        {
+            // Get the location where we will store this file
+
+            // If the file is there, we should return that
+
+            // Download the file.
+
+            // Return the location of the file for use by others!
+            throw new NotImplementedException();
+        }
     }
 }
