@@ -52,6 +52,7 @@ namespace CDSReviewerModels.ViewModels
 
             var papers2 = _findPaper
                 .SelectMany(x => paperFinder.GetPaperFiles(PaperID))
+                .Where(x => x != null)
                 .SelectMany(x => Observable.FromAsync(_ => MergeWithObservable(x, localI)));
 
             papers1.Merge(papers2)
