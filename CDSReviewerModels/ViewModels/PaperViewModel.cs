@@ -59,6 +59,9 @@ namespace CDSReviewerModels.ViewModels
                 .Select(x => new ObservableCollection<PaperFileViewModel>(x.Select(MostRecentFileVersionVM)))
                 .ToPropertyCM(this, x => x.PaperVersions, out _PaperVersionsOAPH, new ObservableCollection<PaperFileViewModel>());
 
+            _findPaper
+                .Subscribe(x => { _paperStub = x.Item1; });
+
             // When we have an update to the string property guy, off we go!
             this.ObservableForProperty(p => p.PaperID)
                 .Subscribe(x => _findPaper.Execute(x.Value));
@@ -73,22 +76,48 @@ namespace CDSReviewerModels.ViewModels
 
             OpenPaperVersion
                 .Where(x => !IsDownloaded(x))
-                .Subscribe(x => StartFileDownload(x));
+                .Subscribe(x => StartFileDownload(x, paperFinder));
         }
 
-        private object StartFileDownload(PaperFileViewModel x)
+        /// <summary>
+        /// Hold onto the paper stub
+        /// </summary>
+        private PaperStub _paperStub;
+
+        /// <summary>
+        /// Download the file from the main repository for papers.
+        /// </summary>
+        /// <param name="paperVM">The paper we should download</param>
+        /// <returns></returns>
+        private void StartFileDownload(PaperFileViewModel paperVM, IPaperFetcher fetcher)
         {
-            throw new NotImplementedException();
+            var progress = fetcher.DownloadPaper(_paperStub, paperVM._file, paperVM._version);
+            progress
+                .Subscribe(
+                    p => { paperVM.DownloadFraction = p; },
+                    () => { paperVM.DownloadFraction = 100; paperVM.IsDownloaded = true; }
+                );
         }
 
-        private object OpenFile(PaperFileViewModel x, IOSFileHandler fileIO)
+        /// <summary>
+        /// Trigger an opening of the file
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="fileIO"></param>
+        /// <returns></returns>
+        private void OpenFile(PaperFileViewModel x, IOSFileHandler fileIO)
         {
-            throw new NotImplementedException();
+            fileIO.OpenFile();
         }
 
+        /// <summary>
+        /// Check to see if the file has been downloaded already
+        /// </summary>
+        /// <param name="x"></param>
+        /// <returns></returns>
         private bool IsDownloaded(PaperFileViewModel x)
         {
-            throw new NotImplementedException();
+            return false;
         }
 
         /// <summary>
@@ -116,10 +145,7 @@ namespace CDSReviewerModels.ViewModels
         private PaperFileViewModel MostRecentFileVersionVM(PaperFile aFile)
         {
             var mostRecentVersion = aFile.Versions.OrderByDescending(x => x.VersionNumber).First();
-            return new PaperFileViewModel(
-                aFile.FileName,
-                mostRecentVersion.VersionNumber, mostRecentVersion.VersionDate
-            );
+            return new PaperFileViewModel(aFile, mostRecentVersion);
         }
 
         /// <summary>

@@ -461,5 +461,15 @@ namespace CDSReviewerModelsTest.ViewModels
                 Mock.Get(fileIO).VerifyAll();
             });
         }
+
+        /// <summary>
+        /// When the download fails for some reason, make sure that
+        /// the error message makes it out.
+        /// </summary>
+        [TestMethod]
+        public void DownloadFails()
+        {
+            Assert.Inconclusive();
+        }
     }
 }

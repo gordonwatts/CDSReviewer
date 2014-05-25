@@ -1,4 +1,5 @@
 ﻿using Caliburn.Micro;
+using CDSReviewerCore.Data;
 using System;
 
 namespace CDSReviewerModels.ViewModels
@@ -10,16 +11,29 @@ namespace CDSReviewerModels.ViewModels
     public class PaperFileViewModel : PropertyChangedBase
     {
         /// <summary>
+        /// Return the paper file we are attached to.
+        /// </summary>
+        public PaperFile _file { get; private set; }
+
+        /// <summary>
+        /// Return the version info we are attached to.
+        /// </summary>
+        public PaperFileVersion _version { get; private set; }
+
+        /// <summary>
         /// Initialize the view model with the appropriate values
         /// </summary>
         /// <param name="fname"></param>
         /// <param name="version"></param>
         /// <param name="date"></param>
-        public PaperFileViewModel(string fname, int version, DateTime date)
+        public PaperFileViewModel(PaperFile file, PaperFileVersion version)
         {
-            FileName = fname;
-            Version = version;
-            FileDate = date;
+            _file = file;
+            _version = version;
+
+            FileName = file.FileName;
+            Version = version.VersionNumber;
+            FileDate = version.VersionDate;
         }
 
         /// <summary>
