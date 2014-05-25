@@ -6,6 +6,7 @@ using CDSReviewerModels.ViewModels;
 using Microsoft.Reactive.Testing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using ReactiveUI;
 using ReactiveUI.Testing;
 using System;
 using System.Linq;
@@ -329,9 +330,73 @@ namespace CDSReviewerModelsTest.ViewModels
 
                 // Next, wait for it to complete and then make sure it is marked as downloaded.
                 shed.AdvanceBy(1);
+                Assert.AreEqual(100, pvobj.PaperVersions[0].DownloadFraction);
                 Assert.IsTrue(pvobj.PaperVersions[0].IsDownloaded);
 
                 Mock.Get(fetcher).VerifyAll();
+            });
+        }
+
+        /// <summary>
+        /// The file isn't downloaded, when they click open it should download
+        /// the file. The download takes some time, and the fraction downloaded
+        /// gets updated appropriately.
+        /// </summary>
+        [TestMethod]
+        public void FiledownloadTakesTime()
+        {
+            new TestScheduler().With(shed =>
+            {
+
+                var ps = new PaperStub() { ID = "1234", Title = "this title" };
+                var psf = new PaperFullInfo()
+                {
+                    Abstract = "this abstract",
+                    Authors = new string[] { "this author" },
+                    Files = new PaperFile[] { 
+                        new PaperFile() {
+                             FileName="1.pdf",
+                             Versions = new PaperFileVersion[] {
+                                 new PaperFileVersion() {
+                                      VersionNumber = 1,
+                                      VersionDate = DateTime.Now,
+                                 },
+                                 new PaperFileVersion() {
+                                     VersionNumber = 2,
+                                     VersionDate = DateTime.Now,
+                                 }
+                            }
+                        }
+                    }
+                };
+
+                var nav = Mock.Of<INavService>();
+                var addr = Mock.Of<IInternalPaperDB>(a => a.GetPaperInfoForID("1234") == Task.Factory.StartNew(() => Tuple.Create(ps, psf)));
+                var fetcher = Mock.Of<IPaperFetcher>(f => f.GetPaperFiles("1234") == Observable.Return<PaperFile[]>(psf.Files)
+                    && f.DownloadPaper(ps, psf.Files[0], psf.Files[0].Versions[1]) == Observable.Return<int>(15).Delay(TimeSpan.FromMilliseconds(50), RxApp.TaskpoolScheduler).Merge(Observable.Return<int>(100)));
+
+                var pvobj = new PaperViewModel(nav, addr, fetcher);
+                var paps = pvobj.PaperVersions;
+
+                pvobj.PaperID = "1234";
+
+                shed.AdvanceByMs(1);
+
+                // Check the file isn't marked as already downloaded
+                Assert.IsFalse(pvobj.PaperVersions[0].IsDownloaded);
+
+                // Now, trigger the download
+                pvobj.OpenPaperVersion.Execute(pvobj.PaperVersions.First());
+
+                // Get it going a little bit, make sure that the numbers show up as expected.
+                shed.AdvanceBy(10);
+                Assert.AreEqual(15, pvobj.PaperVersions[0].DownloadFraction);
+                Assert.IsFalse(pvobj.PaperVersions[0].IsDownloaded);
+
+                // Travel to the end and make sure it recovers correctly.
+                shed.AdvanceBy(50);
+                Assert.AreEqual(100, pvobj.PaperVersions[0].DownloadFraction);
+                Assert.IsTrue(pvobj.PaperVersions[0].IsDownloaded);
             });
         }
 

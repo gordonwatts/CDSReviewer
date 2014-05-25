@@ -38,5 +38,7 @@ namespace CDSReviewerModels.ViewModels
         public DateTime FileDate { get; private set; }
 
         public bool IsDownloaded { get; set; }
+
+        public int DownloadFraction { get; set; }
     }
 }

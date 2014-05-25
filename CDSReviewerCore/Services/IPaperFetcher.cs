@@ -20,10 +20,11 @@ namespace CDSReviewerCore.Services
         /// <summary>
         /// Download the data for a particular file into local storage.
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="file"></param>
-        /// <param name="version"></param>
-        /// <returns></returns>
+        /// <param name="id">Basic paper information</param>
+        /// <param name="file">File that is to be downloaded.</param>
+        /// <param name="version">Version information of the file to download</param>
+        /// <returns>A sequence of integers between 0 and 100 that represent the % the file is downloaded.
+        /// The sequence terminates upon successful download, or throws if an error has occured.</returns>
         IObservable<int> DownloadPaper(PaperStub id, PaperFile file, PaperFileVersion version);
     }
 }
