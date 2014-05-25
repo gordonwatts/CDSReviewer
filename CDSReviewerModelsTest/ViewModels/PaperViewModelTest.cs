@@ -378,7 +378,7 @@ namespace CDSReviewerModelsTest.ViewModels
                 var nav = Mock.Of<INavService>();
                 var addr = Mock.Of<IInternalPaperDB>(a => a.GetPaperInfoForID("1234") == Task.Factory.StartNew(() => Tuple.Create(ps, psf)));
                 var fetcher = Mock.Of<IPaperFetcher>(f => f.GetPaperFiles("1234") == Observable.Return<PaperFile[]>(psf.Files)
-                    && f.DownloadPaper(ps, psf.Files[0], psf.Files[0].Versions[1]) == Observable.Return<int>(15).Delay(TimeSpan.FromMilliseconds(50), RxApp.TaskpoolScheduler).Merge(Observable.Return<int>(100)));
+                    && f.DownloadPaper(ps, psf.Files[0], psf.Files[0].Versions[1]) == Observable.Return<int>(15).Concat(Observable.Return<int>(100).Delay(TimeSpan.FromMilliseconds(50), RxApp.TaskpoolScheduler)));
                 var fileIO = Mock.Of<IOSFileHandler>();
 
                 var pvobj = new PaperViewModel(nav, addr, fetcher, fileIO);
@@ -395,12 +395,12 @@ namespace CDSReviewerModelsTest.ViewModels
                 pvobj.OpenPaperVersion.Execute(pvobj.PaperVersions.First());
 
                 // Get it going a little bit, make sure that the numbers show up as expected.
-                shed.AdvanceBy(10);
+                shed.AdvanceByMs(10);
                 Assert.AreEqual(15, pvobj.PaperVersions[0].DownloadFraction);
                 Assert.IsFalse(pvobj.PaperVersions[0].IsDownloaded);
 
                 // Travel to the end and make sure it recovers correctly.
-                shed.AdvanceBy(50);
+                shed.AdvanceByMs(50);
                 Assert.AreEqual(100, pvobj.PaperVersions[0].DownloadFraction);
                 Assert.IsTrue(pvobj.PaperVersions[0].IsDownloaded);
             });
