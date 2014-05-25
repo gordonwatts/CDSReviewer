@@ -37,8 +37,14 @@ namespace CDSReviewerModels.ViewModels
         /// </summary>
         public DateTime FileDate { get; private set; }
 
+        /// <summary>
+        /// Set when the file download is complete.
+        /// </summary>
         public bool IsDownloaded { get; set; }
 
+        /// <summary>
+        /// Denotes the fraction of the file that is downloaded when a download is in progress.
+        /// </summary>
         public int DownloadFraction { get; set; }
     }
 }

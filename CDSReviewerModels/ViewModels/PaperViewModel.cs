@@ -22,7 +22,7 @@ namespace CDSReviewerModels.ViewModels
         /// Initialize the paper view model
         /// </summary>
         /// <param name="nav"></param>
-        public PaperViewModel(INavService nav, IInternalPaperDB localI, IPaperFetcher paperFinder)
+        public PaperViewModel(INavService nav, IInternalPaperDB localI, IPaperFetcher paperFinder, IOSFileHandler fileIO)
             : base(nav)
         {
 
@@ -64,7 +64,31 @@ namespace CDSReviewerModels.ViewModels
                 .Subscribe(x => _findPaper.Execute(x.Value));
 
             // And when the user clicks on a particular paper, we need to do some work!
+            // Open the file if it is already there, otherwise start the download.
             OpenPaperVersion = new ReactiveCommand<PaperFileViewModel>(Observable.Return(true), o => Observable.Return(o as PaperFileViewModel), RxApp.MainThreadScheduler);
+
+            OpenPaperVersion
+                .Where(x => IsDownloaded(x))
+                .Subscribe(x => OpenFile(x, fileIO));
+
+            OpenPaperVersion
+                .Where(x => !IsDownloaded(x))
+                .Subscribe(x => StartFileDownload(x));
+        }
+
+        private object StartFileDownload(PaperFileViewModel x)
+        {
+            throw new NotImplementedException();
+        }
+
+        private object OpenFile(PaperFileViewModel x, IOSFileHandler fileIO)
+        {
+            throw new NotImplementedException();
+        }
+
+        private bool IsDownloaded(PaperFileViewModel x)
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>

@@ -49,8 +49,9 @@ namespace CDSReviewerModelsTest.ViewModels
                 var nav = Mock.Of<INavService>();
                 var addr = Mock.Of<IInternalPaperDB>(a => a.GetPaperInfoForID("1234") == Task.Factory.StartNew(() => Tuple.Create(ps, psf)));
                 var fetcher = Mock.Of<IPaperFetcher>(f => f.GetPaperFiles("1234") == Observable.Return<PaperFile[]>(psf.Files));
+                var fileIO = Mock.Of<IOSFileHandler>();
 
-                var pvobj = new PaperViewModel(nav, addr, fetcher);
+                var pvobj = new PaperViewModel(nav, addr, fetcher, fileIO);
                 var at = pvobj.PaperTitle;
                 var ab = pvobj.Abstract;
                 var ath = pvobj.Authors;
@@ -103,8 +104,9 @@ namespace CDSReviewerModelsTest.ViewModels
                 var nav = Mock.Of<INavService>();
                 var addr = Mock.Of<IInternalPaperDB>(a => a.GetPaperInfoForID("1234") == Task.Factory.StartNew(() => Tuple.Create(ps, psf)));
                 var fetcher = Mock.Of<IPaperFetcher>(f => f.GetPaperFiles("1234") == Observable.Return<PaperFile[]>(null));
+                var fileIO = Mock.Of<IOSFileHandler>();
 
-                var pvobj = new PaperViewModel(nav, addr, fetcher);
+                var pvobj = new PaperViewModel(nav, addr, fetcher, fileIO);
                 var at = pvobj.PaperTitle;
                 var ab = pvobj.Abstract;
                 var ath = pvobj.Authors;
@@ -178,8 +180,9 @@ namespace CDSReviewerModelsTest.ViewModels
                 addrMock.Setup(a => a.Merge("1234", updatedFiles)).Returns(Task.Factory.StartNew(() => true));
 
                 var fetcher = Mock.Of<IPaperFetcher>(a => a.GetPaperFiles("1234") == Observable.Return(updatedFiles));
+                var fileIO = Mock.Of<IOSFileHandler>();
 
-                var pvobj = new PaperViewModel(nav, addrMock.Object, fetcher);
+                var pvobj = new PaperViewModel(nav, addrMock.Object, fetcher, fileIO);
                 var paps = pvobj.PaperVersions;
 
                 pvobj.PaperID = "1234";
@@ -262,8 +265,9 @@ namespace CDSReviewerModelsTest.ViewModels
                 addrMock.Setup(a => a.Merge("1234", updatedFiles)).Returns(Task.Factory.StartNew(() => true));
 
                 var fetcher = Mock.Of<IPaperFetcher>(a => a.GetPaperFiles("1234") == Observable.Return(updatedFiles));
+                var fileIO = Mock.Of<IOSFileHandler>();
 
-                var pvobj = new PaperViewModel(nav, addrMock.Object, fetcher);
+                var pvobj = new PaperViewModel(nav, addrMock.Object, fetcher, fileIO);
                 var paps = pvobj.PaperVersions;
 
                 pvobj.PaperID = "1234";
@@ -314,8 +318,9 @@ namespace CDSReviewerModelsTest.ViewModels
                 var addr = Mock.Of<IInternalPaperDB>(a => a.GetPaperInfoForID("1234") == Task.Factory.StartNew(() => Tuple.Create(ps, psf)));
                 var fetcher = Mock.Of<IPaperFetcher>(f => f.GetPaperFiles("1234") == Observable.Return<PaperFile[]>(psf.Files)
                     && f.DownloadPaper(ps, psf.Files[0], psf.Files[0].Versions[1]) == Observable.Return<int>(1));
+                var fileIO = Mock.Of<IOSFileHandler>();
 
-                var pvobj = new PaperViewModel(nav, addr, fetcher);
+                var pvobj = new PaperViewModel(nav, addr, fetcher, fileIO);
                 var paps = pvobj.PaperVersions;
 
                 pvobj.PaperID = "1234";
@@ -374,8 +379,9 @@ namespace CDSReviewerModelsTest.ViewModels
                 var addr = Mock.Of<IInternalPaperDB>(a => a.GetPaperInfoForID("1234") == Task.Factory.StartNew(() => Tuple.Create(ps, psf)));
                 var fetcher = Mock.Of<IPaperFetcher>(f => f.GetPaperFiles("1234") == Observable.Return<PaperFile[]>(psf.Files)
                     && f.DownloadPaper(ps, psf.Files[0], psf.Files[0].Versions[1]) == Observable.Return<int>(15).Delay(TimeSpan.FromMilliseconds(50), RxApp.TaskpoolScheduler).Merge(Observable.Return<int>(100)));
+                var fileIO = Mock.Of<IOSFileHandler>();
 
-                var pvobj = new PaperViewModel(nav, addr, fetcher);
+                var pvobj = new PaperViewModel(nav, addr, fetcher, fileIO);
                 var paps = pvobj.PaperVersions;
 
                 pvobj.PaperID = "1234";
@@ -406,7 +412,54 @@ namespace CDSReviewerModelsTest.ViewModels
         [TestMethod]
         public void OpenFileAlreadyDownloaded()
         {
-            Assert.Inconclusive();
+            new TestScheduler().With(shed =>
+            {
+
+                var ps = new PaperStub() { ID = "1234", Title = "this title" };
+                var psf = new PaperFullInfo()
+                {
+                    Abstract = "this abstract",
+                    Authors = new string[] { "this author" },
+                    Files = new PaperFile[] { 
+                        new PaperFile() {
+                             FileName="1.pdf",
+                             Versions = new PaperFileVersion[] {
+                                 new PaperFileVersion() {
+                                      VersionNumber = 1,
+                                      VersionDate = DateTime.Now,
+                                 },
+                                 new PaperFileVersion() {
+                                     VersionNumber = 2,
+                                     VersionDate = DateTime.Now,
+                                 }
+                            }
+                        }
+                    }
+                };
+
+                var nav = Mock.Of<INavService>();
+                var addr = Mock.Of<IInternalPaperDB>(a => a.GetPaperInfoForID("1234") == Task.Factory.StartNew(() => Tuple.Create(ps, psf)));
+                var fetcher = Mock.Of<IPaperFetcher>(f => f.GetPaperFiles("1234") == Observable.Return<PaperFile[]>(psf.Files));
+                var fileIO = Mock.Of<IOSFileHandler>(f => f.OpenFile() == true);
+
+                var pvobj = new PaperViewModel(nav, addr, fetcher, fileIO);
+                var paps = pvobj.PaperVersions;
+
+                pvobj.PaperID = "1234";
+
+                shed.AdvanceByMs(1);
+
+                // Check the file isn't marked as already downloaded
+                Assert.IsFalse(pvobj.PaperVersions[0].IsDownloaded);
+
+                // Now, trigger the download
+                pvobj.OpenPaperVersion.Execute(pvobj.PaperVersions.First());
+
+                // Next, wait for it to complete and then make sure it is marked as downloaded.
+                shed.AdvanceBy(1);
+
+                Mock.Get(fileIO).VerifyAll();
+            });
         }
     }
 }
