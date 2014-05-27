@@ -25,6 +25,8 @@ namespace CDSReviewerModels.ViewModels
         public PaperViewModel(INavService nav, IInternalPaperDB localI, IPaperFetcher paperFinder, IOSFileHandler fileIO)
             : base(nav)
         {
+            // Save a few things for later use
+            _localI = localI;
 
             // When the paper ID is set, kick off a lookup for the paper.
 
@@ -53,7 +55,7 @@ namespace CDSReviewerModels.ViewModels
             var papers2 = _findPaper
                 .SelectMany(x => paperFinder.GetPaperFiles(PaperID))
                 .Where(x => x != null)
-                .SelectMany(x => Observable.FromAsync(_ => MergeWithObservable(x, localI)));
+                .SelectMany(x => Observable.FromAsync(_ => MergeWithObservable(x)));
 
             papers1.Merge(papers2)
                 .Select(x => new ObservableCollection<PaperFileViewModel>(x.Select(MostRecentFileVersionVM)))
@@ -117,7 +119,7 @@ namespace CDSReviewerModels.ViewModels
         /// <returns></returns>
         private bool IsDownloaded(PaperFileViewModel x)
         {
-            return false;
+            return _localI.IsFileDownloaded(_paperStub, x._file, x._version);
         }
 
         /// <summary>
@@ -131,9 +133,9 @@ namespace CDSReviewerModels.ViewModels
         /// </summary>
         /// <param name="x"></param>
         /// <returns></returns>
-        private async Task<PaperFile[]> MergeWithObservable(PaperFile[] x, IInternalPaperDB db)
+        private async Task<PaperFile[]> MergeWithObservable(PaperFile[] x)
         {
-            await db.Merge(PaperID, x);
+            await _localI.Merge(PaperID, x);
             return x;
         }
 
@@ -145,7 +147,7 @@ namespace CDSReviewerModels.ViewModels
         private PaperFileViewModel MostRecentFileVersionVM(PaperFile aFile)
         {
             var mostRecentVersion = aFile.Versions.OrderByDescending(x => x.VersionNumber).First();
-            return new PaperFileViewModel(aFile, mostRecentVersion);
+            return new PaperFileViewModel(aFile, mostRecentVersion) { IsDownloaded = _localI.IsFileDownloaded(_paperStub, aFile, mostRecentVersion) };
         }
 
         /// <summary>
@@ -199,5 +201,6 @@ namespace CDSReviewerModels.ViewModels
             get { return _PaperVersionsOAPH.Value; }
         }
         private ObservableAsPropertyHelper<ObservableCollection<PaperFileViewModel>> _PaperVersionsOAPH;
+        private IInternalPaperDB _localI;
     }
 }

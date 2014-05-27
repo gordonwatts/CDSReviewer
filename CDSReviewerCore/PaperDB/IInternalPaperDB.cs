@@ -63,5 +63,14 @@ namespace CDSReviewerCore.PaperDB
         /// <param name="paperID"></param>
         /// <returns></returns>
         Task<Tuple<PaperStub, PaperFullInfo>> GetPaperInfoForID(string paperID);
+
+        /// <summary>
+        /// Return true if the paper has been downloaded
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="file"></param>
+        /// <param name="version"></param>
+        /// <returns></returns>
+        bool IsFileDownloaded(PaperStub id, PaperFile file, PaperFileVersion version);
     }
 }

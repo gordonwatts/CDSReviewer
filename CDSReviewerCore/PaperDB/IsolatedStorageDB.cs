@@ -231,5 +231,17 @@ namespace CDSReviewerCore.PaperDB
         {
             return (await LoadObject(paperID)) as PaperFullInfo;
         }
+
+        /// <summary>
+        /// Return true if the file has been downloaded
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="file"></param>
+        /// <param name="version"></param>
+        /// <returns></returns>
+        public bool IsFileDownloaded(PaperStub id, PaperFile file, PaperFileVersion version)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

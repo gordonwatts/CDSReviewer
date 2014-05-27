@@ -438,7 +438,9 @@ namespace CDSReviewerModelsTest.ViewModels
                 };
 
                 var nav = Mock.Of<INavService>();
-                var addr = Mock.Of<IInternalPaperDB>(a => a.GetPaperInfoForID("1234") == Task.Factory.StartNew(() => Tuple.Create(ps, psf)));
+                var addr = Mock.Of<IInternalPaperDB>(a =>
+                    a.GetPaperInfoForID("1234") == Task.Factory.StartNew(() => Tuple.Create(ps, psf))
+                    && a.IsFileDownloaded(ps, psf.Files[0], psf.Files[0].Versions[1]) == true);
                 var fetcher = Mock.Of<IPaperFetcher>(f => f.GetPaperFiles("1234") == Observable.Return<PaperFile[]>(psf.Files));
                 var fileIO = Mock.Of<IOSFileHandler>(f => f.OpenFile() == true);
 
@@ -449,10 +451,10 @@ namespace CDSReviewerModelsTest.ViewModels
 
                 shed.AdvanceByMs(1);
 
-                // Check the file isn't marked as already downloaded
-                Assert.IsFalse(pvobj.PaperVersions[0].IsDownloaded);
+                // This file should already be downloaded
+                Assert.IsTrue(pvobj.PaperVersions[0].IsDownloaded);
 
-                // Now, trigger the download
+                // Now, open the file by triggering it again.
                 pvobj.OpenPaperVersion.Execute(pvobj.PaperVersions.First());
 
                 // Next, wait for it to complete and then make sure it is marked as downloaded.
