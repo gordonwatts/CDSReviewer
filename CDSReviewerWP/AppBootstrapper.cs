@@ -18,7 +18,7 @@ namespace CDSReviewerWP
 
         public AppBootstrapper()
         {
-            Start();
+            this.StartRuntime();
         }
 
         /// <summary>
