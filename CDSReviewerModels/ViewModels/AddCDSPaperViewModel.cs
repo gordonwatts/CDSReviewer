@@ -27,7 +27,8 @@ namespace CDSReviewerModels.ViewModels
             _paperAdder = adder;
 
             // When we run, look for the first paper, and route its output to our author, etc.
-            _executeSearch = ReactiveCommand.Create(
+            _executeSearch = new ReactiveCommand<Tuple<PaperStub, PaperFullInfo>>(
+                Observable.Return(true),
                 searchString => Observable.Return(searchString)
                     .Where(x => x is string)
                     .SelectMany(x => _searchParser.GetPaperFinders(x as string))
@@ -85,7 +86,7 @@ namespace CDSReviewerModels.ViewModels
             // We can only add something when all searches are "good"
             var cmdGood = titleSet
                 .Select(x => x != "");
-            _addButtonCommand = ReactiveCommand.Create(cmdGood, _ => Observable.FromAsync(t => _paperAdder.Add(_paperStub, _paperFullInfo)));
+            _addButtonCommand = new ReactiveCommand<Unit>(cmdGood, _ => Observable.FromAsync(t => _paperAdder.Add(_paperStub, _paperFullInfo)));
             _addButtonCommand
                 .Subscribe(_ =>
                 {

@@ -30,7 +30,7 @@ namespace CDSReviewerModels.ViewModels
 
             // When the paper ID is set, kick off a lookup for the paper.
 
-            _findPaper = ReactiveCommand.Create(
+            _findPaper = new ReactiveCommand<Tuple<PaperStub, PaperFullInfo>>(Observable.Return(true),
                 idString => Observable.Return(idString as string)
                     .SelectMany(id => Observable.FromAsync(_ => localI.GetPaperInfoForID(id)))
                 );
