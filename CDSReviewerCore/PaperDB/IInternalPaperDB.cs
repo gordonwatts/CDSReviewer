@@ -1,6 +1,7 @@
 ﻿using CDSReviewerCore.Data;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace CDSReviewerCore.PaperDB
@@ -71,6 +72,16 @@ namespace CDSReviewerCore.PaperDB
         /// <param name="file"></param>
         /// <param name="version"></param>
         /// <returns></returns>
-        bool IsFileDownloaded(PaperStub id, PaperFile file, PaperFileVersion version);
+        Task<bool> IsFileDownloaded(PaperStub id, PaperFile file, PaperFileVersion version);
+
+        /// <summary>
+        /// Return a stream that has data that can be written into.
+        /// This data is associated with a file that is attached to a paper.
+        /// </summary>
+        /// <param name="id">The id of the paper this file is associated with</param>
+        /// <param name="file">The file that this file is associated with</param>
+        /// <param name="version">The version of this file</param>
+        /// <returns></returns>
+        Task<Stream> CreatePaperFile(PaperStub id, PaperFile file, PaperFileVersion version);
     }
 }

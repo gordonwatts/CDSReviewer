@@ -2,6 +2,7 @@
 using CDSReviewerCore.PaperDB;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -250,6 +251,54 @@ namespace CDSReviewerCoreTest.PaperDB
             Assert.AreEqual(2, fullInfo.Files.Length);
         }
 
+        [TestMethod]
+        public async Task MakeSureFileDoesNotExist()
+        {
+            var p1 = CreatePaperInfo("CDS1234");
+            IInternalPaperDB paperdb = new IsolatedStorageDB();
+
+            Assert.IsFalse(await paperdb.IsFileDownloaded(p1.Item1, p1.Item2.Files[0], p1.Item2.Files[0].Versions[0]));
+        }
+
+        [TestMethod]
+        public async Task MakeSureFileDoesNotExistAfterStubCreation()
+        {
+            var p1 = CreatePaperInfo("CDS1234");
+            IInternalPaperDB paperdb = new IsolatedStorageDB();
+            await paperdb.Add(p1.Item1, p1.Item2);
+
+            Assert.IsFalse(await paperdb.IsFileDownloaded(p1.Item1, p1.Item2.Files[0], p1.Item2.Files[0].Versions[0]));
+        }
+
+        [TestMethod]
+        public async Task WriteFile()
+        {
+            var p1 = CreatePaperInfo("CDS1234");
+            IInternalPaperDB paperdb = new IsolatedStorageDB();
+            await paperdb.Add(p1.Item1, p1.Item2);
+
+            using (var wtr = await paperdb.CreatePaperFile(p1.Item1, p1.Item2.Files[0], p1.Item2.Files[0].Versions[0]))
+            {
+                var txtwtr = new StreamWriter(wtr);
+                await txtwtr.WriteAsync("hi");
+                txtwtr.Close();
+                txtwtr.Dispose();
+            }
+
+            Assert.IsTrue(await paperdb.IsFileDownloaded(p1.Item1, p1.Item2.Files[0], p1.Item2.Files[0].Versions[0]));
+        }
+
+        /// <summary>
+        /// Some of the storage API's seem to have problems if you try to create a file that already
+        /// exists. Make sure we can handle that.
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public async Task WriteFileTwice()
+        {
+            Assert.Inconclusive();
+        }
+
         /// <summary>
         /// Create simple file info
         /// </summary>
@@ -265,7 +314,7 @@ namespace CDSReviewerCoreTest.PaperDB
         /// <param name="findex"></param>
         /// <param name="nVersions"></param>
         /// <returns></returns>
-        private PaperFile CreatePaperFile(int findex,int nVersions)
+        private PaperFile CreatePaperFile(int findex, int nVersions)
         {
             return new PaperFile()
             {

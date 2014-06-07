@@ -3,6 +3,7 @@ using PCLStorage;
 using Polenter.Serialization;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -80,12 +81,23 @@ namespace CDSReviewerCore.PaperDB
         /// <returns></returns>
         private async Task SaveObject(string fileID, object full)
         {
-            var folder = await _paperDBFolder.Value;
-            var outfile = await folder.CreateFileAsync(fileID, CreationCollisionOption.ReplaceExisting);
-            using (var wtr = await outfile.OpenAsync(FileAccess.ReadAndWrite))
+            using (var wtr = await CreateFile(await _paperDBFolder.Value, fileID))
             {
                 _binarySerlizer.Value.Serialize(full, wtr);
             }
+        }
+
+        /// <summary>
+        /// Open a stream for writing in a folder with a given filename.
+        /// </summary>
+        /// <param name="f">The folder in which to place the file.</param>
+        /// <param name="fileName">The filename to write</param>
+        /// <returns>A stream where the file can be written. Must be Disposed.</returns>
+        private async Task<Stream> CreateFile(IFolder f, string fileName)
+        {
+            var folder = await _paperDBFolder.Value;
+            var outfile = await folder.CreateFileAsync(fileName, CreationCollisionOption.ReplaceExisting);
+            return await outfile.OpenAsync(FileAccess.ReadAndWrite);
         }
 
         /// <summary>
@@ -239,9 +251,48 @@ namespace CDSReviewerCore.PaperDB
         /// <param name="file"></param>
         /// <param name="version"></param>
         /// <returns></returns>
-        public bool IsFileDownloaded(PaperStub id, PaperFile file, PaperFileVersion version)
+        public async Task<bool> IsFileDownloaded(PaperStub id, PaperFile file, PaperFileVersion version)
         {
+            var info = await GetFolderAndNameForPaperFile(id, file, version);
+            return (await info.Item1.CheckExistsAsync(info.Item2)).HasFlag(ExistenceCheckResult.FileExists);
+        }
+
+
+        /// <summary>
+        /// Create a stream that will write to a file we have internally opened.
+        /// </summary>
+        /// <param name="id">The paper ID that we need to cache</param>
+        /// <param name="file"></param>
+        /// <param name="version"></param>
+        /// <returns></returns>
+        public async Task<Stream> CreatePaperFile(PaperStub id, PaperFile file, PaperFileVersion version)
+        {
+            // Build up the file and the location where we can store it.
+
             throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Return the info needed to location a particular paper file in our system. Don't check for its existance, but do throw
+        /// if the directory isn't there!
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="file"></param>
+        /// <param name="vers"></param>
+        /// <returns></returns>
+        private async Task<Tuple<IFolder, string>> GetFolderAndNameForPaperFile(PaperStub id, PaperFile file, PaperFileVersion vers)
+        {
+            var rootFolder = await _paperDBFolder.Value;
+            var paperFolderName = string.Format("papers_{0}", id.ID);
+            if (!(await rootFolder.CheckExistsAsync(paperFolderName)).HasFlag(ExistenceCheckResult.FolderExists))
+            {
+                throw new FileNotFoundException(string.Format("Internal error: paper storage for {0} not created yet.", id.ID));
+            }
+            var folder = await rootFolder.GetFolderAsync(paperFolderName);
+
+            var filename = string.Format("{0}-{1}", vers.VersionNumber.ToString("D2"), file.FileName);
+
+            return Tuple.Create(folder, filename);
         }
     }
 }
