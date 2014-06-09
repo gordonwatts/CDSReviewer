@@ -251,19 +251,30 @@ namespace CDSReviewerCoreTest.PaperDB
             Assert.AreEqual(2, fullInfo.Files.Length);
         }
 
+        /// <summary>
+        /// We've not even created a directory yet - this shuld throw.
+        /// In code, this should never happen (I hope).
+        /// </summary>
+        /// <returns></returns>
         [TestMethod]
+        [ExpectedException(typeof(FileNotFoundException))]
         public async Task MakeSureFileDoesNotExist()
         {
-            var p1 = CreatePaperInfo("CDS1234");
+            var p1 = CreatePaperInfoWithFiles("CDS1234");
             IInternalPaperDB paperdb = new IsolatedStorageDB();
 
             Assert.IsFalse(await paperdb.IsFileDownloaded(p1.Item1, p1.Item2.Files[0], p1.Item2.Files[0].Versions[0]));
         }
 
+        /// <summary>
+        /// Create the paper, but the file still isn't in the db.
+        /// </summary>
+        /// <returns></returns>
         [TestMethod]
+        [ExpectedException(typeof(FileNotFoundException))]
         public async Task MakeSureFileDoesNotExistAfterStubCreation()
         {
-            var p1 = CreatePaperInfo("CDS1234");
+            var p1 = CreatePaperInfoWithFiles("CDS1234");
             IInternalPaperDB paperdb = new IsolatedStorageDB();
             await paperdb.Add(p1.Item1, p1.Item2);
 
@@ -273,7 +284,7 @@ namespace CDSReviewerCoreTest.PaperDB
         [TestMethod]
         public async Task WriteFile()
         {
-            var p1 = CreatePaperInfo("CDS1234");
+            var p1 = CreatePaperInfoWithFiles("CDS1234");
             IInternalPaperDB paperdb = new IsolatedStorageDB();
             await paperdb.Add(p1.Item1, p1.Item2);
 
