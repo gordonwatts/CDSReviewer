@@ -267,11 +267,10 @@ namespace CDSReviewerCoreTest.PaperDB
         }
 
         /// <summary>
-        /// Create the paper, but the file still isn't in the db.
+        /// Create the paper, but the file still isn't in the db. This should return a false.
         /// </summary>
         /// <returns></returns>
         [TestMethod]
-        [ExpectedException(typeof(FileNotFoundException))]
         public async Task MakeSureFileDoesNotExistAfterStubCreation()
         {
             var p1 = CreatePaperInfoWithFiles("CDS1234");

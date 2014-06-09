@@ -26,6 +26,11 @@ namespace CDSReviewerCore.PaperDB
             await SaveFullInfo(stub.ID, full);
 
             await UpdateStubList(stub);
+
+            // Create the file where we will be storing any papers we manage to download.
+            var rootFolder = await _paperDBFolder.Value;
+            var paperFolderName = PaperFolderName(stub);
+            await rootFolder.CreateFolderAsync(paperFolderName, CreationCollisionOption.OpenIfExists);
         }
 
         /// <summary>
@@ -283,7 +288,7 @@ namespace CDSReviewerCore.PaperDB
         private async Task<Tuple<IFolder, string>> GetFolderAndNameForPaperFile(PaperStub id, PaperFile file, PaperFileVersion vers)
         {
             var rootFolder = await _paperDBFolder.Value;
-            var paperFolderName = string.Format("papers_{0}", id.ID);
+            var paperFolderName = PaperFolderName(id);
             if (!(await rootFolder.CheckExistsAsync(paperFolderName)).HasFlag(ExistenceCheckResult.FolderExists))
             {
                 throw new FileNotFoundException(string.Format("Internal error: paper storage for {0} not created yet.", id.ID));
@@ -293,6 +298,17 @@ namespace CDSReviewerCore.PaperDB
             var filename = string.Format("{0}-{1}", vers.VersionNumber.ToString("D2"), file.FileName);
 
             return Tuple.Create(folder, filename);
+        }
+
+        /// <summary>
+        /// Given the stub for a paper, return the folder where all files for it will be stored.
+        /// </summary>
+        /// <param name="id">Paper id that we will be accessing.</param>
+        /// <returns>String with the file name</returns>
+        private static string PaperFolderName(PaperStub id)
+        {
+            var paperFolderName = string.Format("papers_{0}", id.ID);
+            return paperFolderName;
         }
     }
 }
