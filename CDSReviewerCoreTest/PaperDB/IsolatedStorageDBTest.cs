@@ -280,6 +280,10 @@ namespace CDSReviewerCoreTest.PaperDB
             Assert.IsFalse(await paperdb.IsFileDownloaded(p1.Item1, p1.Item2.Files[0], p1.Item2.Files[0].Versions[0]));
         }
 
+        /// <summary>
+        /// Write some data into a file. Make sure the file exists after that too.
+        /// </summary>
+        /// <returns></returns>
         [TestMethod]
         public async Task WriteFile()
         {
@@ -306,7 +310,26 @@ namespace CDSReviewerCoreTest.PaperDB
         [TestMethod]
         public async Task WriteFileTwice()
         {
-            Assert.Inconclusive();
+            var p1 = CreatePaperInfoWithFiles("CDS1234");
+            IInternalPaperDB paperdb = new IsolatedStorageDB();
+            await paperdb.Add(p1.Item1, p1.Item2);
+
+            using (var wtr = await paperdb.CreatePaperFile(p1.Item1, p1.Item2.Files[0], p1.Item2.Files[0].Versions[0]))
+            {
+                var txtwtr = new StreamWriter(wtr);
+                await txtwtr.WriteAsync("hi");
+                txtwtr.Close();
+                txtwtr.Dispose();
+            }
+            using (var wtr = await paperdb.CreatePaperFile(p1.Item1, p1.Item2.Files[0], p1.Item2.Files[0].Versions[0]))
+            {
+                var txtwtr = new StreamWriter(wtr);
+                await txtwtr.WriteAsync("hi");
+                txtwtr.Close();
+                txtwtr.Dispose();
+            }
+
+            Assert.IsTrue(await paperdb.IsFileDownloaded(p1.Item1, p1.Item2.Files[0], p1.Item2.Files[0].Versions[0]));
         }
 
         /// <summary>

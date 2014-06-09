@@ -274,7 +274,9 @@ namespace CDSReviewerCore.PaperDB
         {
             // Build up the file and the location where we can store it.
 
-            throw new NotImplementedException();
+            var info = await GetFolderAndNameForPaperFile(id, file, version);
+            var f = await info.Item1.CreateFileAsync(info.Item2, CreationCollisionOption.ReplaceExisting);
+            return await f.OpenAsync(FileAccess.ReadAndWrite);
         }
 
         /// <summary>
