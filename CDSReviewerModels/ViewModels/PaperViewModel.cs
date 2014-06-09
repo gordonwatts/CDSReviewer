@@ -73,11 +73,11 @@ namespace CDSReviewerModels.ViewModels
             OpenPaperVersion = new ReactiveCommand<PaperFileViewModel>(Observable.Return(true), o => Observable.Return(o as PaperFileViewModel), RxApp.MainThreadScheduler);
 
             OpenPaperVersion
-                .Where(x => IsDownloaded(x))
+                .Where(x => IsDownloaded(x).Wait(1000))
                 .Subscribe(x => OpenFile(x, fileIO));
 
             OpenPaperVersion
-                .Where(x => !IsDownloaded(x))
+                .Where(x => !IsDownloaded(x).Wait(1000))
                 .Subscribe(x => StartFileDownload(x, paperFinder));
         }
 
@@ -117,9 +117,9 @@ namespace CDSReviewerModels.ViewModels
         /// </summary>
         /// <param name="x"></param>
         /// <returns></returns>
-        private bool IsDownloaded(PaperFileViewModel x)
+        private async Task<bool> IsDownloaded(PaperFileViewModel x)
         {
-            return _localI.IsFileDownloaded(_paperStub, x._file, x._version);
+            return await _localI.IsFileDownloaded(_paperStub, x._file, x._version);
         }
 
         /// <summary>
@@ -147,7 +147,7 @@ namespace CDSReviewerModels.ViewModels
         private PaperFileViewModel MostRecentFileVersionVM(PaperFile aFile)
         {
             var mostRecentVersion = aFile.Versions.OrderByDescending(x => x.VersionNumber).First();
-            return new PaperFileViewModel(aFile, mostRecentVersion) { IsDownloaded = _localI.IsFileDownloaded(_paperStub, aFile, mostRecentVersion) };
+            return new PaperFileViewModel(aFile, mostRecentVersion) { IsDownloaded = _localI.IsFileDownloaded(_paperStub, aFile, mostRecentVersion).Wait(1000) };
         }
 
         /// <summary>
