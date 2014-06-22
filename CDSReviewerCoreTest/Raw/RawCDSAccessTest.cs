@@ -138,27 +138,6 @@ namespace CDSReviewerCoreTest
         }
 
         [TestMethod]
-        public async Task GetPublicFile()
-        {
-            // Get a file associated with a workshop https://cds.cern.ch/record/1007190
-            // https://cds.cern.ch/record/1007190/files/ard-2005-013.pdf
-
-            var doc = new dummyDoc() { Title = "dude", MainDocument = new Uri(@"https://cds.cern.ch/record/1007190/files/ard-2005-013.pdf") };
-            var localFile = new FileInfo(@"GetPublicFile.pdf");
-            using (var rdr = localFile.Create())
-            {
-                var r = await RawCDSAccess.GetMainDocumentHttp(doc, rdr);
-                Assert.IsNotNull(r);
-                rdr.Close();
-            }
-
-            localFile.Refresh();
-            Assert.AreEqual(405757, localFile.Length, "Length of downloaded file");
-
-            Assert.Inconclusive("Is this really something we want to have now?");
-        }
-
-        [TestMethod]
         public async Task GetPublicFileWithVersion()
         {
             // Get a file associated with a workshop https://cds.cern.ch/record/1007190
@@ -192,7 +171,6 @@ namespace CDSReviewerCoreTest
         class dummyDoc : IDocumentMetadata
         {
             public string Title { get; set; }
-            public Uri MainDocument { get; set; }
             public string Abstract { get; set; }
             public string[] Authors { get; set; }
         }

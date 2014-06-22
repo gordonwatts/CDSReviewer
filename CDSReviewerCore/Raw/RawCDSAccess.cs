@@ -64,18 +64,6 @@ namespace CDSReviewerCore.Raw
         }
 
         /// <summary>
-        /// Downloads the main document associated with a particular guy, in a particular location..
-        /// </summary>
-        /// <param name="doc">The document metatdata, the main document will be pulled from there.</param>
-        /// <param name="writeto">A writable stream. It will be closed and disposed of when this returns.</param>
-        /// <returns>A unit sequence with a single item is returned when the request has completed.</returns>
-        internal static IObservable<Unit> GetMainDocumentHttp(IDocumentMetadata doc, Stream writeto)
-        {
-            var uri = doc.MainDocument;
-            return ReadFromCDSToStream(writeto, uri);
-        }
-
-        /// <summary>
         /// Read the contents of a file to a stream for local use.
         /// </summary>
         /// <param name="id">The id of the paper</param>
