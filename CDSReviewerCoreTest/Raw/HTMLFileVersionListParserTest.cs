@@ -1,10 +1,9 @@
-﻿using System;
+﻿using CDSReviewerCore.Raw;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.IO;
-using CDSReviewerCore.Raw;
-using System.Linq;
+using System;
 using System.Collections.Generic;
-using HtmlAgilityPack;
+using System.IO;
+using System.Linq;
 
 namespace CDSReviewerCoreTest.Raw
 {
@@ -12,9 +11,10 @@ namespace CDSReviewerCoreTest.Raw
     public class HTMLFileVersionListParserTest
     {
         [TestMethod]
+        [DeploymentItem(@"Raw\hvfiles.html")]
         public void LoadHVFiles()
         {
-            var mdstring = LoadXML(@"Raw\hvfiles.html");
+            var mdstring = LoadXML(@"hvfiles.html");
             var r = HTMLFileVersionListParser.ParseToFileList(mdstring);
             Assert.IsNotNull(r);
             var l = r.ToArray();
@@ -36,9 +36,10 @@ namespace CDSReviewerCoreTest.Raw
         }
 
         [TestMethod]
+        [DeploymentItem(@"Raw\ss3lfiles.html")]
         public void LoadSS3LFiles()
         {
-            var mdstring = LoadXML(@"Raw\ss3lfiles.html");
+            var mdstring = LoadXML(@"ss3lfiles.html");
             var r = HTMLFileVersionListParser.ParseToFileList(mdstring);
             Assert.IsNotNull(r);
             var l = r.ToArray();
