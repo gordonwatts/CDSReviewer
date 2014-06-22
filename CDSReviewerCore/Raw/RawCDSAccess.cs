@@ -71,7 +71,36 @@ namespace CDSReviewerCore.Raw
         /// <returns>A unit sequence with a single item is returned when the request has completed.</returns>
         internal static IObservable<Unit> GetMainDocumentHttp(IDocumentMetadata doc, Stream writeto)
         {
-            var wr = WebRequest.CreateHttp(doc.MainDocument);
+            var uri = doc.MainDocument;
+            return ReadFromCDSToStream(writeto, uri);
+        }
+
+        /// <summary>
+        /// Read the contents of a file to a stream for local use.
+        /// </summary>
+        /// <param name="id">The id of the paper</param>
+        /// <param name="fileName">The file we are after</param>
+        /// <param name="version">The file verison we want to pick up</param>
+        /// <param name="writeto">The stream to output the data on</param>
+        /// <returns></returns>
+        public static IObservable<Unit> SaveDocumentLocally(string id, string fileName, int version, Stream writeto)
+        {
+            // Build the URI from the file information we have.
+            var fURI = new Uri(string.Format("http://cds.cern.ch/record/{0}/files/{1}?version={2}", id, fileName, version));
+
+            // Read it!
+            return ReadFromCDSToStream(writeto, fURI);
+        }
+
+        /// <summary>
+        /// Run the download. Return an observable that when done the read is done.
+        /// </summary>
+        /// <param name="writeto"></param>
+        /// <param name="uri"></param>
+        /// <returns></returns>
+        private static IObservable<Unit> ReadFromCDSToStream(Stream writeto, Uri uri)
+        {
+            var wr = WebRequest.CreateHttp(uri);
 
             var s = Observable
                 .FromAsync(tnk => Task.Factory.FromAsync<WebResponse>(wr.BeginGetResponse, wr.EndGetResponse, null))

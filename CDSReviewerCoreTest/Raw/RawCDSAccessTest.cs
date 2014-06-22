@@ -1,8 +1,8 @@
 ﻿using CDSReviewerCore.Raw;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Linq;
 using System.IO;
+using System.Linq;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 
@@ -148,6 +148,24 @@ namespace CDSReviewerCoreTest
             using (var rdr = localFile.Create())
             {
                 var r = await RawCDSAccess.GetMainDocumentHttp(doc, rdr);
+                Assert.IsNotNull(r);
+                rdr.Close();
+            }
+
+            localFile.Refresh();
+            Assert.AreEqual(405757, localFile.Length, "Length of downloaded file");
+
+            Assert.Inconclusive("Is this really something we want to have now?");
+        }
+
+        [TestMethod]
+        public async Task GetPublicFileWithVersion()
+        {
+            // Get a file associated with a workshop https://cds.cern.ch/record/1007190
+            var localFile = new FileInfo(@"GetPublicFileWithVersion.pdf");
+            using (var rdr = localFile.Create())
+            {
+                var r = await RawCDSAccess.SaveDocumentLocally("1007190", "ard-2005-013.pdf", 1, rdr);
                 Assert.IsNotNull(r);
                 rdr.Close();
             }
