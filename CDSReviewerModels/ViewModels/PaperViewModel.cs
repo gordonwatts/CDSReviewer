@@ -91,9 +91,9 @@ namespace CDSReviewerModels.ViewModels
         /// </summary>
         /// <param name="paperVM">The paper we should download</param>
         /// <returns></returns>
-        private void StartFileDownload(PaperFileViewModel paperVM, IPaperFetcher fetcher)
+        private async Task StartFileDownload(PaperFileViewModel paperVM, IPaperFetcher fetcher)
         {
-            var progress = fetcher.DownloadPaper(_paperStub, paperVM._file, paperVM._version);
+            var progress = await fetcher.DownloadPaper(_localI, _paperStub, paperVM._file, paperVM._version);
             progress
                 .Subscribe(
                     p => { paperVM.DownloadFraction = p; },

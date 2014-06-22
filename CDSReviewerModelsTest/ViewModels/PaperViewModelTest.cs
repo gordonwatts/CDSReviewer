@@ -317,7 +317,7 @@ namespace CDSReviewerModelsTest.ViewModels
                 var nav = Mock.Of<INavService>();
                 var addr = Mock.Of<IInternalPaperDB>(a => a.GetPaperInfoForID("1234") == Task.Factory.StartNew(() => Tuple.Create(ps, psf)));
                 var fetcher = Mock.Of<IPaperFetcher>(f => f.GetPaperFiles("1234") == Observable.Return<PaperFile[]>(psf.Files)
-                    && f.DownloadPaper(ps, psf.Files[0], psf.Files[0].Versions[1]) == Observable.Return<int>(1));
+                    && f.DownloadPaper(addr, ps, psf.Files[0], psf.Files[0].Versions[1]) == Observable.Return<int>(1));
                 var fileIO = Mock.Of<IOSFileHandler>();
 
                 var pvobj = new PaperViewModel(nav, addr, fetcher, fileIO);
@@ -378,7 +378,7 @@ namespace CDSReviewerModelsTest.ViewModels
                 var nav = Mock.Of<INavService>();
                 var addr = Mock.Of<IInternalPaperDB>(a => a.GetPaperInfoForID("1234") == Task.Factory.StartNew(() => Tuple.Create(ps, psf)));
                 var fetcher = Mock.Of<IPaperFetcher>(f => f.GetPaperFiles("1234") == Observable.Return<PaperFile[]>(psf.Files)
-                    && f.DownloadPaper(ps, psf.Files[0], psf.Files[0].Versions[1]) == Observable.Return<int>(15).Concat(Observable.Return<int>(100).Delay(TimeSpan.FromMilliseconds(50), RxApp.TaskpoolScheduler)));
+                    && f.DownloadPaper(addr, ps, psf.Files[0], psf.Files[0].Versions[1]) == Observable.Return<int>(15).Concat(Observable.Return<int>(100).Delay(TimeSpan.FromMilliseconds(50), RxApp.TaskpoolScheduler)));
                 var fileIO = Mock.Of<IOSFileHandler>();
 
                 var pvobj = new PaperViewModel(nav, addr, fetcher, fileIO);
