@@ -1,7 +1,10 @@
 ﻿using CDSReviewerCore.Data;
+using CDSReviewerCore.PaperDB;
 using CDSReviewerCore.Services.CDS;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 using System;
+using System.IO;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 
@@ -18,29 +21,41 @@ namespace CDSReviewerCoreTest.Services.CDS
         {
             var info = CreatePaperInfo();
 
-            var dnldr = new CDSPaperDataFetcher();
-            var res = dnldr.DownloadPaper(info.Item1, info.Item2, info.Item3);
-
-            // Now, wait until the paper is totally finished downloading.
-
-            int donePercent = 0;
-            while (donePercent != 0)
+            var outfile = new FileInfo("DownloadNewPaperResult.pdf");
+            using (var fstream = outfile.Create())
             {
-                Console.WriteLine("{0} - {1}%", DateTime.Now, donePercent);
-                donePercent = await res;
+
+                var dnldr = new CDSPaperDataFetcher();
+                var db = Mock.Of<IInternalPaperDB>(b =>
+                    b.IsFileDownloaded(info.Item1, info.Item2, info.Item3) == Task<bool>.Factory.StartNew(() => false)
+                    && b.CreatePaperFile(info.Item1, info.Item2, info.Item3) == Task<Stream>.Factory.StartNew(() => fstream)
+                    );
+                var res = await dnldr.DownloadPaper(db, info.Item1, info.Item2, info.Item3);
+                var v = await res;
+                Assert.AreEqual(100, v, "percent complete should be just one number here");
             }
 
-            // Now, see if the file has actually been downloaded or not!
-            Assert.Inconclusive();
+            // Check the file came down ok
+            outfile.Refresh();
+            Assert.AreEqual(826454, outfile.Length, "Length of file we downloaded");
         }
 
         /// <summary>
-        /// Make sure that if we try to redownload this guy we get it ok.
+        /// Make sure that if we try to re-download nothing like CreatePaperFile is called!
         /// </summary>
         [TestMethod]
-        public void ReDownloadPaper()
+        public async Task ReDownloadPaper()
         {
-            Assert.Inconclusive();
+            var info = CreatePaperInfo();
+
+            var dnldr = new CDSPaperDataFetcher();
+            var db = Mock.Of<IInternalPaperDB>(b =>
+                b.IsFileDownloaded(info.Item1, info.Item2, info.Item3) == Task<bool>.Factory.StartNew(() => true)
+                );
+            var res = await dnldr.DownloadPaper(db, info.Item1, info.Item2, info.Item3);
+            var v = await res;
+            Assert.AreEqual(100, v, "percent complete should be just one number here");
+
         }
 
         Tuple<PaperStub, PaperFile, PaperFileVersion> CreatePaperInfo()

@@ -1,8 +1,10 @@
 ﻿using CDSReviewerCore.Data;
+using CDSReviewerCore.PaperDB;
 using CDSReviewerCore.Raw;
 using System;
 using System.Linq;
 using System.Reactive.Linq;
+using System.Threading.Tasks;
 
 namespace CDSReviewerCore.Services.CDS
 {
@@ -34,20 +36,25 @@ namespace CDSReviewerCore.Services.CDS
         /// <summary>
         /// Download a file into local storage. If we already have it locally, then do nothing.
         /// </summary>
+        /// <param name="db">Database where we are storing papers</param>
         /// <param name="id"></param>
         /// <param name="file"></param>
         /// <param name="version"></param>
-        /// <returns></returns>
-        public IObservable<int> DownloadPaper(PaperStub id, PaperFile file, PaperFileVersion version)
+        /// <returns>The number 100 when done. Doesn't currenlty correctly return fraction of file downloaded</returns>
+        public async Task<IObservable<int>> DownloadPaper(IInternalPaperDB db,
+            PaperStub id, PaperFile file, PaperFileVersion version)
         {
-            // Get the location where we will store this file
+            // If the file is done, we are too.
+            if (await db.IsFileDownloaded(id, file, version))
+                return Observable.Return(100);
 
-            // If the file is there, we should return that
-
-            // Download the file.
-
-            // Return the location of the file for use by others!
-            throw new NotImplementedException();
+            // Create a stream for the file, and then run the download.
+            using (var whereToSave = await db.CreatePaperFile(id, file, version))
+            {
+                var r = RawCDSAccess.SaveDocumentLocally(id.ID, file.FileName, version.VersionNumber, whereToSave);
+                await r;
+            }
+            return Observable.Return(100);
         }
     }
 }

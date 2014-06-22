@@ -1,5 +1,7 @@
 ﻿using CDSReviewerCore.Data;
+using CDSReviewerCore.PaperDB;
 using System;
+using System.Threading.Tasks;
 
 namespace CDSReviewerCore.Services
 {
@@ -20,11 +22,12 @@ namespace CDSReviewerCore.Services
         /// <summary>
         /// Download the data for a particular file into local storage.
         /// </summary>
+        /// <param name="db">Paper database where everything is stored locally</param>
         /// <param name="id">Basic paper information</param>
         /// <param name="file">File that is to be downloaded.</param>
         /// <param name="version">Version information of the file to download</param>
         /// <returns>A sequence of integers between 0 and 100 that represent the % the file is downloaded.
         /// The sequence terminates upon successful download, or throws if an error has occured.</returns>
-        IObservable<int> DownloadPaper(PaperStub id, PaperFile file, PaperFileVersion version);
+        Task<IObservable<int>> DownloadPaper(IInternalPaperDB db, PaperStub id, PaperFile file, PaperFileVersion version);
     }
 }
